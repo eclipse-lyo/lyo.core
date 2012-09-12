@@ -1,0 +1,9 @@
+Change-Id: I0f2f4bec25d559943a1f352d73e993c6dce2efc3
+Code-Review+2: Samuel Padgett <spadgett@us.ibm.com>
+IP-Clean+1: Samuel Padgett <spadgett@us.ibm.com>
+Verified+1: Samuel Padgett <spadgett@us.ibm.com>
+Submitted-by: Samuel Padgett <spadgett@us.ibm.com>
+Submitted-at: Wed, 12 Sep 2012 15:03:41 -0400
+Reviewed-on: https://git.eclipse.org/r/7732
+Project: lyo/org.eclipse.lyo.core
+Branch: refs/heads/master
