@@ -1,0 +1,8 @@
+TestResults/**
+**/obj/**/*
+*.obj
+*.dll
+*.pdb
+TraceAndTestImpact.testsettings
+*~
+*.bak
