@@ -180,8 +180,18 @@ namespace Org.Eclipse.Lyo.Client
 
             content.Headers.ContentType = mediaTypeValue;
 
-            return Post<T>(content).Result;
-        }
+            return client.PostAsync(uri, content).ContinueWith(response =>
+                {
+                    HttpStatusCode status = response.Result.StatusCode;
+
+                    if (status != HttpStatusCode.Created && status != HttpStatusCode.OK)
+                    {
+                        throw new HttpRequestException(response.Result.ReasonPhrase);
+                    }
+
+                    return response;
+                }).Result.Result.Content.ReadAsAsync<T>(formatters).Result;
+            }
 
 	    public HttpResponseMessage AddOslcResourceReturnClientResponse(Object oslcResource)
 	    {
@@ -195,7 +205,7 @@ namespace Org.Eclipse.Lyo.Client
 
             content.Headers.ContentType = mediaTypeValue;
 
-            HttpResponseMessage response = Post(content).Result;
+            HttpResponseMessage response = client.PostAsync(uri, content).Result;
             HttpStatusCode statusCode = response.StatusCode;
 
             switch (statusCode)
@@ -219,7 +229,7 @@ namespace Org.Eclipse.Lyo.Client
 
             content.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
 
-            HttpResponseMessage response = Put(content).Result;
+            HttpResponseMessage response = client.PutAsync(uri, content).Result;
 
             return response;
         }
@@ -229,39 +239,9 @@ namespace Org.Eclipse.Lyo.Client
             this.client.DefaultRequestHeaders.Clear();
             this.client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
 
-            HttpResponseMessage response = Delete().Result;
+            HttpResponseMessage response = client.DeleteAsync(uri).Result;
 
             return response;
-        }
-
-        private async Task<T> Post<T>(ObjectContent<T> content)
-        {
-            return await client.PostAsync(uri, content).ContinueWith(response =>
-            {
-                HttpStatusCode status = response.Result.StatusCode;
-
-                if (status != HttpStatusCode.Created && status != HttpStatusCode.OK)
-                {
-                    throw new HttpRequestException(response.Result.ReasonPhrase);
-                }
-
-                return response.Result.Content.ReadAsAsync<T>(formatters).Result;
-            });
-        }
-
-        private async Task<HttpResponseMessage> Post(ObjectContent content)
-        {
-            return await client.PostAsync(uri, content);
-        }
-
-        private async Task<HttpResponseMessage> Put(ObjectContent content)
-        {
-            return await client.PutAsync(uri, content);
-        }
-
-        private async Task<HttpResponseMessage> Delete()
-        {
-            return await client.DeleteAsync(uri);
         }
     }
 }
