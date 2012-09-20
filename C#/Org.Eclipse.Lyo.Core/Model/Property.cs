@@ -222,7 +222,7 @@ namespace Org.Eclipse.Lyo.Core.Model
 	    public Uri GetValueType() {
 	        if (valueType != ValueType.Unknown) {
 	            try {
-	                return new Uri(valueType.ToString());
+	                return new Uri(ValueTypeExtension.ToString(valueType));
 	            } catch (UriFormatException exception) {
 	                // This should never happen since we control the possible values of the ValueType enum.
 	                throw new SystemException(exception.Message, exception);

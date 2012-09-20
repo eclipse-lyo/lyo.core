@@ -327,8 +327,10 @@ namespace Org.Eclipse.Lyo.Core.DotNetRdfProvider
                 	    {
                             string predicateUri = predicate.Uri.ToString();
                             int hash = predicateUri.LastIndexOf('#');
-                            string localPart = predicateUri.Substring(hash + 1);
-                            string ns = predicateUri.Substring(0, hash);
+                            int slash = predicateUri.LastIndexOf('/');
+                            int idx = hash > slash ? hash : slash;
+                            string localPart = predicateUri.Substring(idx + 1);
+                            string ns = predicateUri.Substring(0, idx + 1);
                 		    string prefix = graph.NamespaceMap.GetPrefix(new Uri(ns));
                 		    if (prefix == null)
                 		    {
@@ -336,14 +338,14 @@ namespace Org.Eclipse.Lyo.Core.DotNetRdfProvider
                 		    }
                 		    QName key = new QName(ns, localPart, prefix);
                 		    object value = HandleExtendedPropertyValue(beanType, obj);
-                		    object previous = extendedProperties[key];
-                		    if (previous == null)
+                            if (!extendedProperties.ContainsKey(key))
                 		    {
                 			    extendedProperties.Add(key, value);
                 		    }
                 		    else
                 		    {
-                			    IList<object> collection;
+                                object previous = extendedProperties[key];
+                                IList<object> collection;
                 			    if (previous is IList<object>)
                 			    {
                 				    collection = ((IList<object>) previous);
@@ -495,6 +497,18 @@ namespace Org.Eclipse.Lyo.Core.DotNetRdfProvider
                             parameter = nestedBean;
                         }
                     }
+                    else if (obj is IBlankNode)
+                    {
+                        IBlankNode nestedResource = obj as IBlankNode;
+                        object nestedBean = Activator.CreateInstance(setMethodComponentParameterType);
+
+                        FromDotNetRdfNode(typePropertyDefinitionsToSetMethods,
+                                          setMethodComponentParameterType,
+                                          nestedBean,
+                                          nestedResource);
+
+                        parameter = nestedBean;
+                    }
 
                     if (parameter != null)
                     {
@@ -557,7 +571,6 @@ namespace Org.Eclipse.Lyo.Core.DotNetRdfProvider
                                 throw new OslcCoreMisusedOccursException(beanType,
                                                                          setMethod);
                             }
-
 
                             setMethod.Invoke(bean,
                                              new object[] { parameter });
@@ -664,7 +677,7 @@ namespace Org.Eclipse.Lyo.Core.DotNetRdfProvider
                 }
 
                 reificationTriples.Clear();
-                result = null;
+                result[0] = null;
             }
 
             return new Triple[0];
@@ -735,10 +748,14 @@ namespace Org.Eclipse.Lyo.Core.DotNetRdfProvider
 				{
 					return ((StringNode)obj).AsString();
 				}
-				else if (obj is UnsignedLongNode)
-				{
-					return ((UnsignedLongNode)obj).AsInteger();
-				}
+                else if (obj is UnsignedLongNode)
+                {
+                    return ((UnsignedLongNode)obj).AsInteger();
+                }
+                else
+                {
+                    return ((ILiteralNode)obj).Value;
+                }
 		    }
 		
 		    // Is this an inline resource?

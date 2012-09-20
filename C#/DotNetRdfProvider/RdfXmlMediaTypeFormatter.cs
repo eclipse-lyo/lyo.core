@@ -41,7 +41,9 @@ namespace Org.Eclipse.Lyo.Core.DotNetRdfProvider
     {
         public RdfXmlMediaTypeFormatter()
         {
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue(RDF_XML));
+            SupportedMediaTypes.Add(OslcMediaType.APPLICATION_RDF_XML_TYPE);
+            SupportedMediaTypes.Add(OslcMediaType.APPLICATION_XML_TYPE);
+            SupportedMediaTypes.Add(OslcMediaType.APPLICATION_X_OSLC_COMPACT_XML_TYPE);
         }
 
         public override bool CanWriteType(Type type)
@@ -75,15 +77,32 @@ namespace Org.Eclipse.Lyo.Core.DotNetRdfProvider
                         graph = DotNetRdfHelper.CreateDotNetRdfGraph(new EnumerableWrapper(value));
                     }
 
-                    RdfXmlWriter rdfXmlWriter = new RdfXmlWriter();
+                    IRdfWriter xmlWriter;
 
-                    rdfXmlWriter.UseDtd = false;
-                    rdfXmlWriter.PrettyPrintMode = false;
-                    rdfXmlWriter.CompressionLevel = 20;
+                    if (content == null || content.Headers == null || content.Headers.ContentType.MediaType.Equals(OslcMediaType.APPLICATION_RDF_XML)) 
+                    {
+                        RdfXmlWriter rdfXmlWriter = new RdfXmlWriter();
 
-                    StreamWriter streamWriter = new StreamWriter(writeStream);
+                        rdfXmlWriter.UseDtd = false;
+                        rdfXmlWriter.PrettyPrintMode = false;
+                        rdfXmlWriter.CompressionLevel = 20;
+                        rdfXmlWriter.UseTypedNodes = false;
 
-                    rdfXmlWriter.Save(graph, streamWriter);
+                        xmlWriter = rdfXmlWriter;
+                    }
+                    else
+                    {
+                        OslcXmlWriter oslcXmlWriter = new OslcXmlWriter();
+
+                        oslcXmlWriter.PrettyPrintMode = false;
+                        oslcXmlWriter.CompressionLevel = 20;
+
+                        xmlWriter = oslcXmlWriter;
+                    }
+
+                    StreamWriter streamWriter = new NonClosingStreamWriter(writeStream);
+
+                    xmlWriter.Save(graph, streamWriter);
                 });
         }
 
@@ -110,13 +129,23 @@ namespace Org.Eclipse.Lyo.Core.DotNetRdfProvider
 
             try
             {
-                RdfXmlParser rdfXmlParser = new RdfXmlParser();
+                IRdfReader parser;
+                    
+                if (content == null || content.Headers == null || content.Headers.ContentType.MediaType.Equals(OslcMediaType.APPLICATION_RDF_XML)) 
+                {
+                    parser = new RdfXmlParser();
+                }
+                else
+                {
+                    parser = new OslcXmlParser();
+                }
+
                 IGraph graph = new Graph();
                 StreamReader streamReader = new StreamReader(readStream);
 
                 using (streamReader)
                 {
-                    rdfXmlParser.Load(graph, streamReader);
+                    parser.Load(graph, streamReader);
 
                     bool isSingleton = IsSinglton(type);
                     object output = DotNetRdfHelper.FromDotNetRdfGraph(graph, isSingleton ? type : GetMemberType(type));
@@ -156,6 +185,11 @@ namespace Org.Eclipse.Lyo.Core.DotNetRdfProvider
 
         private Type GetMemberType(Type type)
         {
+            if (type.IsArray)
+            {
+                return type.GetElementType();
+            }
+
             if (InheritedGenericInterfacesHelper.ImplementsGenericInterface(typeof(IEnumerable<>), type))
             {
                 Type[] interfaces = type.GetInterfaces();
@@ -179,6 +213,17 @@ namespace Org.Eclipse.Lyo.Core.DotNetRdfProvider
             return null;
         }
 
-        private readonly string RDF_XML = "application/rdf+xml";
+        private class NonClosingStreamWriter : StreamWriter
+        {
+            public NonClosingStreamWriter(Stream stream)
+                : base(stream)
+            {
+            }
+
+            public override void Close()
+            {
+               // Don't let dotNetRDF writer close the file.
+            }
+        }
     }
 }

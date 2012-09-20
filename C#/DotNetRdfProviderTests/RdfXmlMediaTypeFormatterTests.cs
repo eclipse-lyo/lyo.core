@@ -36,7 +36,7 @@ namespace DotNetRdfProviderTests
     public class RdfXmlMediaTypeFormatterTests
     {
         [TestMethod]
-        public void TestXmlRdfSerialization()
+        public void TestRdfXmlSerialization()
         {
             ChangeRequest changeRequest1 = new ChangeRequest(new Uri("http://com/somewhere/changeReuest"));
 
@@ -45,26 +45,40 @@ namespace DotNetRdfProviderTests
 
             RdfXmlMediaTypeFormatter formatter = new RdfXmlMediaTypeFormatter();
 
-            string rdfXml = Serialize<ChangeRequest>(formatter, changeRequest1);
+            string rdfXml = Serialize<ChangeRequest>(formatter, changeRequest1, OslcMediaType.APPLICATION_RDF_XML_TYPE);
 
             Debug.WriteLine(rdfXml);
 
-            ChangeRequest changeRequest2 = Deserialize<ChangeRequest>(formatter, rdfXml);
+            ChangeRequest changeRequest2 = Deserialize<ChangeRequest>(formatter, rdfXml, OslcMediaType.APPLICATION_RDF_XML_TYPE);
 
             Assert.AreEqual(changeRequest1, changeRequest2);
         }
 
-        // dotNetRdf RdfXmlWriter and RdfXmlParser close the stream after writing, which doesn't
-        // work for Serialize() and Deserialize() memory streams below.
-        private class MyMemoryStream : MemoryStream
+        [TestMethod]
+        public void TestXmlSerialization()
         {
-            public override void Close() { }
+            ChangeRequest changeRequest1 = new ChangeRequest(new Uri("http://com/somewhere/changeReuest"));
+
+            changeRequest1.SetFixed(true);
+            changeRequest1.AddAffectedByDefect(new Link(new Uri("http://com/somewhere/changeRequest2"), "Test of links"));
+
+            RdfXmlMediaTypeFormatter formatter = new RdfXmlMediaTypeFormatter();
+
+            string rdfXml = Serialize<ChangeRequest>(formatter, changeRequest1, OslcMediaType.APPLICATION_XML_TYPE);
+
+            Debug.WriteLine(rdfXml);
+
+            ChangeRequest changeRequest2 = Deserialize<ChangeRequest>(formatter, rdfXml, OslcMediaType.APPLICATION_XML_TYPE);
+
+            Assert.AreEqual(changeRequest1, changeRequest2);
         }
 
-        private string Serialize<T>(MediaTypeFormatter formatter, T value)
+        private string Serialize<T>(MediaTypeFormatter formatter, T value, MediaTypeHeaderValue mediaType)
         {
-            Stream stream = new MyMemoryStream();
-            var content = new StreamContent(stream);
+            Stream stream = new MemoryStream();
+            HttpContent content = new StreamContent(stream);
+
+            content.Headers.ContentType = mediaType;
 
             formatter.WriteToStreamAsync(typeof(T), value, stream, content, null).Wait();
             stream.Position = 0;
@@ -72,17 +86,20 @@ namespace DotNetRdfProviderTests
             return content.ReadAsStringAsync().Result;
         }
 
-        private T Deserialize<T>(MediaTypeFormatter formatter, string str) where T : class
+        private T Deserialize<T>(MediaTypeFormatter formatter, string str, MediaTypeHeaderValue mediaType) where T : class
         {
-            Stream stream = new MyMemoryStream();
+            Stream stream = new MemoryStream();
             StreamWriter writer = new StreamWriter(stream);
+            HttpContent content = new StreamContent(stream);
+
+            content.Headers.ContentType = mediaType;
 
             writer.Write(str);
             writer.Flush();
 
             stream.Position = 0;
 
-            return formatter.ReadFromStreamAsync(typeof(T), stream, null, null).Result as T;
+            return formatter.ReadFromStreamAsync(typeof(T), stream, content, null).Result as T;
         }
     }
 }

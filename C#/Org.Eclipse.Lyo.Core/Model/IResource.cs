@@ -28,4 +28,18 @@ namespace Org.Eclipse.Lyo.Core.Model
         Uri GetAbout();
         void SetAbout(Uri about);
     }
+
+    public static class AddAllExtension
+    {
+        public static void AddAll<T>(
+            this ICollection<T> target,
+            IEnumerable<T> source
+        )
+        {
+            foreach (T item in source)
+            {
+                target.Add(item);
+            }
+        }
+    }
 }

@@ -569,7 +569,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (affectedByDefects != null)
             {
-                AddAll(this.affectedByDefects, affectedByDefects);
+                this.affectedByDefects.AddAll(affectedByDefects);
             }
         }
 
@@ -579,7 +579,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (affectsPlanItems != null)
             {
-                AddAll(this.affectsPlanItems, affectsPlanItems);
+                this.affectsPlanItems.AddAll(affectsPlanItems);
             }
         }
 
@@ -589,7 +589,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (affectsRequirements != null)
             {
-                AddAll(this.affectsRequirements, affectsRequirements);
+                this.affectsRequirements.AddAll(affectsRequirements);
             }
         }
 
@@ -599,7 +599,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (affectsTestResults != null)
             {
-                AddAll(this.affectsTestResults, affectsTestResults);
+                this.affectsTestResults.AddAll(affectsTestResults);
             }
         }
 
@@ -614,7 +614,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (blocksTestExecutionRecords != null)
             {
-                AddAll(this.blocksTestExecutionRecords, blocksTestExecutionRecords);
+                this.blocksTestExecutionRecords.AddAll(blocksTestExecutionRecords);
             }
         }
 
@@ -634,7 +634,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (contributors != null)
             {
-                AddAll(this.contributors, contributors);
+                this.contributors.AddAll(contributors);
             }
         }
 
@@ -649,7 +649,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (creators != null)
             {
-                AddAll(this.creators, creators);
+                this.creators.AddAll(creators);
             }
         }
 
@@ -692,7 +692,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (implementsRequirements != null)
             {
-                AddAll(this.implementsRequirements, implementsRequirements);
+                this.implementsRequirements.AddAll(implementsRequirements);
             }
         }
 
@@ -717,7 +717,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (rdfTypes != null)
             {
-                AddAll(this.rdfTypes, rdfTypes);
+                this.rdfTypes.AddAll(rdfTypes);
             }
         }
 
@@ -727,7 +727,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (relatedChangeRequests != null)
             {
-                AddAll(this.relatedChangeRequests, relatedChangeRequests);
+                this.relatedChangeRequests.AddAll(relatedChangeRequests);
             }
         }
 
@@ -737,7 +737,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (relatedResources != null)
             {
-                AddAll(this.relatedResources, relatedResources);
+                this.relatedResources.AddAll(relatedResources);
             }
         }
 
@@ -747,7 +747,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (relatedTestCases != null)
             {
-                AddAll(this.relatedTestCases, relatedTestCases);
+                this.relatedTestCases.AddAll(relatedTestCases);
             }
         }
 
@@ -757,7 +757,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (relatedTestExecutionRecords != null)
             {
-                AddAll(this.relatedTestExecutionRecords, relatedTestExecutionRecords);
+                this.relatedTestExecutionRecords.AddAll(relatedTestExecutionRecords);
             }
         }
 
@@ -767,7 +767,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (relatedTestPlans != null)
             {
-                AddAll(this.relatedTestPlans, relatedTestPlans);
+                this.relatedTestPlans.AddAll(relatedTestPlans);
             }
         }
 
@@ -777,7 +777,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (relatedTestScripts != null)
             {
-                AddAll(this.relatedTestScripts, relatedTestScripts);
+                this.relatedTestScripts.AddAll(relatedTestScripts);
             }
         }
 
@@ -812,7 +812,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (subjects != null)
             {
-                AddAll(this.subjects, subjects);
+                this.subjects.AddAll(subjects);
             }
         }
 
@@ -822,7 +822,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (testedByTestCases != null)
             {
-                AddAll(this.testedByTestCases, testedByTestCases);
+                this.testedByTestCases.AddAll(testedByTestCases);
             }
         }
 
@@ -837,7 +837,7 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (tracksChangeSets != null)
             {
-                AddAll(this.tracksChangeSets, tracksChangeSets);
+                this.tracksChangeSets.AddAll(tracksChangeSets);
             }
         }
 
@@ -847,21 +847,13 @@ namespace Org.Eclipse.Lyo.ChangeManagement
 
             if (tracksRequirements != null)
             {
-                AddAll(this.tracksRequirements, tracksRequirements);
+                this.tracksRequirements.AddAll(tracksRequirements);
             }
         }
 
         public void SetVerified(bool? verified)
         {
             this.verified = verified;
-        }
-
-        private static void AddAll<T>(ISet<T> set, T[] addins)
-        {
-            foreach (T elem in addins)
-            {
-                set.Add(elem);
-            }
         }
     }
 }

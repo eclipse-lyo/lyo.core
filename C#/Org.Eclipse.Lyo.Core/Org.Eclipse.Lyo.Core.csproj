@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\OslcCoreDeregistrationException.cs" />
+    <Compile Include="Exceptions\OslcCoreRegistrationException.cs" />
     <Compile Include="Exceptions\OslcCoreInvalidRepresentationException.cs" />
     <Compile Include="Exceptions\OslcCoreInvalidValueTypeException.cs" />
     <Compile Include="Exceptions\OslcCoreInvalidOccursException.cs" />
@@ -60,6 +63,18 @@
     <Compile Include="Model\AbstractResource.cs" />
     <Compile Include="Model\AnyResource.cs" />
     <Compile Include="Model\AbstractReifiedResource.cs" />
+    <Compile Include="Model\Compact.cs" />
+    <Compile Include="Model\Preview.cs" />
+    <Compile Include="Model\ServiceProviderCatalog.cs" />
+    <Compile Include="Model\Publisher.cs" />
+    <Compile Include="Model\OAuthConfiguration.cs" />
+    <Compile Include="Model\QueryCapability.cs" />
+    <Compile Include="Model\CreationFactory.cs" />
+    <Compile Include="Model\Dialog.cs" />
+    <Compile Include="Model\Service.cs" />
+    <Compile Include="Model\PrefixDefinition.cs" />
+    <Compile Include="Model\ServiceProvider.cs" />
+    <Compile Include="Model\OslcMediaType.cs" />
     <Compile Include="Model\XmlNamespace.cs" />
     <Compile Include="Model\Link.cs" />
     <Compile Include="Model\EnumerableWrapper.cs" />

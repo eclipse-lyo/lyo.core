@@ -23,6 +23,8 @@ using Org.Eclipse.Lyo.Core.Attribute;
 
 namespace Org.Eclipse.Lyo.Core.Model
 {
+    [OslcNamespace(OslcConstants.OSLC_CORE_NAMESPACE)]
+    [OslcResourceShape(title = "OSLC Resource Shape Resource Shape", describes = new string[] { OslcConstants.TYPE_RESOURCE_SHAPE })]
     public class ResourceShape : AbstractResource 
     {
         private SortedSet<Uri> describes = new SortedSet<Uri>();
