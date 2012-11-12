@@ -406,10 +406,17 @@ final class JsonHelper
         
         if (collectionType != null &&
                 OslcConstants.RDF_NAMESPACE.equals(collectionType.namespaceURI()) &&
+<<<<<<< HEAD   (85b8d3 Bug 390919: Add in Support for rdf:Alt, rdf:Bag and rdf:Seq)
                     (JSON_PROPERTY_SUFFIX_LIST.equals(collectionType.collectionType()))
                      || JSON_PROPERTY_SUFFIX_ALT.equals(collectionType.collectionType())
                      || JSON_PROPERTY_SUFFIX_BAG.equals(collectionType.collectionType())
                      || JSON_PROPERTY_SUFFIX_SEQ.equals(collectionType.collectionType()))
+=======
+                    (JSON_PROPERTY_SUFFIX_LIST.equals(collectionType.collectionType())
+                     || JSON_PROPERTY_SUFFIX_ALT.equals(collectionType.collectionType())
+                     || JSON_PROPERTY_SUFFIX_BAG.equals(collectionType.collectionType())
+                     || JSON_PROPERTY_SUFFIX_SEQ.equals(collectionType.collectionType())))
+>>>>>>> BRANCH (1d1c91 Bug 390919: Add in Support for rdf:Alt, rdf:Bag and rdf:Seq)
         {
            isRdfContainer = true;
         }
@@ -566,6 +573,7 @@ final class JsonHelper
                 listObject = newListObject;
             }
             
+<<<<<<< HEAD   (85b8d3 Bug 390919: Add in Support for rdf:Alt, rdf:Bag and rdf:Seq)
             JSONObject container = new JSONObject();
             
             container.put(rdfPrefix + JSON_PROPERTY_DELIMITER + collectionType.collectionType(),
@@ -575,6 +583,17 @@ final class JsonHelper
         }
         
         return null;        
+=======
+            return listObject;
+        }
+            
+        JSONObject container = new JSONObject();
+        
+        container.put(rdfPrefix + JSON_PROPERTY_DELIMITER + collectionType.collectionType(),
+                      jsonArray);
+       
+        return container;
+>>>>>>> BRANCH (1d1c91 Bug 390919: Add in Support for rdf:Alt, rdf:Bag and rdf:Seq)
     }
 
     private static void buildResource(final Map<String, String> namespaceMappings,
