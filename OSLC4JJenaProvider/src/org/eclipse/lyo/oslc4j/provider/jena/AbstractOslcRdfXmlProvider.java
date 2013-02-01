@@ -128,7 +128,11 @@ public abstract class AbstractOslcRdfXmlProvider
         // application/rdf+xml yields xml
         // applicaton/xml yields abbreviated xml
         final String serializationLanguage;
-        if (OslcMediaType.APPLICATION_RDF_XML_TYPE.isCompatible(baseMediaType))
+        if (OslcMediaType.TEXT_TURTLE_TYPE.equals(baseMediaType))
+        {
+        	serializationLanguage = FileUtils.langTurtle;
+        }
+        else if (OslcMediaType.APPLICATION_RDF_XML_TYPE.isCompatible(baseMediaType))
         {
             serializationLanguage = FileUtils.langXML;
         }
@@ -215,7 +219,11 @@ public abstract class AbstractOslcRdfXmlProvider
         // application/rdf+xml yields xml
         // applicaton/xml yields abbreviated xml
         final String serializationLanguage;
-        if (OslcMediaType.APPLICATION_RDF_XML_TYPE.isCompatible(baseMediaType))
+        if (OslcMediaType.TEXT_TURTLE_TYPE.equals(baseMediaType))
+        {
+        	serializationLanguage = FileUtils.langTurtle;
+        }
+        else if (OslcMediaType.APPLICATION_RDF_XML_TYPE.isCompatible(baseMediaType))
         {
             serializationLanguage = FileUtils.langXML;
         }
