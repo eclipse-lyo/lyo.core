@@ -105,4 +105,7 @@ public interface TRSConstants extends OslcConstants {
 	public static final String LDP_TERM_PAGE_OF = "pageOf";
 	public static final String LDP_PAGE_OF = LDP_NAMESPACE + LDP_TERM_PAGE_OF;
 	
+	//XSD Constants
+	public static final String XSD_NAMESPACE_PREFIX = "xsd";
+	public static final String XSD_NAMESPACE = "http://www.w3.org/2001/XMLSchema#";
 }
