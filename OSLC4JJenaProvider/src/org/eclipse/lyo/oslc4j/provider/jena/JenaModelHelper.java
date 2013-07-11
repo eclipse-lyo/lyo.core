@@ -333,35 +333,66 @@ public final class JenaModelHelper
 
         if (beanClass.getAnnotation(OslcResourceShape.class) != null)
         {
-            final String qualifiedName = TypeFactory.getQualifiedName(beanClass);
-
-            final ResIterator listSubjects = model.listSubjectsWithProperty(RDF.type,
-                                                                            model.getResource(qualifiedName));
-
-            if (listSubjects.hasNext())
-            {
-                final Map<Class<?>, Map<String, Method>> classPropertyDefinitionsToSetMethods = new HashMap<Class<?>, Map<String, Method>>();
-
-                while (listSubjects.hasNext())
-                {
-                    final Resource resource    = listSubjects.next();
-                    final Object   newInstance = beanClass.newInstance();
-                    final Map<String,Object> visitedResources = new HashMap<String, Object>();
-
-                    fromResource(classPropertyDefinitionsToSetMethods,
-                                 beanClass,
-                                 newInstance,
-                                 resource,
-                                 visitedResources);
-
-                    results.add(newInstance);
-                }
+        	
+            ResIterator listSubjects = null;
+            
+            // Fix for defect 412755
+            // keep the same behavior, i.e. use the class name fo match the resource rdf:type
+        	if (!OSLC4JUtils.useResourceShapeDescribes()) {
+	            final String qualifiedName = TypeFactory.getQualifiedName(beanClass);
+	            listSubjects = model.listSubjectsWithProperty(RDF.type, model.getResource(qualifiedName));
+	            createObjectResultList(beanClass, results, listSubjects);
+        	}
+            else {
+            	// consider describes parameter when matching the resource rdf:type
+            	OslcResourceShape rShapeAnnotation = beanClass.getAnnotation(OslcResourceShape.class);
+            	String describes[] = rShapeAnnotation.describes();
+            	if (null != describes) {
+            		for (String resourceShapeType : describes) {
+            			listSubjects = model.listSubjectsWithProperty(RDF.type, model.getResource(resourceShapeType));
+            			createObjectResultList(beanClass, results, listSubjects);
+            		}
+            	}
+            	
+            	// try to match the resource rdf:type with the specified java class when it does not match the describes parameter
+                if (0 == results.size()) {
+    	            listSubjects = model.listSubjectsWithProperty(RDF.type);
+    	            createObjectResultList(beanClass, results, listSubjects);
+            	}
             }
+        	
         }
-
         return results.toArray((Object[]) Array.newInstance(beanClass,
                                                             results.size()));
     }
+
+	private static List<Object> createObjectResultList(final Class<?> beanClass,
+			List<Object> results, ResIterator listSubjects)
+			throws IllegalAccessException, InstantiationException,
+			DatatypeConfigurationException, InvocationTargetException,
+			OslcCoreApplicationException, URISyntaxException,
+			NoSuchMethodException {
+		if (listSubjects.hasNext())
+		{
+		    final Map<Class<?>, Map<String, Method>> classPropertyDefinitionsToSetMethods = new HashMap<Class<?>, Map<String, Method>>();
+		    while (listSubjects.hasNext())
+		    {
+		        final Resource resource    = listSubjects.next();
+		        final Object   newInstance = beanClass.newInstance();
+		        final Map<String,Object> visitedResources = new HashMap<String, Object>();
+		        
+		        fromResource(classPropertyDefinitionsToSetMethods,
+		                     beanClass,
+		                     newInstance,
+		                     resource,
+		                     visitedResources);
+		        
+		        results.add(newInstance);
+		    }
+		}
+
+		return results;
+	}
 
     @SuppressWarnings("unchecked")
 	private static void fromResource(final Map<Class<?>, Map<String, Method>> classPropertyDefinitionsToSetMethods,
@@ -769,10 +800,9 @@ public final class JenaModelHelper
                                                                          setMethod);
                             }
     
-    
                             setMethod.invoke(bean,
                                              new Object[] {parameter});
-    
+
                             singleValueMethodsUsed.add(setMethod);
                         }
                     }

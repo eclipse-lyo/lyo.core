@@ -256,6 +256,10 @@ public class OslcRdfXmlProvider
         if ((objects != null) &&
             (objects.length > 0))
         {
+        	//Fix for defect 412755
+        	if (objects.length > 1 && OSLC4JUtils.useResourceShapeDescribes()) {
+        		throw new IOException("The returned resource object should not have more than one element.");
+        	}        	
             return objects[0];
         }
 

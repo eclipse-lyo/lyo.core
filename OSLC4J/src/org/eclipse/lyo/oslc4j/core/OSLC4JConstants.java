@@ -25,6 +25,8 @@ public interface OSLC4JConstants {
 	public static String OSLC4J_DISABLE_HOST_RESOLUTION = "org.eclipse.lyo.oslc4j.disableHostResolution";
 	public static String OSLC4J_DISABLE_RELATIVE_URIS = "org.eclipse.lyo.oslc4j.disableRelativeURIs";
 	
+	public static String OSLC4J_USE_RESOURCE_SHAPE_DESCRIBES = "org.eclipse.lyo.oslc4j.useOslcResourceShapeDescribesAttributeForParsing";
+	
     public static final Map<String, Object> OSL4J_PROPERTY_SINGLETON =
         new HashMap<String, Object>(0);
     
