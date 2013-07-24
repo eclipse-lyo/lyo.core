@@ -84,6 +84,7 @@ import org.eclipse.lyo.oslc4j.core.model.IReifiedResource;
 import org.eclipse.lyo.oslc4j.core.model.IResource;
 import org.eclipse.lyo.oslc4j.core.model.InheritedMethodAnnotationHelper;
 import org.eclipse.lyo.oslc4j.core.model.OslcConstants;
+import org.eclipse.lyo.oslc4j.core.model.ResponseInfo;
 import org.eclipse.lyo.oslc4j.core.model.TypeFactory;
 import org.eclipse.lyo.oslc4j.core.model.ValueType;
 import org.eclipse.lyo.oslc4j.core.model.XMLLiteral;
@@ -147,8 +148,7 @@ public final class JenaModelHelper
                   OslcCoreApplicationException
     {
         return createJenaModel(null,
-                               null,
-                               null,
+        					   null,
                                null,
                                objects,
                                null);
@@ -156,8 +156,7 @@ public final class JenaModelHelper
 
     static Model createJenaModel(final String              descriptionAbout,
                                  final String              responseInfoAbout,
-                                 final String              nextPageAbout,
-                                 final Integer             totalCount,
+                                 final ResponseInfo<?>		   responseInfo,
                                  final Object[]            objects,
                                  final Map<String, Object> properties)
            throws DatatypeConfigurationException,
@@ -170,7 +169,7 @@ public final class JenaModelHelper
         final Map<String, String> namespaceMappings = new HashMap<String, String>();
 
         Resource descriptionResource = null;
-
+        
         if (descriptionAbout != null)
         {
             descriptionResource = model.createResource(descriptionAbout);
@@ -180,15 +179,27 @@ public final class JenaModelHelper
                 final Resource responseInfoResource = model.createResource(responseInfoAbout,
                                                                            model.createProperty(OslcConstants.TYPE_RESPONSE_INFO));
 
-                responseInfoResource.addProperty(model.createProperty(OslcConstants.OSLC_CORE_NAMESPACE,
-                                                                      PROPERTY_TOTAL_COUNT),
-                                                 String.valueOf(totalCount == null ? objects.length : totalCount));
-                
-                if (nextPageAbout != null)
+                if (responseInfo != null) 
                 {
-                    responseInfoResource.addProperty(model.createProperty(OslcConstants.OSLC_CORE_NAMESPACE,
-                                                                          PROPERTY_NEXT_PAGE),
-                                                     nextPageAbout);
+                	
+                	responseInfoResource.addProperty(model.createProperty(OslcConstants.OSLC_CORE_NAMESPACE,
+                                                                      	PROPERTY_TOTAL_COUNT),
+                                                                      String.valueOf(responseInfo.totalCount() == null ? objects.length : responseInfo.totalCount()));
+                
+                	if (responseInfo.nextPage() != null)
+                	{
+                		responseInfoResource.addProperty(model.createProperty(OslcConstants.OSLC_CORE_NAMESPACE,
+                                                                          	PROPERTY_NEXT_PAGE),
+                                                                          	responseInfo.nextPage());
+                	}
+                
+                	Map<IExtendedResource,Resource> visitedResources = new HashMap<IExtendedResource,Resource>();
+                	handleExtendedProperties(ResponseInfo.class, 
+                							model, 
+                							responseInfoResource, 
+                							(IExtendedResource) responseInfo, 
+                							properties, 
+                							visitedResources);
                 }
             }
         }

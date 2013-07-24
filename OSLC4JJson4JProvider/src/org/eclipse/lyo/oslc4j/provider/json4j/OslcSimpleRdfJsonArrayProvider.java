@@ -64,7 +64,6 @@ public final class OslcSimpleRdfJsonArrayProvider
                 null,
                 null,
                 null,
-                null,
                 null);
     }
 }

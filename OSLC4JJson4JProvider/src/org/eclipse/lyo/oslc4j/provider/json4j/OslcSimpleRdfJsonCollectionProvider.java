@@ -80,7 +80,6 @@ public final class OslcSimpleRdfJsonCollectionProvider
                 null,
                 null,
                 null,
-                null,
                 null);
     }
 }

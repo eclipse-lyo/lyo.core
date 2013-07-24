@@ -149,8 +149,7 @@ public final class OslcRdfJsonProvider
         Map<String, Object>             properties = null;
         String                          descriptionURI = null;
         String                          responseInfoURI = null;
-        String                          nextPageURI = null;
-        Integer                         totalCount = null;
+        ResponseInfo<?>					responseInfo = null;
         
         if (object instanceof FilteredResource<?>)
         {
@@ -184,8 +183,7 @@ public final class OslcRdfJsonProvider
                     objects = collection.toArray(new Object[collection.size()]);
                 }
                 
-                nextPageURI = ((ResponseInfo<?>)filteredResource).nextPage();
-                totalCount = ((ResponseInfo<?>)filteredResource).totalCount();
+                responseInfo = (ResponseInfo<?>)filteredResource;
             }
             else
             {
@@ -217,8 +215,7 @@ public final class OslcRdfJsonProvider
                 properties,
                 descriptionURI,
                 responseInfoURI,
-                nextPageURI,
-                totalCount);
+                responseInfo);
     }
 
     @Override

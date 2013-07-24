@@ -30,7 +30,7 @@ public abstract class ResponseInfo<T extends Object>
     ResponseInfo(
         T resource,
         Map<String, Object> properties,
-        int totalCount,
+        Integer totalCount,
         String nextPage
     )
     {
@@ -44,7 +44,7 @@ public abstract class ResponseInfo<T extends Object>
     ResponseInfo(
         T resource,
         Map<String, Object> properties,
-        int totalCount,
+        Integer totalCount,
         URI nextPage
     )
     {
@@ -52,12 +52,12 @@ public abstract class ResponseInfo<T extends Object>
              nextPage == null ? null : nextPage.toString());
     }
     
-    public int
+    public Integer
     totalCount() { return totalCount; }
     
     public String
     nextPage() { return nextPage; }
     
-    private final int totalCount;
+    private final Integer totalCount;
     private final String nextPage;
 }

@@ -30,7 +30,7 @@ public class ResponseInfoCollection<T extends Object> extends ResponseInfo<Colle
     ResponseInfoCollection(
         Collection<T> collection,
         Map<String, Object> properties,
-        int totalCount,
+        Integer totalCount,
         String nextPage
     )
     {
@@ -41,7 +41,7 @@ public class ResponseInfoCollection<T extends Object> extends ResponseInfo<Colle
     ResponseInfoCollection(
         Collection<T> collection,
         Map<String, Object> properties,
-        int totalCount,
+        Integer totalCount,
         URI nextPage
     )
     {
