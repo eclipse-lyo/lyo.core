@@ -29,7 +29,7 @@ public class ResponseInfoArray<T extends Object> extends ResponseInfo<T[]>
     ResponseInfoArray(
         T[] array,
         Map<String, Object> properties,
-        int totalCount,
+        Integer totalCount,
         String nextPage
     )
     {
@@ -40,7 +40,7 @@ public class ResponseInfoArray<T extends Object> extends ResponseInfo<T[]>
     ResponseInfoArray(
         T[] array,
         Map<String, Object> properties,
-        int totalCount,
+        Integer totalCount,
         URI nextPage
     )
     {

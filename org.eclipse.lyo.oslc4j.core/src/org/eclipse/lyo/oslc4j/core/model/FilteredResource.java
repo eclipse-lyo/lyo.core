@@ -22,7 +22,7 @@ import java.util.Map;
  * Wrapper for resources to pass in properties map to filter output
  * to a subset of the resource's properties
  */
-public class FilteredResource<T extends Object>
+public class FilteredResource<T extends Object> extends AbstractResource
 {
     public
     FilteredResource(
