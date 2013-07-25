@@ -217,8 +217,11 @@ public final class JsonHelper
 
                 if (nextPageAbout != null)
                 {
+                	final JSONObject nextPageJSONObject = new JSONObject();
+                	nextPageJSONObject.put(rdfPrefix + JSON_PROPERTY_DELIMITER + JSON_PROPERTY_SUFFIX_RESOURCE,
+                            nextPageAbout);                
                     responseInfoJSONObject.put(oslcPrefix + JSON_PROPERTY_DELIMITER + JSON_PROPERTY_SUFFIX_NEXT_PAGE,
-                                               nextPageAbout);
+                    		nextPageJSONObject);
                 }
                 
                 final JSONArray responseInfoTypesJSONArray = new JSONArray();
