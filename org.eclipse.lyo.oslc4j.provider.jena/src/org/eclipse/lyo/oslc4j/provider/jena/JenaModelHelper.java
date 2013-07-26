@@ -90,6 +90,7 @@ import org.eclipse.lyo.oslc4j.core.model.XMLLiteral;
 import org.w3c.dom.Element;
 
 import com.hp.hpl.jena.datatypes.DatatypeFormatException;
+import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
 import com.hp.hpl.jena.datatypes.xsd.impl.XMLLiteralType;
@@ -104,6 +105,7 @@ import com.hp.hpl.jena.rdf.model.RSIterator;
 import com.hp.hpl.jena.rdf.model.ReifiedStatement;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.SimpleSelector;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
@@ -308,12 +310,14 @@ public final class JenaModelHelper
         final Object   newInstance = beanClass.newInstance();
         final Map<Class<?>, Map<String, Method>> classPropertyDefinitionsToSetMethods = new HashMap<Class<?>, Map<String, Method>>();
         final Map<String,Object> visitedResources = new HashMap<String, Object>();
-
+        final List<String> rdfTypesList = new ArrayList<String>();
+        
         fromResource(classPropertyDefinitionsToSetMethods,
                      beanClass,
                      newInstance,
                      resource,
-                     visitedResources);
+                     visitedResources,
+                     rdfTypesList);
 
         return newInstance;
     }
@@ -334,42 +338,84 @@ public final class JenaModelHelper
 
         if (beanClass.getAnnotation(OslcResourceShape.class) != null)
         {
-            final String qualifiedName = TypeFactory.getQualifiedName(beanClass);
-
-            final ResIterator listSubjects = model.listSubjectsWithProperty(RDF.type,
-                                                                            model.getResource(qualifiedName));
-
-            if (listSubjects.hasNext())
-            {
-                final Map<Class<?>, Map<String, Method>> classPropertyDefinitionsToSetMethods = new HashMap<Class<?>, Map<String, Method>>();
-
-                while (listSubjects.hasNext())
-                {
-                    final Resource resource    = listSubjects.next();
-                    final Object   newInstance = beanClass.newInstance();
-                    final Map<String,Object> visitedResources = new HashMap<String, Object>();
-
-                    fromResource(classPropertyDefinitionsToSetMethods,
-                                 beanClass,
-                                 newInstance,
-                                 resource,
-                                 visitedResources);
-
-                    results.add(newInstance);
-                }
-            }
+        	ResIterator listSubjects = null;
+        	
+            // Fix for defect 412755
+            // keep the same behavior, i.e. use the class name to match the resource rdf:type
+        	if (!OSLC4JUtils.useBeanClassForParsing()) {
+        	
+	            final String qualifiedName = TypeFactory.getQualifiedName(beanClass);
+				listSubjects = model.listSubjectsWithProperty(RDF.type,
+						model.getResource(qualifiedName));
+				List<Resource> resourceList = listSubjects.toList();
+				createObjectResultList(beanClass, results, resourceList);	
+        	}
+        	else {
+        		// get the list of subjects that have rdf:type element
+        		listSubjects = model.listSubjectsWithProperty(RDF.type);
+        		
+        		List<Resource> resourceList = new ArrayList<Resource>();
+        		
+				// iterate over the list of subjects to create a list of
+				// subjects that does not contain inline resources
+        		while (listSubjects.hasNext()) {
+        			final Resource resource = listSubjects.next();
+        			
+					// check if the current resource is not an inline resource,
+					// i.e, check if it does not have a parent node
+                    SimpleSelector selector = new SimpleSelector(null, null, (RDFNode) resource);
+                    StmtIterator listStatements = model.listStatements(selector);
+                	if (!listStatements.hasNext()) {
+						// the current resource is not an inline resource, it
+						// should be considered in the list of subjects
+                		resourceList.add(resource);
+                	}
+        		}
+        		
+	            createObjectResultList(beanClass, results, resourceList);
+        	}
+        
         }
-
         return results.toArray((Object[]) Array.newInstance(beanClass,
                                                             results.size()));
     }
 
+	private static List<Object> createObjectResultList(final Class<?> beanClass,
+			List<Object> results, List<Resource> listSubjects)
+			throws IllegalAccessException, InstantiationException,
+			DatatypeConfigurationException, InvocationTargetException,
+			OslcCoreApplicationException, URISyntaxException,
+			NoSuchMethodException {
+		if (null != listSubjects) {
+			
+            final Map<Class<?>, Map<String, Method>> classPropertyDefinitionsToSetMethods = new HashMap<Class<?>, Map<String, Method>>();
+
+            for (final Resource resource : listSubjects) {
+                final Object   newInstance = beanClass.newInstance();
+                final Map<String,Object> visitedResources = new HashMap<String, Object>();
+                final List<String> rdfTypesList = new ArrayList<String>();
+                
+                fromResource(classPropertyDefinitionsToSetMethods,
+                             beanClass,
+                             newInstance,
+                             resource,
+                             visitedResources,
+                             rdfTypesList);
+
+                results.add(newInstance);
+            }
+        }
+
+		return results;
+	}
+	
     @SuppressWarnings("unchecked")
 	private static void fromResource(final Map<Class<?>, Map<String, Method>> classPropertyDefinitionsToSetMethods,
                                      final Class<?>                           beanClass,
                                      final Object                             bean,
                                      final Resource                           resource,
-                                           Map<String,Object>                 visitedResources)
+                                           Map<String,Object>                 visitedResources,
+                                           List<String> 					  rdfTypesList)
             throws DatatypeConfigurationException,
                    IllegalAccessException,
                    IllegalArgumentException,
@@ -437,6 +483,10 @@ public final class JenaModelHelper
         	extendedProperties = null;
         }
         
+		// fix for Bug 412789
+		// this piece of code populates the list of resource rdf type
+		rdfTypesList = getRdfTypesListFromResource(resource, rdfTypesList);
+		
         while (listProperties.hasNext())
         {
             final Statement statement = listProperties.next();
@@ -473,7 +523,7 @@ public final class JenaModelHelper
                 			prefix = generatePrefix(resource.getModel(), predicate.getNameSpace());
                 		}
                 		final QName key = new QName(predicate.getNameSpace(), predicate.getLocalName(), prefix);
-                		final Object value = handleExtendedPropertyValue(beanClass, object, visitedResources);
+                		final Object value = handleExtendedPropertyValue(beanClass, object, visitedResources, key, rdfTypesList);
                 		final Object previous = extendedProperties.get(key);
                 		if (previous == null)
                 		{
@@ -705,7 +755,8 @@ public final class JenaModelHelper
                                          setMethodComponentParameterClass,
                                          nestedBean,
                                          nestedResource,
-                                         visitedResources);
+                                         visitedResources,
+                                         rdfTypesList);
     
                             parameter = nestedBean;
                         }
@@ -743,7 +794,8 @@ public final class JenaModelHelper
     						    		reifiedClass,
     	                                reifiedResource,
     	                                reifiedStatement,
-    	                                visitedResources);
+    	                                visitedResources,
+    	                                rdfTypesList);
     					    }
     					    
                     		parameter = reifiedResource;
@@ -855,6 +907,35 @@ public final class JenaModelHelper
         }
     }
 
+	/**
+	 * Returns a list of rdf:types for a given resource object. If the list was
+	 * populated before, returns the given list. This list will only be
+	 * populated if the property inferTypeFromShape is set to true.
+	 * 
+	 * @param resource
+	 * @param rdfTypesList
+	 * @return List of rdf:types
+	 */
+	private static List<String> getRdfTypesListFromResource(final Resource resource, List<String> rdfTypesList) {
+		// The list of rdf:types will be populated only if the property
+		// inferTypeFromShape is set and if the list was not populated before.
+		// This is necessary because for an inline resource, the retuned
+		// rdf:type is not from the parent resource, it is from the actual
+		// resource.
+		if (OSLC4JUtils.inferTypeFromShape() && rdfTypesList.isEmpty()) {
+			StmtIterator rdfTypesIterator = resource.listProperties(RDF.type);
+			while (rdfTypesIterator.hasNext()) {
+				Statement rdfTypeStmt = rdfTypesIterator.next();
+				RDFNode object = rdfTypeStmt.getObject();
+				if (object.isResource()) {
+					String rdfType = object.asResource().getURI();
+					rdfTypesList.add(rdfType);
+				}
+			}
+		}
+		return rdfTypesList;
+	}
+
     private static boolean isRdfCollectionResource(Model model, RDFNode object)
     {
         if (object.isResource())
@@ -897,7 +978,9 @@ public final class JenaModelHelper
 
 	private static Object handleExtendedPropertyValue(final Class<?> beanClass,
 												      final RDFNode object,
-												            Map<String,Object> visitedResources)
+												            Map<String,Object> visitedResources,
+												      final QName propertyQName,
+												      List<String> rdfTypesList)
 			throws URISyntaxException,
 				   IllegalArgumentException,
 				   SecurityException,
@@ -913,6 +996,27 @@ public final class JenaModelHelper
 			try
 			{
 				final Literal literal = object.asLiteral();
+				
+				// fix for Bug 412789
+				if (OSLC4JUtils.inferTypeFromShape()) {
+
+					// get property data type
+					RDFDatatype dataType = literal.getDatatype();
+					
+					// infer the data type from the Resource Shape only if the
+					// data type was not explicit passed in the original request
+					if (null == dataType) {
+						Object newObject = OSLC4JUtils.getValueBasedOnResourceShapeType(rdfTypesList, propertyQName, literal.getString());
+						
+						// return the value only if the type was really inferred
+						// from the resource shape, otherwise keep the same
+						// behavior, i.e., return a String value
+						if (null != newObject) {
+							return newObject;
+						}
+					}
+				}
+				
 				final Object literalValue = literal.getValue();
 				if (literalValue instanceof XSDDateTime)
 				{
@@ -945,7 +1049,8 @@ public final class JenaModelHelper
                          AnyResource.class,
                          any,
                          nestedResource,
-                         visitedResources);
+                         visitedResources,
+                         rdfTypesList);
 
             return any;
 		}
