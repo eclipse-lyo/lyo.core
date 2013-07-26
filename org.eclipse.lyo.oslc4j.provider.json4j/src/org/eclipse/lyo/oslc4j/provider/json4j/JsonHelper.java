@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -390,13 +391,15 @@ public final class JsonHelper
                     final JSONObject resourceJSONObject = (JSONObject) object;
 
                     final Object bean = beanClass.newInstance();
-
+                    List<String> rdfTypesList = new ArrayList<String>();
+                    
                     fromJSON(rdfPrefix,
                              namespaceMappings,
                              classPropertyDefinitionsToSetMethods,
                              resourceJSONObject,
                              beanClass,
-                             bean);
+                             bean,
+                             rdfTypesList);
 
                     beans.add(bean);
                 }
@@ -405,13 +408,15 @@ public final class JsonHelper
         else
         {
             final Object bean = beanClass.newInstance();
-
+            List<String> rdfTypesList = new ArrayList<String>();
+            
             fromJSON(rdfPrefix,
                      namespaceMappings,
                      classPropertyDefinitionsToSetMethods,
                      jsonObject,
                      beanClass,
-                     bean);
+                     bean,
+                     rdfTypesList);
 
             beans.add(bean);
         }
@@ -1363,12 +1368,49 @@ public final class JsonHelper
         }
     }
 
+	/**
+	 * Returns a list of rdf:types for a given json object. If the list was
+	 * populated before, returns the given list. This list will only be
+	 * populated if the property inferTypeFromShape is set to true.
+	 * 
+	 * @param jsonObject
+	 * @param rdfPrefix
+	 * @param rdfTypesList
+	 * @return List of rdf:types
+	 */
+    private static List<String> getRdfTypesListFromJsonObject(JSONObject jsonObject, String rdfPrefix, List<String> rdfTypesList) {
+		// The list of rdf:types will be populated only if the property
+		// inferTypeFromShape is set and if the list was not populated before.
+		// This is necessary because for an inline object, the retuned
+		// rdf:type is not from the parent object, it is from the actual
+		// resource.
+    	if (OSLC4JUtils.inferTypeFromShape() && rdfTypesList.isEmpty()) {
+			final String typeProperty = rdfPrefix + JSON_PROPERTY_DELIMITER + JSON_PROPERTY_SUFFIX_TYPE;
+			if (jsonObject.has(typeProperty)) {
+				try {
+					JSONArray array = jsonObject.getJSONArray(typeProperty);
+					for (int i = 0; i < array.size(); ++i) {
+						final JSONObject typeObj = array.getJSONObject(i);
+						String resTypePropertyValue = typeObj.getString(rdfPrefix + JSON_PROPERTY_DELIMITER + JSON_PROPERTY_SUFFIX_RESOURCE);
+						rdfTypesList.add(resTypePropertyValue);
+					}
+				}
+				catch (JSONException e)
+				{
+					throw new IllegalArgumentException(e);
+				}
+			}
+    	}
+    	return rdfTypesList;
+    }
+    
     private static void fromJSON(final String                             rdfPrefix,
                                  final Map<String, String>                jsonNamespaceMappings,
                                  final Map<Class<?>, Map<String, Method>> classPropertyDefinitionsToSetMethods,
                                  final JSONObject                         jsonObject,
                                  final Class<?>                           beanClass,
-                                 final Object                             bean)
+                                 final Object                             bean,
+                                 List<String> 							  rdfTypesList)
             throws DatatypeConfigurationException,
                    IllegalAccessException,
                    IllegalArgumentException,
@@ -1446,6 +1488,10 @@ public final class JsonHelper
         	extendedProperties = null;
         }
         
+		// fix for Bug 412789
+		// this piece of code populates the list of rdf types
+		rdfTypesList = getRdfTypesListFromJsonObject(jsonObject, rdfPrefix, rdfTypesList);
+        
         @SuppressWarnings("unchecked")
         final Set<Map.Entry<String, Object>> entrySet = jsonObject.entrySet();
 
@@ -1508,14 +1554,16 @@ public final class JsonHelper
                     	}
                     	else
                     	{
+                    		final QName qName = new QName(namespace,
+			                          name,
+			                          namespacePrefix);
+                    		
                     		final Object value = fromExtendedJSONValue(jsonValue,
                     			                                       rdfPrefix,
                     			                                       jsonNamespaceMappings,
-                    			                                       beanClass);
-                    		final QName qName = new QName(namespace,
-                    			                          name,
-                    			                          namespacePrefix);
-                    		
+                    			                                       beanClass,
+                    			                                       qName,
+                    			                                       rdfTypesList);
                     		extendedProperties.put(qName, value);
                     	}
                     }
@@ -1555,7 +1603,8 @@ public final class JsonHelper
                                                            setMethod,
                                                            setMethodParameterClass,
                                                            setMethodComponentParameterClass,
-                                                           jsonValue);
+                                                           jsonValue,
+                                                           rdfTypesList);
 
                     if (parameter != null)
                     {
@@ -1575,7 +1624,9 @@ public final class JsonHelper
 	private static Object fromExtendedJSONValue(final Object jsonValue,
 			                                    final String rdfPrefix,
 			                                    final Map<String, String> jsonNamespaceMappings,
-			                                    final Class<?> beanClass)
+			                                    final Class<?> beanClass,
+			                                    final QName propertyQName,
+			                                    List<String> rdfTypesList)
 			throws DatatypeConfigurationException,
 			       URISyntaxException,
 			       IllegalArgumentException,
@@ -1591,7 +1642,7 @@ public final class JsonHelper
 			final Iterator<?> i = jsonArray.iterator();
 			while (i.hasNext())
 			{
-				collection.add(fromExtendedJSONValue(i.next(), rdfPrefix, jsonNamespaceMappings, beanClass));
+				collection.add(fromExtendedJSONValue(i.next(), rdfPrefix, jsonNamespaceMappings, beanClass, propertyQName, rdfTypesList));
 			}
 
 			return collection;
@@ -1622,12 +1673,33 @@ public final class JsonHelper
 				     new HashMap<Class<?>, Map<String, Method>>(),
 				     o,
 				     AnyResource.class,
-				     any);
+				     any,
+				     rdfTypesList);
 			
 			return any;
 		}
 		else if (jsonValue instanceof String)
 		{
+
+			// fix for Bug 412789
+			// try to infer the data type from resource shapes for Strings
+			if (OSLC4JUtils.inferTypeFromShape()) {
+				
+				Object newObject = OSLC4JUtils.getValueBasedOnResourceShapeType(rdfTypesList, propertyQName, jsonValue);
+				
+				// return the value only if the type was really inferred from
+				// the resource shape, otherwise keep the same behavior
+				if (null != newObject) {
+					
+					// return the new value only for ambiguous case
+					if ((newObject instanceof String)
+							|| (newObject instanceof XMLLiteral)
+							|| (newObject instanceof Date)) {
+						return newObject;
+					}
+				}
+			}
+
 			// Check if it's in the OSLC date format.
 			try
 			{
@@ -1640,6 +1712,35 @@ public final class JsonHelper
 				// It's not a date. Treat it as a string.
 				return jsonValue;
 			}
+		}
+		else if (jsonValue instanceof Integer) {
+			
+			// fix for Bug 412789
+			// There is no need to infer data type from resource shapes as
+			// integer values do not have ambiguity cases
+			return jsonValue;
+			
+		}
+		else if (jsonValue instanceof Double) {
+
+			// fix for Bug 412789
+			// try to infer data type from resource shapes for Double
+			if (OSLC4JUtils.inferTypeFromShape()) {
+				Object newObject = OSLC4JUtils.getValueBasedOnResourceShapeType(rdfTypesList, propertyQName, jsonValue);
+				
+				// return the value only if the type was really inferred from
+				// the resource shape, otherwise keep the same behavior
+				if (null != newObject) {
+					
+					// return the new value only for ambiguous case
+					if ((newObject instanceof Double)
+							|| (newObject instanceof Float)
+							|| (newObject instanceof BigDecimal)) {
+						return newObject;
+					}
+				}
+			}
+			
 		}
 
 		return jsonValue;
@@ -1734,7 +1835,8 @@ public final class JsonHelper
                                         final Method                             setMethod,
                                         final Class<?>                           setMethodParameterClass,
                                         final Class<?>                           setMethodComponentParameterClass,
-                                        final Object                             jsonValue)
+                                        final Object                             jsonValue,
+                                        List<String> 							 rdfTypesList)
             throws DatatypeConfigurationException,
                    IllegalAccessException,
                    IllegalArgumentException,
@@ -1806,7 +1908,8 @@ public final class JsonHelper
                      classPropertyDefinitionsToSetMethods,
                      nestedJSONObject,
                      setMethodComponentParameterClass,
-                     nestedBean);
+                     nestedBean,
+                     rdfTypesList);
 
             return nestedBean;
         }
@@ -1857,7 +1960,8 @@ public final class JsonHelper
                                                                   setMethod,
                                                                   setMethodComponentParameterClass,
                                                                   setMethodComponentParameterClass,
-                                                                  jsonArrayEntryObject);
+                                                                  jsonArrayEntryObject,
+                                                                  rdfTypesList);
 
                 tempList.add(parameterArrayObject);
             }
