@@ -198,13 +198,14 @@ public class OSLC4JUtils {
 		UriBuilder builder = null;
 
 		final String pathInfo    = request.getPathInfo();
+		final String contextPath = request.getContextPath();
 	    final String servletPath = request.getServletPath();
 		final String configuredPublicURI = getPublicURI();
 	   
 		//public URI configured, use it - it includes the context
 		if (configuredPublicURI != null && !configuredPublicURI.isEmpty())
 		{
-			String uriToBuild = includePath ? (configuredPublicURI + "/" + servletPath + pathInfo) : configuredPublicURI;
+			String uriToBuild = includePath ? (configuredPublicURI + "/" + contextPath + servletPath + pathInfo) : configuredPublicURI;
 			builder = UriBuilder.fromUri(uriToBuild); //Normalize later
 		}
 		else
@@ -237,7 +238,6 @@ public class OSLC4JUtils {
 				hostName = request.getServerName();
 			}
 
-			String contextPath   = request.getContextPath();
 			String pathToBuild   = includePath ? (contextPath + servletPath + pathInfo) : contextPath; 
             builder = UriBuilder.fromPath(pathToBuild)
                                 .scheme(request.getScheme())
