@@ -176,7 +176,14 @@ public final class JenaModelHelper
         {
         	if(OSLC4JUtils.isQueryResultListAsContainer())
         	{
-        		descriptionResource = model.createResource(descriptionAbout, RDFS.Container);	
+        		descriptionResource = model.createResource(descriptionAbout, RDFS.Container);
+                Map<IExtendedResource,Resource> visitedResources = new HashMap<IExtendedResource,Resource>();
+                handleExtendedProperties(ResponseInfo.class, 
+                        model, 
+                        descriptionResource, 
+                        (IExtendedResource) responseInfo.getContainer(), 
+                        properties, 
+                        visitedResources);        		
         	} 
         	else
         	{
@@ -211,7 +218,7 @@ public final class JenaModelHelper
                 }
             }
         }
-
+        
         for (final Object object : objects)
         {
             handleSingleResource(descriptionResource,
