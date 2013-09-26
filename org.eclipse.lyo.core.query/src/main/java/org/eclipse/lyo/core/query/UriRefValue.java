@@ -21,5 +21,5 @@ package org.eclipse.lyo.core.query;
  */
 public interface UriRefValue extends Value
 {
-    PName value();
+    String value();
 }
