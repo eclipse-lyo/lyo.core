@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -160,7 +161,8 @@ public final class ResourceShapeFactory {
 		return resourceShape;
 	}
 
-	private static Property createProperty(final String baseURI, final Class<?> resourceClass, final Method method, final OslcPropertyDefinition propertyDefinitionAnnotation, final Set<Class<?>> verifiedClasses) throws OslcCoreApplicationException, URISyntaxException {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+    private static Property createProperty(final String baseURI, final Class<?> resourceClass, final Method method, final OslcPropertyDefinition propertyDefinitionAnnotation, final Set<Class<?>> verifiedClasses) throws OslcCoreApplicationException, URISyntaxException {
 		final String name;
 		final OslcName nameAnnotation = InheritedMethodAnnotationHelper.getAnnotation(method, OslcName.class);
 		if (nameAnnotation != null) {
@@ -250,9 +252,7 @@ public final class ResourceShapeFactory {
 
 		final OslcAllowedValue allowedValueAnnotation = InheritedMethodAnnotationHelper.getAnnotation(method, OslcAllowedValue.class);
 		if (allowedValueAnnotation != null) {
-			for (final String allowedValue : allowedValueAnnotation.value()) {
-				property.addAllowedValue(allowedValue);
-			}
+			property.setAllowedValuesCollection((Collection) Arrays.asList(allowedValueAnnotation.value()));
 		}
 
 		final OslcAllowedValues allowedValuesAnnotation = InheritedMethodAnnotationHelper.getAnnotation(method, OslcAllowedValues.class);
