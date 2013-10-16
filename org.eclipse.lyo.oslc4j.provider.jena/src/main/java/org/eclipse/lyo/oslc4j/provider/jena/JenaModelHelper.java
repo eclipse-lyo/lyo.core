@@ -1844,6 +1844,23 @@ public final class JenaModelHelper
                           nestedProperties);
 
             nestedNode = nestedResource;
+        } else {
+        	// Warn that one of the properties could not be serialized because it does not have the right annotations.
+        	String objectClassName = objectClass.getSimpleName();
+        	if ("".equals(objectClassName)) {
+        		objectClassName = objectClass.getName();
+        	}
+        	String subjectClassName = resourceClass.getSimpleName();
+        	if ("".equals(subjectClassName)) {
+        		subjectClassName = resourceClass.getName();
+        	}
+			logger.warning("Could not object "
+			        + objectClassName
+			        + " for "
+			        + subjectClassName
+			        + " method "
+			        + method.getName()
+			        + " because the object class does not have an OslcResourceShape annotation.");
         }
 
         if (nestedNode != null)
