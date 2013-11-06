@@ -45,6 +45,6 @@ public final class TypeFactory
     {
         final OslcName oslcNameAnnotation = objectClass.getAnnotation(OslcName.class);
 
-        return oslcNameAnnotation != null ? oslcNameAnnotation.value() : objectClass.getSimpleName();
+        return oslcNameAnnotation != null && !"".equals(oslcNameAnnotation.value())? oslcNameAnnotation.value() : objectClass.getSimpleName();
     }
 }
