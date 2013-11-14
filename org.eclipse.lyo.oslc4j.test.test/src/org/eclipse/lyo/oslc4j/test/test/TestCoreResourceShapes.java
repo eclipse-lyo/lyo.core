@@ -37,12 +37,6 @@ public class TestCoreResourceShapes
 {
     private static final Set<Class<?>> PROVIDERS = JenaProvidersRegistry.getProviders();
 
-    public void testAllowedValuesResourceShape()
-           throws URISyntaxException
-    {
-        testResourceShape(OslcConstants.TYPE_ALLOWED_VALUES, OslcConstants.PATH_ALLOWED_VALUES);
-    }
-
     public void testCompactResourceShape()
            throws URISyntaxException
     {
