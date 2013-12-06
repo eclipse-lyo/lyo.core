@@ -23,6 +23,7 @@ import java.net.URI;
 public enum ValueType {
     Boolean(OslcConstants.XML_NAMESPACE + "boolean"),
 	DateTime(OslcConstants.XML_NAMESPACE + "dateTime"),
+	Date(OslcConstants.XML_NAMESPACE + "date"),
 	Decimal(OslcConstants.XML_NAMESPACE + "decimal"),
 	Double(OslcConstants.XML_NAMESPACE + "double"),
 	Float(OslcConstants.XML_NAMESPACE + "float"),
