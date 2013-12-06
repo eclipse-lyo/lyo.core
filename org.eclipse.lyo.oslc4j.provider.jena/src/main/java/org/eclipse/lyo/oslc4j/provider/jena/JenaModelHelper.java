@@ -1435,7 +1435,25 @@ public final class JenaModelHelper
     	    
     		final Calendar cal = Calendar.getInstance();
     		cal.setTime((Date) value);
-    		resource.addProperty(property, model.createTypedLiteral(cal));
+    		// Check is it is a DateTime or a Date field
+    	    if ( cal.get(Calendar.SECOND) == 0  && 
+    	    	 cal.get(Calendar.MINUTE) == 0  &&
+    	    	 cal.get(Calendar.HOUR) == 0  ) 
+    	    {
+    	    	// This is highly probably to be a Date field
+        		XSDDateTime valuec = new XSDDateTime( cal);
+        		valuec.narrowType(XSDDatatype.XSDdate);
+        		String valueDate = valuec.toString();
+        		if ( valueDate != null && valueDate.endsWith("Z")){
+        			valueDate = valueDate.replaceAll("Z","");
+        		}        		
+        		resource.addProperty(property, model.createTypedLiteral(valueDate, XSDDatatype.XSDdate));
+    	    } 
+    	    else 
+    	    {
+        		resource.addProperty(property, model.createTypedLiteral(cal));	
+    	    }	
+    	    
     	}
     	else if (value instanceof XMLLiteral)
     	{
