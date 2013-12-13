@@ -418,6 +418,27 @@ public final class JenaModelHelper
         	}
         
         }
+        else if (URI.class.equals(beanClass)) 
+        {
+            StmtIterator containerIterator = model.listStatements(null, RDF.type, RDFS.Container);
+            if (containerIterator.hasNext()) 
+            {
+                Statement containerStatement = containerIterator.next();
+                Resource subject = containerStatement.getSubject();
+                StmtIterator memberIterator = model.listStatements(subject, RDFS.member, (RDFNode) null);
+                while (memberIterator.hasNext()) 
+                {
+                    Statement memberStatement = memberIterator.next();
+                    RDFNode memberObject = memberStatement.getObject();
+                    if (memberObject.isURIResource()) 
+                    {
+                        URI memberURI = URI.create(memberObject.asResource().getURI());
+                        results.add(memberURI);
+                    }
+                }                
+            }
+        }
+        
         return results.toArray((Object[]) Array.newInstance(beanClass,
                                                             results.size()));
     }
