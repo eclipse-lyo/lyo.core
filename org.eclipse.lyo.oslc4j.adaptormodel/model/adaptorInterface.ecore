@@ -52,6 +52,8 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="services" lowerBound="1"
         upperBound="-1" eType="#//Service" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="collectionID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="instanceID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Service">
     <eStructuralFeatures xsi:type="ecore:EReference" name="domainSpecification" lowerBound="1"
@@ -64,6 +66,8 @@
         eType="#//Dialog" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="creationDialogs" upperBound="-1"
         eType="#//Dialog" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="basicCapabilities" upperBound="-1"
+        eType="#//BasicCapability" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Resource">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -119,6 +123,13 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="resourceTypes" upperBound="-1"
         eType="#//Resource"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BasicCapability">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceTypes" upperBound="-1"
+        eType="#//Resource"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="instanceID" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="collectionIDRelativeToServiceProvider"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral=""/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Dialog">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

@@ -25,6 +25,8 @@
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::serviceServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderServices/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderCatalogServices/]
 
 [template public generateAdaptorManager(anAdaptorInterface : AdaptorInterface)]
 [file (javaClassFullFileNameForAdaptorManager(anAdaptorInterface), false, 'UTF-8')]
@@ -54,9 +56,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletContextEvent;
 import java.util.List;
 
-import [javaClassFullNameForServiceProviderInfo(anAdaptorInterface) /];
+import org.eclipse.lyo.oslc4j.core.model.ServiceProvider;
+
+[for (aServiceProvider: ServiceProvider | anAdaptorInterface.serviceProviderCatalog.serviceProviders)]
+import [javaClassFullNameForServiceProviderInfo(aServiceProvider) /];
+[/for]
 [for (aResource: Resource | relevantResources(anAdaptorInterface)->sortedBy(name))]
-		import [javaClassFullName(aResource, anAdaptorInterface) /];
+import [javaClassFullName(aResource, anAdaptorInterface) /];
 [/for]
 
 // [protected ('imports')]
@@ -107,16 +113,18 @@ public class [javaClassNameForAdaptorManager(anAdaptorInterface) /] {
 	[comment TODO: {PATTERNS} generate Genric code that allows developer to cache resources.
 	/]
 
-    public static [javaClassNameForServiceProviderInfo(anAdaptorInterface) /] [ '[' ']' /] getServiceProviderInfos(HttpServletRequest httpServletRequest)
+    [for (aServiceProvider: ServiceProvider | anAdaptorInterface.serviceProviderCatalog.serviceProviders)]
+    public static [javaClassNameForServiceProviderInfo(aServiceProvider) /] [ '[' ']' /] getServiceProviderInfos(HttpServletRequest httpServletRequest)
     {
-		[javaClassNameForServiceProviderInfo(anAdaptorInterface) /] [ '[' ']' /] serviceProviderInfos = {};
+		[javaClassNameForServiceProviderInfo(aServiceProvider) /] [ '[' ']' /] serviceProviderInfos = {};
 		// [protected ('(MUST_FILL_IN) getServiceProviderInfos userCode')]
 		// [/protected]
 		return serviceProviderInfos;
     }
+    [/for]
 
 	[for (aResource: Resource | servicedResources(anAdaptorInterface))]
-    public static [javaClassName(aResource) /] get[aResource.name.toUpperFirst() /](HttpServletRequest httpServletRequest, String [aResource.name.toLowerFirst() /]Id, String serviceProviderId)
+    public static [javaClassName(aResource) /] get[aResource.name.toUpperFirst() /](HttpServletRequest httpServletRequest[commaSeparate(instanceMethodSignature(aResource, anAdaptorInterface), true, false)/])
     {
 		[javaClassName(aResource) /] a[aResource.name.toUpperFirst() /] = null;
 		// [protected ('(MUST_FILL_IN) getResource userCode')]
@@ -124,7 +132,7 @@ public class [javaClassNameForAdaptorManager(anAdaptorInterface) /] {
 		return a[aResource.name.toUpperFirst() /];
     }
 
-    public static List<[javaClassName(aResource) /]> get[aResource.name.toUpperFirst() /]s(HttpServletRequest httpServletRequest, String serviceProviderId, int page, int limit)
+    public static List<[javaClassName(aResource) /]> get[aResource.name.toUpperFirst() /]s(HttpServletRequest httpServletRequest[commaSeparate(collectionMethodSignature(aResource, anAdaptorInterface), true, false)/], int page, int limit)
     {
 		List<[javaClassName(aResource) /]> [aResource.name.toLowerFirst() /]s = null;
 		// [protected ('(MUST_FILL_IN) getResources userCode')]
@@ -132,7 +140,7 @@ public class [javaClassNameForAdaptorManager(anAdaptorInterface) /] {
 		return [aResource.name.toLowerFirst() /]s;
     }
 
-    public static List<[javaClassName(aResource) /]> search[aResource.name.toUpperFirst() /]s(HttpServletRequest httpServletRequest, String serviceProviderId, String terms)
+    public static List<[javaClassName(aResource) /]> search[aResource.name.toUpperFirst() /]s(HttpServletRequest httpServletRequest[commaSeparate(collectionMethodSignature(aResource, anAdaptorInterface), true, false)/], String terms)
     {
 		List<[javaClassName(aResource) /]> [aResource.name.toLowerFirst() /]s = null;
 		// [protected ('(MUST_FILL_IN) searchResources userCode')]
@@ -140,7 +148,7 @@ public class [javaClassNameForAdaptorManager(anAdaptorInterface) /] {
 		return [aResource.name.toLowerFirst() /]s;
     }
 
-    public static [javaClassName(aResource) /] create[aResource.name.toUpperFirst() /](HttpServletRequest httpServletRequest, final [javaClassName(aResource) /] a[aResource.name.toUpperFirst() /], final String serviceProviderId)
+    public static [javaClassName(aResource) /] create[aResource.name.toUpperFirst() /](HttpServletRequest httpServletRequest, final [javaClassName(aResource) /] a[aResource.name.toUpperFirst()/][commaSeparate(collectionMethodSignature(aResource, anAdaptorInterface), true, false)/])
     {
 		[javaClassName(aResource) /] new[aResource.name.toUpperFirst() /] = null;
 		// [protected ('(MUST_FILL_IN) createResource userCode')]
@@ -155,6 +163,20 @@ public class [javaClassNameForAdaptorManager(anAdaptorInterface) /] {
 		// [/protected]
 		return eTag;
     }
+
+/*
+    public static ServiceProvider get[aResource.name.toUpperFirst() /]sManagingServiceProvider(HttpServletRequest httpServletRequest, final [javaClassName(aResource) /] a[aResource.name.toUpperFirst()/][commaSeparate(instanceMethodSignature(aResource, anAdaptorInterface), true, false)/])
+    {
+        ServiceProvider aServiceProvider = null;
+        [if (aResource.idRelativeToServiceProvider(anAdaptorInterface))]
+        //aServiceProvider can be deduced automatically, since the resource's id is relative to that of its serviceProvider.
+        aServiceProvider = [javaClassNameForSingleton(anAdaptorInterface.serviceProviderCatalog) /].getServiceProvider(httpServletRequest[commaSeparate(instanceMethodParameterList(managingServiceProviders(aResource, anAdaptorInterface)->any(true)), true, false)/]);
+        [/if]
+        // [protected ('(MUST_FILL_IN) getResourcesManagingServiceProvider userCode')]
+        // [/protected]
+        return aServiceProvider;
+    }
+*/
 	[/for]
 
 }
