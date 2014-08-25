@@ -15,6 +15,7 @@
  *     Alberto Giammaria    - initial API and implementation
  *     Chris Peters         - initial API and implementation
  *     Gianluca Bernardini  - initial API and implementation
+ *     Romain Barth			- unparseable literal
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.provider.jena;
 
@@ -50,6 +51,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+//import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,6 +68,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.lyo.oslc4j.core.NestedWildcardProperties;
 import org.eclipse.lyo.oslc4j.core.OSLC4JConstants;
 import org.eclipse.lyo.oslc4j.core.OSLC4JUtils;
+import org.eclipse.lyo.oslc4j.core.UnparseableLiteral;
 import org.eclipse.lyo.oslc4j.core.OslcGlobalNamespaceProvider;
 import org.eclipse.lyo.oslc4j.core.SingletonWildcardProperties;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcName;
@@ -392,6 +395,7 @@ public final class JenaModelHelper
 				listSubjects = model.listSubjectsWithProperty(RDF.type,
 						model.getResource(qualifiedName));
 				List<Resource> resourceList = listSubjects.toList();
+				
 				createObjectResultList(beanClass, results, resourceList);	
         	}
         	else {
@@ -547,22 +551,24 @@ public final class JenaModelHelper
 		
         while (listProperties.hasNext())
         {
-            final Statement statement = listProperties.next();
+        	
+        	final Statement statement = listProperties.next();
             final Property  predicate = statement.getPredicate();
             final RDFNode   object    = statement.getObject();
-
             final String uri       = predicate.getURI();
             final Method setMethod = setMethodMap.get(uri);
+                         
             if (setMethod == null)
             {
                 if (RDF_TYPE_URI.equals(uri))
                 {
                     if (extendedResource != null)
                     {
-                        final URI type = new URI(object.asResource().getURI());
+                    	final URI type = new URI(object.asResource().getURI());
                         extendedResource.addType(type);
                     }
                     // Otherwise ignore missing propertyDefinition for rdf:type.
+                    
                 }
                 else
                 {
@@ -575,6 +581,7 @@ public final class JenaModelHelper
                 	}
                 	else
                 	{
+                		
                 		String prefix = resource.getModel().getNsURIPrefix(predicate.getNameSpace());
                 		if (prefix == null)
                 		{
@@ -583,34 +590,36 @@ public final class JenaModelHelper
                 		final QName key = new QName(predicate.getNameSpace(), predicate.getLocalName(), prefix);
                 		final Object value = handleExtendedPropertyValue(beanClass, object, visitedResources, key, rdfTypes);
                 		final Object previous = extendedProperties.get(key);
+                		
                 		if (previous == null)
-                		{
-                			extendedProperties.put(key, value);
-                		}
-                		else
-                		{
-                			final Collection<Object> collection;
-                			if (previous instanceof Collection)
-                			{
-                				collection = ((Collection<Object>) previous);
-                			}
-                			else
-                			{
-                				collection = new ArrayList<Object>();
-                				collection.add(previous);
-                				extendedProperties.put(key, collection);
-                			}
-
-                			collection.add(value);
-                		}
-                	}
+	                	{
+	                		extendedProperties.put(key, value);
+	                	}
+	                	else
+	                	{
+	                		final Collection<Object> collection;
+	                		if (previous instanceof Collection)
+	                		{
+	                			collection = ((Collection<Object>) previous);
+	                		}
+	                		else
+	                		{
+	                			collection = new ArrayList<Object>();
+	                			collection.add(previous);
+	                			extendedProperties.put(key, collection);
+	                		}
+	                			collection.add(value);
+	               		}
+                   	}
                 }
             }
             else
             {
-                Class<?> setMethodComponentParameterClass = setMethod.getParameterTypes()[0];
+            	
+            	Class<?> setMethodComponentParameterClass = setMethod.getParameterTypes()[0];
                 
                 boolean multiple = setMethodComponentParameterClass.isArray();
+               
                 if (multiple)
                 {
                     setMethodComponentParameterClass = setMethodComponentParameterClass.getComponentType();
@@ -1048,17 +1057,18 @@ public final class JenaModelHelper
 				   InvocationTargetException,
 				   OslcCoreApplicationException,
 				   NoSuchMethodException
+				   
 	{
 		if (object.isLiteral())
 		{
+			
 			final Literal literal = object.asLiteral();
-
 			// fix for Bug 412789
 			if (OSLC4JUtils.inferTypeFromShape()) {
 
 				// get property data type
 				RDFDatatype dataType = literal.getDatatype();
-
+				
 				// infer the data type from the Resource Shape only if the
 				// data type was not explicit passed in the original request
 				if (null == dataType) {
@@ -1072,14 +1082,17 @@ public final class JenaModelHelper
 					}
 				}
 			}
-
 			final Object literalValue;
 			try
 			{
 				literalValue = literal.getValue();
+				
 			}
 			catch (DatatypeFormatException e)
 			{
+				String rawValue = literal.getString();
+				String datatype = literal.getDatatypeURI();
+								
 				if ("false".equals(System.getProperty(AbstractOslcRdfXmlProvider.OSLC4J_STRICT_DATATYPES))) {
 					if (logger.isLoggable(Level.WARNING))
 					{
@@ -1089,11 +1102,14 @@ public final class JenaModelHelper
 								+ " could not be parsed as datatype "
 								+ literal.getDatatypeURI(), e);
 					}
-
-					return "";
+					
+					return new UnparseableLiteral(rawValue,datatype);
+					
 				}
-
-				throw e;
+				else {
+					
+					throw e;
+				}
 			}
 
 			if (literalValue instanceof XSDDateTime)
