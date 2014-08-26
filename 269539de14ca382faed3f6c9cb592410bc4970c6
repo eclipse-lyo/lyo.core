@@ -1,0 +1,9 @@
+Verified+1: Hudson CI
+Code-Review+2: Samuel Padgett <spadgett@us.ibm.com>
+Verified+1: Samuel Padgett <spadgett@us.ibm.com>
+Code-Review+1: Romain Barth <romainba@ie.ibm.com>
+Submitted-by: Samuel Padgett <spadgett@us.ibm.com>
+Submitted-at: Tue, 26 Aug 2014 12:09:06 -0400
+Reviewed-on: https://git.eclipse.org/r/32262
+Project: lyo/org.eclipse.lyo.core
+Branch: refs/heads/master
