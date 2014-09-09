@@ -14,6 +14,8 @@
  * Contributors:
  *
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *     Matthieu Helleboid   - Use the service provider title for the service provider factory class name
+ *     Anass Radouani       - Use the service provider title for the service provider factory class name
  *     
  *******************************************************************************/
 /]
@@ -160,15 +162,15 @@ aResource.name.toUpperCase().substituteAll(' ', '_')
 javaClassBaseNamespace(anAdaptorInterface).concat('.servlet')
 /]
 
-[query public javaClassNameForServiceProviderFactory(anAdaptorInterface : AdaptorInterface) : String = 
-anAdaptorInterface.name.toUpperFirst().concat('ServiceProviderFactory')
+[query public javaClassNameForServiceProviderFactory(aServiceProvider : ServiceProvider) : String = 
+aServiceProvider.title.substituteAll(' ', '').toUpperFirst().concat('ServiceProviderFactory')
 /]
 
-[query public javaClassFullNameForServiceProviderFactory(anAdaptorInterface : AdaptorInterface) : String = 
-javaClassPackageNameForServiceProviderFactory(anAdaptorInterface).concat('.').concat(javaClassNameForServiceProviderFactory(anAdaptorInterface))
+[query public javaClassFullNameForServiceProviderFactory(aServiceProvider : ServiceProvider) : String = 
+javaClassPackageNameForServiceProviderFactory(containingAdaptorInterface(aServiceProvider)).concat('.').concat(javaClassNameForServiceProviderFactory(aServiceProvider))
 /]
 
-[query public javaClassFullFileNameForServiceProviderFactory(anAdaptorInterface : AdaptorInterface) : String = 
-javaFilesBasePath(anAdaptorInterface).concat(javaClassPackageNameForServiceProviderFactory(anAdaptorInterface).substituteAll('.', '/')).concat('/').concat(javaClassNameForServiceProviderFactory(anAdaptorInterface)).concat('.java')
+[query public javaClassFullFileNameForServiceProviderFactory(aServiceProvider : ServiceProvider) : String = 
+javaFilesBasePath(containingAdaptorInterface(aServiceProvider)).concat(javaClassPackageNameForServiceProviderFactory(containingAdaptorInterface(aServiceProvider)).substituteAll('.', '/')).concat('/').concat(javaClassNameForServiceProviderFactory(aServiceProvider)).concat('.java')
 /]
 

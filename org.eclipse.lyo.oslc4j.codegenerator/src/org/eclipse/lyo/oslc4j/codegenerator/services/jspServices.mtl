@@ -14,6 +14,8 @@
  * Contributors:
  *
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *     Matthieu Helleboid   - Add resourceCreatorJspRelativeFileName and resourceCreatorJspFullFileName with a Service Provider attribute
+ *     Anass Radouani       - Add resourceCreatorJspRelativeFileName and resourceCreatorJspFullFileName with a Service Provider attribute
  *     
  *******************************************************************************/
 /]
@@ -47,8 +49,17 @@ jspFilesBasePath(anAdaptorInterface).concat(getResourceJspRelativeFileName(aReso
 [query public resourceCreatorJspRelativeFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
 jspFilesWebappPath(anAdaptorInterface).concat('/').concat(aResource.name.toLower()).concat('creator_html').concat('.jsp')
 /]
+
+[query public resourceCreatorJspRelativeFileName(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+jspFilesWebappPath(containingAdaptorInterface(aServiceProvider)).concat('/').concat(aResource.name.toLower()).concat('creator').concat(aServiceProvider.title.substituteAll(' ', '').toUpperFirst()).concat('_html').concat('.jsp')
+/]
+
 [query public resourceCreatorJspFullFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
 jspFilesBasePath(anAdaptorInterface).concat(resourceCreatorJspRelativeFileName(aResource, anAdaptorInterface))
+/]
+
+[query public resourceCreatorJspFullFileName(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+jspFilesBasePath(containingAdaptorInterface(aServiceProvider)).concat(resourceCreatorJspRelativeFileName(aResource, aServiceProvider))
 /]
 
 [query public resourceSelectorJspRelativeFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
@@ -66,7 +77,7 @@ jspFilesBasePath(containingAdaptorInterface(aServiceProviderCatalog)).concat(ser
 /]
 
 [query public serviceProviderJspRelativeFileName(aServiceProvider : ServiceProvider, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesWebappPath(anAdaptorInterface).concat('/').concat('serviceProvider_html').concat('.jsp')
+jspFilesWebappPath(anAdaptorInterface).concat('/').concat(aServiceProvider.title.substituteAll(' ','').toUpperFirst()).concat('serviceProvider_html').concat('.jsp')
 /]
 [query public serviceProviderJspFullFileName(aServiceProvider : ServiceProvider, anAdaptorInterface : AdaptorInterface) : String = 
 jspFilesBasePath(anAdaptorInterface).concat(serviceProviderJspRelativeFileName(aServiceProvider, anAdaptorInterface))
