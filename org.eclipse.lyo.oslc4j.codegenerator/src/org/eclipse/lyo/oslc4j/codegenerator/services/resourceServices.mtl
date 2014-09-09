@@ -14,6 +14,8 @@
  * Contributors:
  *
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *     Matthieu Helleboid  - Independent Resources, Relative Resources and multiple Service Providers management
+ *     Anass Radouani      - Independent Resources, Relative Resources and multiple Service Providers management
  *     
  *******************************************************************************/
 /]
@@ -40,6 +42,10 @@ anAdaptorInterface.serviceProviderCatalog.serviceProviders.services.queryCapabil
 
 [query public basicCapabilities(aResource: Resource, anAdaptorInterface : AdaptorInterface) : Set(BasicCapability) = 
 anAdaptorInterface.serviceProviderCatalog.serviceProviders.services.basicCapabilities->select(aBasicCapability : BasicCapability | aBasicCapability.resourceTypes->includes(aResource))->asSet()
+/]
+
+[query public basicCapabilities(aResource: Resource, aServiceProvider : ServiceProvider) : Set(BasicCapability) = 
+aServiceProvider.services.basicCapabilities->select(aBasicCapability : BasicCapability | aBasicCapability.resourceTypes->includes(aResource))->asSet()
 /]
 
 [query public creationFactories(aResource: Resource, anAdaptorInterface : AdaptorInterface) : Set(CreationFactory) = 
@@ -80,40 +86,71 @@ aResource.definingDomainSpecification().namespaceURI.concat('#').concat(aResourc
 javaClassBaseNamespace(anAdaptorInterface).concat('.resources')
 /]
 
-[query public javaClassName(aResource: Resource) : String = 
+[query public javaClassNameIndependentResource(aResource: Resource) : String = 
 aResource.name.substituteAll(' ', '').toUpperFirst()
 /]
 
-[query public javaClassFullName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-javaClassPackageName(aResource, anAdaptorInterface).concat('.').concat(javaClassName(aResource))
+[query public javaClassNameRelativeResource(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+aResource.name.substituteAll(' ', '').toUpperFirst().concat('For').concat(aServiceProvider.title.substituteAll(' ', '').toUpperFirst())
 /]
 
-[query public javaClassFullFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-javaFilesBasePath(anAdaptorInterface).concat(javaClassPackageName(aResource, anAdaptorInterface).substituteAll('.', '/')).concat('/').concat(javaClassName(aResource)).concat('.java')
+[query public javaClassName(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+(if(not aServiceProvider.oclIsUndefined()) then
+	(if(serviceNamespaceRelativeToServiceProvider(aResource, aServiceProvider)) then
+		javaClassNameRelativeResource(aResource, aServiceProvider)
+	else
+		javaClassNameIndependentResource(aResource)
+	endif)
+else
+	javaClassNameIndependentResource(aResource)
+endif)
+/]
+
+[query public javaClassFullNameIndependentResource(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
+javaClassPackageName(aResource, anAdaptorInterface).concat('.').concat(javaClassNameIndependentResource(aResource))
+/]
+
+[query public javaClassFullNameRelativeResource(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+javaClassPackageName(aResource, containingAdaptorInterface(aServiceProvider)).concat('.').concat(javaClassNameRelativeResource(aResource, aServiceProvider))
+/]
+
+[query public javaClassFullName(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+(if(serviceNamespaceRelativeToServiceProvider(aResource, aServiceProvider)) then
+javaClassFullNameRelativeResource(aResource, aServiceProvider)
+else 
+javaClassFullNameIndependentResource(aResource, containingAdaptorInterface(aServiceProvider))
+endif)
+/]
+
+[query public javaClassFullFileNameIndependentResource(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
+javaFilesBasePath(anAdaptorInterface).concat(javaClassPackageName(aResource, anAdaptorInterface).substituteAll('.', '/')).concat('/').concat(javaClassNameIndependentResource(aResource)).concat('.java')
+/]
+
+[query public javaClassFullFileName(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+javaFilesBasePath(containingAdaptorInterface(aServiceProvider)).concat(javaClassPackageName(aResource, containingAdaptorInterface(aServiceProvider)).substituteAll('.', '/')).concat('/').concat(javaClassNameIndependentResource(aResource)).concat('For').concat(aServiceProvider.title.replaceAll(' ', '').toUpperFirst()).concat('.java')
 /]
 
 [query public javaClassPackageNameForService(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
 javaClassBaseNamespace(anAdaptorInterface).concat('.services')
 /]
 
-[query public javaClassNameForService(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-aResource.name.substituteAll(' ', '').toUpperFirst().concat('Service')
+[query public javaClassNameForService(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+aResource.name.substituteAll(' ', '').toUpperFirst().concat('For').concat(aServiceProvider.title.substituteAll(' ', '').toUpperFirst()).concat('Service')
 /]
 
-[query public javaClassFullNameForService(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-javaClassPackageNameForService(aResource, anAdaptorInterface).concat('.').concat(javaClassNameForService(aResource, anAdaptorInterface))
+[query public javaClassFullNameForService(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+javaClassPackageNameForService(aResource, containingAdaptorInterface(aServiceProvider)).concat('.').concat(javaClassNameForService(aResource, aServiceProvider))
 /]
 
-[query public javaClassFullFileNameForService(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-javaFilesBasePath(anAdaptorInterface).concat(javaClassPackageNameForService(aResource, anAdaptorInterface).substituteAll('.', '/')).concat('/').concat(javaClassNameForService(aResource, anAdaptorInterface)).concat('.java')
+[query public javaClassFullFileNameForService(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+javaFilesBasePath(containingAdaptorInterface(aServiceProvider)).concat(javaClassPackageNameForService(aResource, containingAdaptorInterface(aServiceProvider)).substituteAll('.', '/')).concat('/').concat(javaClassNameForService(aResource, aServiceProvider)).concat('.java')
 /]
-
 
 [comment default to true if the property is not explicitly defined /]
-[query public serviceNamespaceRelativeToServiceProvider (aResource: Resource, anAdaptorInterface : AdaptorInterface) : Boolean = 
-(if (basicCapabilities(aResource, anAdaptorInterface)->size() > 0) then
-    (if (not basicCapabilities(aResource, anAdaptorInterface)->any(true).serviceNamespace.oclIsUndefined()) then
-        (if (basicCapabilities(aResource, anAdaptorInterface)->any(true).serviceNamespace = ResourceServiceNamespace::relativeToServiceProvider) then
+[query public serviceNamespaceRelativeToServiceProvider (aResource: Resource, aServiceProvider : ServiceProvider) : Boolean = 
+(if (basicCapabilities(aResource, aServiceProvider)->size() > 0) then
+    (if (not basicCapabilities(aResource, aServiceProvider)->any(true).serviceNamespace.oclIsUndefined()) then
+        (if (basicCapabilities(aResource, aServiceProvider)->any(true).serviceNamespace = ResourceServiceNamespace::relativeToServiceProvider) then
             true
         else
             false
@@ -126,74 +163,114 @@ else
 endif)
 /]
 
-[query public serviceBaseURI (aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-(if (serviceNamespaceRelativeToServiceProvider (aResource, anAdaptorInterface)) then
+[query public serviceBaseURI (aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+(if (serviceNamespaceRelativeToServiceProvider (aResource, aServiceProvider)) then
     JAXRSConcatURISegments (
-        instanceURI(managingServiceProviders(aResource, anAdaptorInterface)->any(true)),
+        aServiceProvider.instanceURI(),
         aResource.name.toLowerFirst().concat('s')
     )
 else
-    aResource.name.toLowerFirst().concat('s')
+    serviceBaseURIIndependentResource(aResource, containingAdaptorInterface(aServiceProvider))
 endif)
+/]
+
+[query public serviceBaseURIIndependentResource (aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
+    aResource.name.toLowerFirst().concat('s')
 /]
 
 [query public collectionURISegment (aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
     ''
 /]
 
-[query public collectionURI (aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-    JAXRSConcatURISegments(serviceBaseURI (aResource, anAdaptorInterface), collectionURISegment (aResource, anAdaptorInterface))
+[query public collectionURISegmentIndependentResource (aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
+    ''
 /]
 
-[query public collectionCompositeID (aResource: Resource, anAdaptorInterface : AdaptorInterface) : Sequence(String) = 
-    JAXRSPathParameters(collectionURI (aResource, anAdaptorInterface))
+[query public collectionURI (aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+    JAXRSConcatURISegments(serviceBaseURI (aResource, aServiceProvider), collectionURISegment (aResource, containingAdaptorInterface(aServiceProvider)))
 /]
 
-[query public instanceURISegment (aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-(if (basicCapabilities(aResource, anAdaptorInterface)->size() > 0) then
-    (if (not basicCapabilities(aResource, anAdaptorInterface)->any(true).instanceID.oclIsUndefined())._and(not basicCapabilities(aResource, anAdaptorInterface)->any(true).instanceID.equalsIgnoreCase('')) then
-        basicCapabilities(aResource, anAdaptorInterface)->any(true).instanceID
+[query public collectionURIIndependentResource (aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
+    JAXRSConcatURISegments(serviceBaseURIIndependentResource (aResource, anAdaptorInterface), collectionURISegmentIndependentResource (aResource, anAdaptorInterface))
+/]
+
+[query public collectionCompositeID (aResource: Resource, aServiceProvider : ServiceProvider) : Sequence(String) = 
+    JAXRSPathParameters(collectionURI (aResource, aServiceProvider))
+/]
+
+[query public collectionCompositeIDIndependentResource (aResource: Resource, anAdaptorInterface : AdaptorInterface) : Sequence(String) = 
+    JAXRSPathParameters(collectionURIIndependentResource (aResource, anAdaptorInterface))
+/]
+
+[query public instanceURISegment (aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+(if (basicCapabilities(aResource, aServiceProvider)->size() > 0) then
+    (if (not basicCapabilities(aResource, aServiceProvider)->any(true).instanceID.oclIsUndefined())._and(not basicCapabilities(aResource, aServiceProvider)->any(true).instanceID.equalsIgnoreCase('')) then
+        basicCapabilities(aResource, aServiceProvider)->any(true).instanceID
     else
-        '{'.concat(aResource.name.toLowerFirst()).concat('Id}')
+        instanceURISegmentIndependentResource(aResource, containingAdaptorInterface(aServiceProvider))
     endif)
 else
-    '{'.concat(aResource.name.toLowerFirst()).concat('Id}')
+    instanceURISegmentIndependentResource(aResource, containingAdaptorInterface(aServiceProvider))
 endif)
 /]
 
-[query public instanceURI (aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-    JAXRSConcatURISegments(serviceBaseURI (aResource, anAdaptorInterface), instanceURISegment (aResource, anAdaptorInterface))
+[query public instanceURISegmentIndependentResource (aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
+'{'.concat(aResource.name.toLowerFirst()).concat('Id}')
 /]
 
-[query public instanceCompositeID (aResource: Resource, anAdaptorInterface : AdaptorInterface) : Sequence(String) = 
-JAXRSPathParameters(aResource.instanceURI(anAdaptorInterface))
+[query public instanceURI (aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+    JAXRSConcatURISegments(serviceBaseURI (aResource, aServiceProvider), instanceURISegment (aResource, aServiceProvider))
 /]
 
-[template public collectionJAXRSMethodSignature(aResource: Resource, anAdaptorInterface : AdaptorInterface)] 
-[for (aPathParameter: String | JAXRSPathParameters(aResource.collectionURI(anAdaptorInterface))) separator(', ')]@PathParam("[aPathParameter /]") final String [aPathParameter /][/for]
+[query public instanceURIIndependentResource (aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
+    JAXRSConcatURISegments(serviceBaseURIIndependentResource (aResource, anAdaptorInterface), instanceURISegmentIndependentResource (aResource, anAdaptorInterface))
+/]
+
+[query public instanceCompositeID (aResource: Resource, aServiceProvider : ServiceProvider) : Sequence(String) = 
+JAXRSPathParameters(aResource.instanceURI(aServiceProvider))
+/]
+
+[query public instanceCompositeIDIndependentResource (aResource: Resource, anAdaptorInterface : AdaptorInterface) : Sequence(String) = 
+JAXRSPathParameters(aResource.instanceURIIndependentResource(anAdaptorInterface))
+/]
+
+[template public collectionJAXRSMethodSignature(aResource: Resource, aServiceProvider : ServiceProvider)] 
+[for (aPathParameter: String | JAXRSPathParameters(aResource.collectionURI(aServiceProvider))) separator(', ')]@PathParam("[aPathParameter /]") final String [aPathParameter /][/for]
 [/template]
 
-[template public collectionMethodSignature(aResource: Resource, anAdaptorInterface : AdaptorInterface)] 
-[for (collectionCompositeID: String | collectionCompositeID(aResource, anAdaptorInterface)) separator(', ')]final String [collectionCompositeID /][/for]
+[template public collectionMethodSignature(aResource: Resource, aServiceProvider : ServiceProvider)] 
+[for (collectionCompositeID: String | collectionCompositeID(aResource, aServiceProvider)) separator(', ')]final String [collectionCompositeID /][/for]
 [/template]
 
-[template public collectionMethodParameterList(aResource: Resource, anAdaptorInterface : AdaptorInterface)] 
-[for (collectionCompositeID: String | collectionCompositeID(aResource, anAdaptorInterface)) separator(', ')][collectionCompositeID /][/for]
+[template public collectionMethodSignatureIndependentResource(aResource: Resource, anAdaptorInterface : AdaptorInterface)] 
+[for (collectionCompositeID: String | collectionCompositeIDIndependentResource(aResource, anAdaptorInterface)) separator(', ')]final String [collectionCompositeID /][/for]
 [/template]
 
-[template public instanceJAXRSMethodSignature(aResource: Resource, anAdaptorInterface : AdaptorInterface)] 
-[for (aPathParameter: String | JAXRSPathParameters(aResource.instanceURI(anAdaptorInterface))) separator(', ')]@PathParam("[aPathParameter /]") final String [aPathParameter /][/for]
+[template public collectionMethodParameterList(aResource: Resource, aServiceProvider : ServiceProvider)] 
+[for (collectionCompositeID: String | collectionCompositeID(aResource, aServiceProvider)) separator(', ')][collectionCompositeID /][/for]
 [/template]
 
-[template public instanceMethodSignature(aResource: Resource, anAdaptorInterface : AdaptorInterface)] 
-[for (instanceCompositeID: String | instanceCompositeID(aResource, anAdaptorInterface)) separator(', ')]final String [instanceCompositeID /][/for]
+[template public collectionMethodParameterListIndependentResource(aResource: Resource, anAdaptorInterface : AdaptorInterface)] 
+[for (collectionCompositeID: String | collectionCompositeIDIndependentResource(aResource, anAdaptorInterface)) separator(', ')][collectionCompositeID /][/for]
 [/template]
 
-[template public instanceMethodParameterList(aResource: Resource, anAdaptorInterface : AdaptorInterface)] 
-[for (instanceCompositeID: String | instanceCompositeID(aResource, anAdaptorInterface)) separator(', ')][instanceCompositeID /][/for]
+[template public instanceJAXRSMethodSignature(aResource: Resource, aServiceProvider : ServiceProvider)] 
+[for (aPathParameter: String | JAXRSPathParameters(aResource.instanceURI(aServiceProvider))) separator(', ')]@PathParam("[aPathParameter /]") final String [aPathParameter /][/for]
+[/template]
+
+[template public instanceMethodSignature(aResource: Resource, aServiceProvider : ServiceProvider)] 
+[for (instanceCompositeID: String | instanceCompositeID(aResource, aServiceProvider)) separator(', ')]final String [instanceCompositeID /][/for]
+[/template]
+
+[template public instanceMethodSignatureIndependentResource(aResource: Resource, anAdaptorInterface : AdaptorInterface)] 
+[for (instanceCompositeID: String | instanceCompositeIDIndependentResource(aResource, anAdaptorInterface)) separator(', ')]final String [instanceCompositeID /][/for]
+[/template]
+
+[template public instanceMethodParameterList(aResource: Resource, aServiceProvider : ServiceProvider)] 
+[for (instanceCompositeID: String | instanceCompositeID(aResource, aServiceProvider)) separator(', ')][instanceCompositeID /][/for]
 [/template]
 
 [template public parentJavaClassName(aResource: Resource)] 
-[if (aResource.extends.oclIsUndefined())]AbstractResource[else][javaClassName(aResource.extends) /][/if]
+[if (aResource.extends.oclIsUndefined())]AbstractResource[else][javaClassNameIndependentResource(aResource.extends) /][/if]
 
 [/template]

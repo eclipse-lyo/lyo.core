@@ -14,6 +14,8 @@
  * Contributors:
  *
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *     Matthieu Helleboid  - Independent Resources, Relative Resources and multiple Service Providers management
+ *     Anass Radouani      - Independent Resources, Relative Resources and multiple Service Providers management
  *     
  *******************************************************************************/
 /]
@@ -21,6 +23,8 @@
 [module serviceProviderServices('http://org.eclipse.lyo/oslc4j/adaptorInterface')/]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::serviceServices/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices/]
 
 [comment TODO: we should avoid relying on "eContainer", since objects that come from a composing emf file, will not have the eContainer relationship setup as expected.
 This method should be able to work even for objects that come from a differnet emf file than that containing the AdaptorInterface. 
@@ -36,7 +40,7 @@ javaClassBaseNamespace(containingAdaptorInterface(aServiceProvider)).concat('.se
 /]
 
 [query public javaClassNameForService(aServiceProvider : ServiceProvider) : String = 
-'ServiceProviderService'
+aServiceProvider.title.replaceAll(' ', '').toUpperFirst().concat('ServiceProviderService')
 /]
 
 [query public javaClassFullNameForService(aServiceProvider : ServiceProvider) : String = 
@@ -53,7 +57,7 @@ javaClassBaseNamespace(containingAdaptorInterface(aServiceProvider))
 /]
 
 [query public javaClassNameForServiceProviderInfo(aServiceProvider : ServiceProvider) : String = 
-'ServiceProviderInfo'
+aServiceProvider.title.replaceAll(' ', '').toUpperFirst().concat('ServiceProviderInfo')
 /]
 
 [query public javaClassFullNameForServiceProviderInfo(aServiceProvider : ServiceProvider) : String = 
@@ -89,11 +93,22 @@ endif)
 /]
 
 [query public instanceURI (aServiceProvider : ServiceProvider) : String = 
-    JAXRSConcatURISegments(serviceBaseURI (aServiceProvider), instanceURISegment (aServiceProvider))
+    JAXRSConcatURISegments(aServiceProvider.serviceBaseURI(), aServiceProvider.instanceURISegment())
 /]
 
 [query public instanceCompositeID (aServiceProvider : ServiceProvider) : Sequence(String) = 
-    JAXRSPathParameters(instanceURI (aServiceProvider))
+    JAXRSPathParameters(aServiceProvider.instanceURI())
+/]
+
+[query public managedResources(aServiceProvider: ServiceProvider) : Set(Resource) = 
+aServiceProvider.services.creationFactories.resourceTypes->asSet()
+					->union(aServiceProvider.services.queryCapabilities.resourceTypes->asSet())
+					->union(aServiceProvider.services.creationDialogs.resourceTypes->asSet())
+					->union(aServiceProvider.services.selectionDialogs.resourceTypes->asSet())
+/]
+
+[query public managedRelativeResources(aServiceProvider: ServiceProvider) : Set(Resource) = 
+managedResources(aServiceProvider)->reject(aResource : Resource | not aResource.serviceNamespaceRelativeToServiceProvider(aServiceProvider))
 /]
 
 [template public instanceJAXRSMethodSignature(aServiceProvider : ServiceProvider)] 
@@ -105,5 +120,5 @@ endif)
 [/template]
 
 [template public instanceMethodParameterList(aServiceProvider : ServiceProvider)] 
-[for (instanceCompositeID: String | instanceCompositeID(aServiceProvider)) separator(', ')][instanceCompositeID /][/for]
+[for (instanceCompositeID: String | aServiceProvider.instanceCompositeID()) separator(', ')][instanceCompositeID /][/for]
 [/template]

@@ -14,6 +14,8 @@
  * Contributors:
  *
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *     Matthieu Helleboid  - Independent Resources, Relative Resources and multiple Service Providers management
+ *     Anass Radouani      - Independent Resources, Relative Resources and multiple Service Providers management
  *     
  *******************************************************************************/
 /]
@@ -152,7 +154,7 @@ Sequence{'Resource', 'LocalResource'}->includes(aProperty.valueType.toString()).
 						else
 							if(aProperty.valueType.toString() = 'LocalResource') then
 								if (not aProperty.range.oclIsUndefined()) then
-									'new ' + javaClassName(aProperty.range) + '(new URI(' + variable + '))'
+									'new ' + javaClassNameIndependentResource(aProperty.range) + '(new URI(' + variable + '))'
 								else
 									'new Link(new URI(' + variable + '))'
 								endif
@@ -206,7 +208,7 @@ Sequence{'Resource', 'LocalResource'}->includes(aProperty.valueType.toString()).
 						else
 							if(aProperty.valueType.toString() = 'LocalResource') then
 								if (not aProperty.range.oclIsUndefined()) then
-									javaClassName(aProperty.range)
+									javaClassNameIndependentResource(aProperty.range)
 								else
 									'Link'
 								endif

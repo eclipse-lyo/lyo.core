@@ -14,6 +14,8 @@
  * Contributors:
  *
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *     Matthieu Helleboid  - Independent Resources, Relative Resources and multiple Service Providers management
+ *     Anass Radouani      - Independent Resources, Relative Resources and multiple Service Providers management
  *     
  *******************************************************************************/
 /]
@@ -24,6 +26,8 @@
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourcePropertyServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::serviceServices/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderServices/]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderCatalogService/]
 [import org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderCatalogSingleton/]
@@ -39,6 +43,7 @@
 [import org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderService/]
 [import org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderInfo/]
 [import org::eclipse::lyo::oslc4j::codegenerator::files::generateResource/]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateRelativeResource/]
 [import org::eclipse::lyo::oslc4j::codegenerator::files::generateResourceService/]
 [import org::eclipse::lyo::oslc4j::codegenerator::staticFiles::generateLicenseFiles/]
 
@@ -56,7 +61,6 @@
 [anAdaptorInterface.generateAdaptorManager() /]
 [anAdaptorInterface.generateAdaptorConstants() /]
 [anAdaptorInterface.generateDelegatedUIJavaScripts() /]
-[anAdaptorInterface.generateAdaptorServiceProviderFactory() /]
 
 [anAdaptorInterface.serviceProviderCatalog.generateServiceProviderCatalogHTML() /]
 
@@ -64,11 +68,19 @@
 	[aResource.generateResource(anAdaptorInterface) /]
 [/for]
 
-[for (aResource: Resource | servicedResources(anAdaptorInterface))]
-	[aResource.generateResourceService(anAdaptorInterface) /]
-[/for]
+
 
 [for (aServiceProvider: ServiceProvider | anAdaptorInterface.serviceProviderCatalog.serviceProviders)]
+
+	[for (aResource: Resource | managedResources(aServiceProvider))]
+		[aResource.generateResourceService(aServiceProvider) /]
+	[/for]
+
+	[for (aResource : Resource | managedRelativeResources(aServiceProvider))]
+			[aResource.generateRelativeResource(aServiceProvider)/]
+	[/for]
+
+	[aServiceProvider.generateAdaptorServiceProviderFactory(anAdaptorInterface) /]
 	[aServiceProvider.generateServiceProviderService(anAdaptorInterface)/]
 	[aServiceProvider.generateServiceProviderHTML(anAdaptorInterface) /]
     [aServiceProvider.generateServiceProviderInfo(anAdaptorInterface) /]
