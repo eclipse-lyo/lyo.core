@@ -1,0 +1,55 @@
+[comment encoding = UTF-8 /]
+[comment
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *
+ *     Russell Boykin       - initial API and implementation (parent module)
+ *     Alberto Giammaria    - initial API and implementation (parent module)
+ *     Chris Peters         - initial API and implementation (parent module)
+ *     Gianluca Bernardini  - initial API and implementation (parent module)
+ *     Michael Fiedler      - adapted for Bugzilla service provider (parent module)
+ *     Jad El-khoury        - initial implementation of code generator (parent module)
+ *     Matthieu Helleboid   - initialize each service provider separately
+ *	   						- Use of Adapator Interface Generator
+ *							- add method by overriding parent templates
+ *     Anass Radouani       - initialize each service provider separately
+ *	   						- Use of Adapator Interface Generator
+ *							- add method by overriding parent templates
+ *******************************************************************************/
+/]
+
+[module generateServiceProviderCatalogSingleton('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator', 'http://org.eclipse.lyo/oslc4j/emf') extends org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderCatalogSingleton]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::core::services::coreServices/]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderCatalogServices/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderServices/]
+
+[template public importServiceProvidersInfos(aServiceProviderCatalog : ServiceProviderCatalog, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderCatalogSingleton::importServiceProvidersInfos]
+[/template]
+
+[template public initServiceProviders(aServiceProviderCatalog : ServiceProviderCatalog) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderCatalogSingleton::initServiceProviders]
+for (IExposerExtension exposerExtension : ExposerExtensionReader.getInstance().getExposerManagers()) {
+	exposerExtension.initServiceProvider(httpServletRequest);
+}
+[/template]
+
+[template public getExtraImports(aServiceProviderCatalog : ServiceProviderCatalog, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderCatalogSingleton::getExtraImports]
+import [javaClassFullNameForExposerExtensionReader(anAdaptorInterfaceGenerator)/];
+import [javaInterfaceFullNameForExposerExtension(anAdaptorInterfaceGenerator)/];
+[/template]
+
+[template public getExtraMethods(aServiceProviderCatalog : ServiceProviderCatalog, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderCatalogSingleton::getExtraMethods]
+	public static boolean containsIdentifier(String... serviceProviderIds) {
+		String identifier = serviceProviderIdentifier(serviceProviderIds);
+		return serviceProviders.containsKey(identifier);
+	}
+[/template]

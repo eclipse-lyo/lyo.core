@@ -1,0 +1,86 @@
+[comment encoding = UTF-8 /]
+[comment
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *     
+ *******************************************************************************/
+/]
+
+[module generateExposerResourceSet('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::services::exposerServices/]
+
+[comment]Generate Resource Set used by the Exposer plugin[/comment]
+[template public generateExposerResourceSet(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
+[file (javaClassFullFileNameForExposerResourceSet(anAdaptorInterfaceGenerator), false, 'UTF-8')]
+/*****************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *
+ *****************************************************************************/
+package [javaClassPackageNameForExposerExtensionImpl(anAdaptorInterfaceGenerator) /];
+
+import java.net.URL;
+import org.eclipse.emf.common.util.URI;
+import java.util.Enumeration;
+
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+
+import [anAdaptorInterfaceGenerator.javaClassFullNameForExposerActivator()/];
+
+public class [javaClassNameForExposerResourceSet(anAdaptorInterfaceGenerator)/] extends ResourceSetImpl {
+
+	
+	private static [javaClassNameForExposerResourceSet(anAdaptorInterfaceGenerator)/] instance ;
+	
+	private [javaClassNameForExposerResourceSet(anAdaptorInterfaceGenerator)/]() {
+		Enumeration<URL> entries = Activator.getDefault().getBundle().findEntries("/model", null, false);
+		if (entries == null) {
+			return;
+		}
+		while (entries.hasMoreElements()) {
+			String relativePath = entries.nextElement().getFile();
+			URI uri = URI.createPlatformPluginURI(Activator.PLUGIN_ID + relativePath, true);
+			getResource(uri, true);
+
+		}
+	}
+	
+	public static [javaClassNameForExposerResourceSet(anAdaptorInterfaceGenerator)/] getInstance() {
+		if (instance == null) {
+			instance = new [javaClassNameForExposerResourceSet(anAdaptorInterfaceGenerator)/]();
+		}
+		return instance;
+	}
+	
+	
+	public [javaClassNameForTypeCacheAdapter(anAdaptorInterfaceGenerator)/] getCacheAdapter() {
+		[javaClassNameForTypeCacheAdapter(anAdaptorInterfaceGenerator)/] cacheAdapter = [javaClassNameForTypeCacheAdapter(anAdaptorInterfaceGenerator)/].getCacheAdapter(this);
+		if (cacheAdapter == null) {
+			cacheAdapter = new [javaClassNameForTypeCacheAdapter(anAdaptorInterfaceGenerator)/]();
+			this.eAdapters().add(cacheAdapter);
+		}
+		return cacheAdapter;
+	}
+	
+	
+}
+[/file]
+[/template]

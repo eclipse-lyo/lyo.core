@@ -1,0 +1,124 @@
+[comment encoding = UTF-8 /]
+[comment
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *    Jad El-khoury      - initial implementation of code generator (parent module)
+ *******************************************************************************/
+/]
+
+[comment Override the adaptor manager to fill the java methods /]
+[module generateAdaptorManager('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator', 'http://org.eclipse.lyo/oslc4j/emf', 'http://www.eclipse.org/emf/2002/Ecore') extends org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager/]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices /]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::resourcePropertyServices /]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices /]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::services /]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::services::mappingServices /]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::services::exposerServices /]
+
+[comment Override this template to add Imports /]
+[template public getExtraImports(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::getExtraImports]
+import java.util.Collection;
+import java.util.Map;
+import java.util.ArrayList;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EPackage.Registry;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import javax.ws.rs.WebApplicationException;
+import [javaClassFullNameForAdaptorServletListener(anAdaptorInterfaceGenerator) /];
+import [javaClassFullNameForExposerResourceSet(anAdaptorInterfaceGenerator)/];
+import [javaClassFullNameForResourceUtil(anAdaptorInterfaceGenerator)/];
+import [javaClassFullNameForResourceManager(anAdaptorInterfaceGenerator)/];
+[/template]
+
+[comment Override this template to get ServiceProviderInfos /]
+[template public getServiceProviderInfos(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aServiceProvider : ServiceProvider) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::getServiceProviderInfos]
+[/template]
+
+[comment Override this template to create Resource /]
+[template public createResource(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aResource : Resource, aServiceProvider : ServiceProvider) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::createResource]
+[/template]
+
+[comment Override this template to get Resource /]
+[template public getResource(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aResource : Resource, aServiceProvider : ServiceProvider) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::getResource]
+[/template]
+
+[comment Override this template to get Resources /]
+[template public getResources(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aResource : Resource, aServiceProvider : ServiceProvider) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::getResources]
+[/template]
+
+[comment Override this template to search Resources /]
+[template public searchResources(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aResource : Resource, aServiceProvider : ServiceProvider) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::searchResources]
+[/template]
+
+[comment Override this template to get Resources Managing Service Provider /]
+[template public getResourcesManagingServiceProvider(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aResource : Resource, aServiceProvider : ServiceProvider) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::getResourcesManagingServiceProvider]
+[/template]
+
+[comment Override this template to get Resource /]
+[template public getResource(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aResource : Resource) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::getResource]
+[if (not anAdaptorInterfaceGenerator.getEStructuralFeatureMappings(aResource)->isEmpty())]
+for ([aResource.name.toUpperFirst()/] element : get[aResource.name.toUpperFirst()/]s(httpServletRequest,
+				 [for (param : String | aResource.collectionCompositeID(anAdaptorInterfaceGenerator.adaptorInterface))][param/],
+				 [/for]-1, -1)) {
+	if ([JAXRSPathParameters(aResource.instanceURISegment(anAdaptorInterfaceGenerator.adaptorInterface))/].equals(element.getIdentifier())) {
+		a[aResource.name.toUpperFirst()/] = element;
+		break;
+	}
+}
+[/if]
+[/template]
+
+[comment Override this template to get Resources /]
+[template public getResources(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aResource : Resource) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::getResources]
+[if (not anAdaptorInterfaceGenerator.getEStructuralFeatureMappings(aResource)->isEmpty())]
+		try {
+
+			[aResource.name.toLowerFirst() /]s = new ArrayList<[aResource.name.toUpperFirst() /]>();		
+
+			EClass eClass = [anAdaptorInterfaceGenerator.javaClassNameForResourceUtil()/].getEClass(
+			"[anAdaptorInterfaceGenerator.getEStructuralFeatureMappings(aResource)->asSequence()->first().eStructuralFeature.oclAsType(EStructuralFeature).eContainingClass.ePackage.nsURI/]",
+			"[anAdaptorInterfaceGenerator.getEStructuralFeatureMappings(aResource)->asSequence()->first().eStructuralFeature.oclAsType(EStructuralFeature).eContainingClass.name/]");
+			Collection<EObject> instances = [javaClassNameForExposerResourceSet(anAdaptorInterfaceGenerator)/].getInstance().getCacheAdapter().getReachableObjectsOfType(eClass);
+
+			for (EObject eObject : instances) {
+				[aResource.name.toUpperFirst()/] element = new [aResource.name.toUpperFirst()/]();
+				[javaClassNameForResourceManager(anAdaptorInterfaceGenerator)/].setValues(element, eObject);
+				element.setAbout([aResource.name.toUpperFirst()/].constructURI(element.getIdentifier()));
+				[aResource.name.toLowerFirst() /]s.add(element);
+
+			}
+		} catch (Exception e) {
+			throw new WebApplicationException(e);
+		}
+[/if]
+[/template]
+
+[comment Override this template to search Resource /]
+[template public searchResource(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aResource : Resource) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::searchResource]
+[/template]
+
+[comment Override this template to get ETag From Resource /]
+[template public getETagFromResource(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aResource : Resource) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::getETagFromResource]
+[/template]
+
+[comment Override this template to create Resource /]
+[template public createResource(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aResource : Resource) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::createResource]
+[/template]
+
+[comment Override this template to get Resource Managing Service Provider /]
+[template public getResourceManagingServiceProvider(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aResource : Resource) overrides org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager::getResourceManagingServiceProvider]
+[/template]

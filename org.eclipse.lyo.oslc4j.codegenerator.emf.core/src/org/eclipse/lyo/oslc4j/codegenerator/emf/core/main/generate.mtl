@@ -1,0 +1,63 @@
+[comment
+/*******************************************************************************
+ *  Copyright (c) 2014 THALES GLOBAL SERVICES.
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *   
+ *  Contributors:
+ *     Helleboid Matthieu - initial API and implementation
+ *     Anass Radouani 	  - initial API and implementation
+ *
+ *******************************************************************************/
+/]
+
+[module generate('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator', 'http://org.eclipse.lyo/oslc4j/emf')]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::core::files::generateExposerExtension /]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::core::files::generateActivator /]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::core::files::generateCorePluginExtension /]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::core::services::coreServices /]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::core::files::custom::generateAdaptorManager /]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::core::files::custom::generateAdaptorConstants /]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::core::files::custom::generateAdaptorApplication /]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderCatalogService /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderCatalogSingleton /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorServletListener /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateDelegatedUIJavaScripts /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderCatalogHTML /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateWebConf /]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::staticFiles::generateLicenseFiles /]
+
+[template public generate(aCoreGenerator : OSLC4EMFCoreGenerator)]
+[comment @main/]
+
+[comment TODO: Produce "package-info.java" under the Resources package. See the original instructions on how to setup a OSLC4J project for details./]
+[aCoreGenerator.generateServiceProviderCatalogService(aCoreGenerator.adaptorInterface.serviceProviderCatalog) /]
+[aCoreGenerator.generateServiceProviderCatalogSingleton(aCoreGenerator.adaptorInterface.serviceProviderCatalog) /]
+
+[aCoreGenerator.adaptorInterface.generateLicenseFiles() /]
+[comment Adaptor Application is Overrided /]
+[aCoreGenerator.generateAdaptorApplication() /]
+[aCoreGenerator.generateAdaptorServletListener() /]
+[comment Adaptor Manager is Overrided /]
+[aCoreGenerator.generateAdaptorManager() /]
+[comment Adaptor Constant is Overrided /]
+[aCoreGenerator.generateAdaptorConstants() /]
+[aCoreGenerator.generateDelegatedUIJavaScripts() /]
+
+[aCoreGenerator.generateServiceProviderCatalogHTML(aCoreGenerator.adaptorInterface.serviceProviderCatalog) /]
+
+[generateActivator(aCoreGenerator.javaClassFullFileNameForCoreActivator(), aCoreGenerator.javaClassPackageNameForCoreActivator(), aCoreGenerator.corePluginId())/]
+
+[aCoreGenerator.generateExposerExtension()/]
+[aCoreGenerator.generateCorePluginExtension()/]
+
+[aCoreGenerator.generateWebConf() /]
+
+[/template]

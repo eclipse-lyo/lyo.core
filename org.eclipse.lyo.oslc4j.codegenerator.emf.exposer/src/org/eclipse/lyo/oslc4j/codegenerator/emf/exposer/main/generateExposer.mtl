@@ -1,0 +1,76 @@
+[comment encoding = UTF-8 /]
+[comment
+/*******************************************************************************
+ *  Copyright (c) 2014 THALES GLOBAL SERVICES.
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *   
+ *  Contributors:
+ *     Helleboid Matthieu - initial API and implementation
+ *     Anass Radouani 	  - initial API and implementation
+ *
+ *******************************************************************************/
+/]
+
+[module generateExposer('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator', 'http://org.eclipse.lyo/oslc4j/emf')]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::services::serviceServices /]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateResourceService /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateGetResourceJsp /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateResourceCollectionJsp /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateFilteredResourceCollectionJsp /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateResourceSelectorJsp /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateResourceCreatorJsp /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateResourceForSP /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorServiceProviderFactory /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderService /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderHTML /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateServiceProviderInfo /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorManager /]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::core::files::generateActivator /]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::files::generateTypeCacheAdapter /]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::files::generateExposerResourceSet /]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::files::generateExposerPluginExtension /]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::files::generateExposerExtensionImpl /]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::services::exposerServices /]
+
+[template public generateExposer(anExposerGenerator : OSLC4EMFExposerGenerator)]
+[comment @main/]
+
+[for (aServiceProvider: ServiceProvider | anExposerGenerator.adaptorInterface.serviceProviderCatalog.serviceProviders)]
+
+	[for (aResource: Resource | aServiceProvider.services.managedResources())]
+		[aResource.generateResourceService(anExposerGenerator.oclAsType(AdaptorInterfaceGenerator), aServiceProvider) /]
+		[aResource.generateGetResourceJsp(anExposerGenerator.oclAsType(AdaptorInterfaceGenerator))/]
+		[aResource.generateResourceCollectionJsp(anExposerGenerator.oclAsType(AdaptorInterfaceGenerator)) /]
+		[aResource.generateFilteredResourceCollectionJsp(anExposerGenerator.oclAsType(AdaptorInterfaceGenerator)) /]
+		[aResource.generateResourceSelectorJsp(anExposerGenerator.oclAsType(AdaptorInterfaceGenerator)) /]
+		[anExposerGenerator.generateResourceCreatorJsp(aResource, aServiceProvider) /]
+
+		[if (aResource.serviceNamespaceRelativeToServiceProvider(aServiceProvider))]
+			[aResource.generateResourceForSP(anExposerGenerator.oclAsType(AdaptorInterfaceGenerator), aServiceProvider)/]
+		[/if]
+
+	[/for]
+
+
+	[aServiceProvider.generateExposerExtensionImpl(anExposerGenerator.oclAsType(AdaptorInterfaceGenerator)) /]
+	[aServiceProvider.generateAdaptorServiceProviderFactory(anExposerGenerator.oclAsType(AdaptorInterfaceGenerator)) /]
+	[aServiceProvider.generateServiceProviderService(anExposerGenerator.oclAsType(AdaptorInterfaceGenerator))/]
+	[aServiceProvider.generateServiceProviderHTML(anExposerGenerator.oclAsType(AdaptorInterfaceGenerator)) /]
+    [aServiceProvider.generateServiceProviderInfo(anExposerGenerator.oclAsType(AdaptorInterfaceGenerator)) /]
+
+[/for]
+
+[anExposerGenerator.generateTypeCacheAdapter()/]
+[anExposerGenerator.generateExposerResourceSet()/]
+[anExposerGenerator.generateExposerPluginExtension()/]
+[anExposerGenerator.generateAdaptorManager() /]
+
+[generateActivator(anExposerGenerator.javaClassFullFileNameForExposerActivator(), anExposerGenerator.javaClassPackageNameForExposerActivator(), anExposerGenerator.exposerPluginId())/]
+[/template]

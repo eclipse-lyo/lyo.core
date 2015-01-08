@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.acceleo.engine.dynamic.templates">
+      <templates
+            path="src/org/eclipse/lyo/oslc4j/codegenerator/emf/exposer/files/overrides/">
+      </templates>
+      <generator
+            generatorID="org.eclipse.lyo.oslc4j.codegenerator.emf.exposer">
+      </generator>
+   </extension>
+
+</plugin>

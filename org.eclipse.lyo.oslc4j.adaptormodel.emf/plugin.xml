@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated OSLC4EMFGenerator -->
+      <package
+            uri="http://org.eclipse.lyo/oslc4j/emf"
+            class="org.eclipse.lyo.oslc4j.adaptormodel.emf.oslc4emfgenerator.OSLC4EMFgeneratorPackage"
+            genModel="model/OSLC4EMFGenerator.genmodel"/>
+   </extension>
+
+</plugin>

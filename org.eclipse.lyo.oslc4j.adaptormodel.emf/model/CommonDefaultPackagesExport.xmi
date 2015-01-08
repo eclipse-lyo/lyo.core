@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ASCII"?>
+<oslc4emf:PackagesExportContainer
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:oslc4emf="http://org.eclipse.lyo/oslc4j/emf"
+    xsi:schemaLocation="http://org.eclipse.lyo/oslc4j/emf OSLC4EMFGenerator.ecore"
+    name="Common packages to export">
+  <packagesExport
+      xsi:type="oslc4emf:PackageExportFeature"
+      id="{commonPluginId}"/>
+  <packagesExport
+      xsi:type="oslc4emf:PackageExportFeature"
+      id="{commonPluginId}.{basePackage}"/>
+  <packagesExport
+      xsi:type="oslc4emf:PackageExportFeature"
+      id="{commonPluginId}.{basePackage}.resources"/>
+</oslc4emf:PackagesExportContainer>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.eclipse.lyo.oslc4j.adaptormodel.emf.ui.accelerator.category"
+            name="%category.name">
+      </category>
+      <wizard
+            category="org.eclipse.lyo.oslc4j.adaptormodel.emf.ui.accelerator.category"
+            class="org.eclipse.lyo.oslc4j.adaptormodel.emf.ui.accelerator.wizards.InitGenFilesWizard"
+            id="org.eclipse.lyo.oslc4j.adaptormodel.emf.ui.accelerator.init"
+            name="%wizard.name">
+      </wizard>
+   </extension>
+
+</plugin>

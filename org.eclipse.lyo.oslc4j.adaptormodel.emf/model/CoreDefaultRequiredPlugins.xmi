@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ASCII"?>
+<oslc4emf:RequiredPluginsContainer
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:oslc4emf="http://org.eclipse.lyo/oslc4j/emf"
+    xsi:schemaLocation="http://org.eclipse.lyo/oslc4j/emf OSLC4EMFGenerator.ecore"
+    name="Core required plugins">
+  <requiredPlugins
+      id="javax.ws.rs"/>
+  <requiredPlugins
+      id="org.eclipse.core.runtime"/>
+  <requiredPlugins
+      id="org.slf4j.jcl"/>
+  <requiredPlugins
+      id="org.slf4j.log4j"/>
+  <requiredPlugins
+      id="org.slf4j.api"/>
+  <requiredPlugins
+      id="com.google.guava"/>
+  <requiredPlugins
+      id="org.ops4j.pax.web.pax-web-jetty-bundle"/>
+  <requiredPlugins
+      id="org.ops4j.pax.web.pax-web-api"/>
+  <requiredPlugins
+      id="org.eclipse.osgi"/>
+  <requiredPlugins
+      id="org.apache.jena"/>
+  <requiredPlugins
+      id="org.eclipse.equinox.jsp.jasper"/>
+</oslc4emf:RequiredPluginsContainer>

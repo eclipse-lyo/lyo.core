@@ -1,0 +1,44 @@
+[comment encoding = UTF-8 /]
+[comment
+/*******************************************************************************
+ *  Copyright (c) 2014 THALES GLOBAL SERVICES.
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *   
+ *  Contributors:
+ *     Helleboid Matthieu - initial API and implementation
+ *     Anass Radouani 	  - initial API and implementation
+ *
+ *******************************************************************************/
+/]
+
+[module generateCommon('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator', 'http://org.eclipse.lyo/oslc4j/emf')]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateResource /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorConstants /]
+[import org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorPackageInfo /]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices /]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::core::files::generateActivator /]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::files::generateResourceUtil /]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::files::generateResourceManager /]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::services::exposerServices /]
+
+[template public generateCommon(anExposerGenerator : OSLC4EMFExposerGenerator)]
+[comment @main/]
+
+[for (aResource: Resource | relevantResources(anExposerGenerator.adaptorInterface))]
+	[aResource.generateResource(anExposerGenerator.oclAsType(AdaptorInterfaceGenerator)) /]
+[/for]
+
+[anExposerGenerator.generateAdaptorConstants() /]
+[anExposerGenerator.generateAdaptorPackageInfo() /]
+[anExposerGenerator.generateResourceUtil() /]
+[anExposerGenerator.generateResourceManager() /]
+
+[generateActivator(anExposerGenerator.javaClassFullFileNameForCommonActivator(), anExposerGenerator.javaClassPackageNameForCommonActivator(), anExposerGenerator.commonPluginId())/]
+
+[/template]

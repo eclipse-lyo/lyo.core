@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText=" Copyright (c) 2014 THALES GLOBAL SERVICES.&#xD;&#xA; All rights reserved. This program and the accompanying materials&#xD;&#xA; are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA; which accompanies this distribution, and is available at&#xD;&#xA; http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA;  &#xD;&#xA; Contributors:&#xD;&#xA;    &#xD;&#xA;Helleboid Matthieu&#x9;- initial API and implementation&#xD;&#xA;Anass Radouani&#x9;- initial API and implementation"
+    modelDirectory="/org.eclipse.lyo.oslc4j.adaptormodel.emf/src" editorDirectory="" modelPluginID="org.eclipse.lyo.oslc4j.adaptormodel.emf"
+    modelName="OSLC4EMFGenerator" rootExtendsInterface="org.eclipse.emf.cdo.CDOObject"
+    rootExtendsClass="org.eclipse.emf.internal.cdo.CDOObjectImpl" reflectiveDelegation="true"
+    testsDirectory="" importerID="org.eclipse.emf.importer.cdo" featureDelegation="Reflective"
+    complianceLevel="7.0" copyrightFields="false" usedGenPackages="../../org.eclipse.lyo.oslc4j.adaptormodel/model/adaptorInterface.genmodel#//adaptorinterface ../../org.eclipse.lyo.oslc4j.adaptormodel/model/adaptorInterfaceGenerator.genmodel#//adaptorinterfacegenerator ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>OSLC4EMFGenerator.ecore</foreignModel>
+  <modelPluginVariables>CDO=org.eclipse.emf.cdo</modelPluginVariables>
+  <genPackages prefix="OSLC4EMFgenerator" basePackage="org.eclipse.lyo.oslc4j.adaptormodel.emf"
+      disposableProviderFactory="true" multipleEditorPages="false" extensibleProviderFactory="true"
+      childCreationExtenders="true" fileExtensions="oslc4emfgen" ecorePackage="OSLC4EMFGenerator.ecore#/">
+    <genClasses ecoreClass="OSLC4EMFGenerator.ecore#//OSLC4EMFGenerator">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference OSLC4EMFGenerator.ecore#//OSLC4EMFGenerator/extends"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute OSLC4EMFGenerator.ecore#//OSLC4EMFGenerator/javaVersion"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference OSLC4EMFGenerator.ecore#//OSLC4EMFGenerator/packagesExportContainer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference OSLC4EMFGenerator.ecore#//OSLC4EMFGenerator/requiredPluginsContainer"/>
+      <genOperations ecoreOperation="OSLC4EMFGenerator.ecore#//OSLC4EMFGenerator/getJavaFilesBasePath"/>
+      <genOperations ecoreOperation="OSLC4EMFGenerator.ecore#//OSLC4EMFGenerator/getPrefix">
+        <genParameters ecoreParameter="OSLC4EMFGenerator.ecore#//OSLC4EMFGenerator/getPrefix/key"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="OSLC4EMFGenerator.ecore#//EStructuralFeatureMapping">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference OSLC4EMFGenerator.ecore#//EStructuralFeatureMapping/eStructuralFeature"/>
+    </genClasses>
+    <genClasses ecoreClass="OSLC4EMFGenerator.ecore#//EClassMapping">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference OSLC4EMFGenerator.ecore#//EClassMapping/eClass"/>
+    </genClasses>
+    <genClasses ecoreClass="OSLC4EMFGenerator.ecore#//OSLC4EMFCoreGenerator">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute OSLC4EMFGenerator.ecore#//OSLC4EMFCoreGenerator/corePluginId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute OSLC4EMFGenerator.ecore#//OSLC4EMFCoreGenerator/basePackage"/>
+      <genOperations ecoreOperation="OSLC4EMFGenerator.ecore#//OSLC4EMFCoreGenerator/webApplicationBasePath"/>
+    </genClasses>
+    <genClasses ecoreClass="OSLC4EMFGenerator.ecore#//OSLC4EMFExposerGenerator">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute OSLC4EMFGenerator.ecore#//OSLC4EMFExposerGenerator/commonPluginId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute OSLC4EMFGenerator.ecore#//OSLC4EMFExposerGenerator/exposerPluginId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute OSLC4EMFGenerator.ecore#//OSLC4EMFExposerGenerator/basePackage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute OSLC4EMFGenerator.ecore#//OSLC4EMFExposerGenerator/corePluginId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute OSLC4EMFGenerator.ecore#//OSLC4EMFExposerGenerator/coreBasePackage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference OSLC4EMFGenerator.ecore#//OSLC4EMFExposerGenerator/exposerDependenciesContainer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference OSLC4EMFGenerator.ecore#//OSLC4EMFExposerGenerator/exposerRequiredPluginsContainer"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference OSLC4EMFGenerator.ecore#//OSLC4EMFExposerGenerator/exposerPackagesExportContainer"/>
+    </genClasses>
+    <genClasses ecoreClass="OSLC4EMFGenerator.ecore#//PackagesExportContainer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference OSLC4EMFGenerator.ecore#//PackagesExportContainer/packagesExport"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute OSLC4EMFGenerator.ecore#//PackagesExportContainer/name"/>
+    </genClasses>
+    <genClasses ecoreClass="OSLC4EMFGenerator.ecore#//PackageExport">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute OSLC4EMFGenerator.ecore#//PackageExport/id"/>
+    </genClasses>
+    <genClasses ecoreClass="OSLC4EMFGenerator.ecore#//RequiredPluginsContainer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference OSLC4EMFGenerator.ecore#//RequiredPluginsContainer/requiredPlugins"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute OSLC4EMFGenerator.ecore#//RequiredPluginsContainer/name"/>
+    </genClasses>
+    <genClasses ecoreClass="OSLC4EMFGenerator.ecore#//RequiredPlugin">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute OSLC4EMFGenerator.ecore#//RequiredPlugin/id"/>
+    </genClasses>
+    <genClasses ecoreClass="OSLC4EMFGenerator.ecore#//RequiredPluginFeature"/>
+    <genClasses ecoreClass="OSLC4EMFGenerator.ecore#//PackageExportFeature"/>
+  </genPackages>
+</genmodel:GenModel>

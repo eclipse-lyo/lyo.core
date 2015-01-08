@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ftask="http://www.eclipse.org/egf/1.0.0/ftask"
+    xmlns:types="http://www.eclipse.org/egf/1.0.0/types">
+  <ftask:Task xmi:id="_1P9VAHQmEeSNOYUnvIeHIQ" name="OSLC4EMF Core Generator Task"
+      kind="Acceleo3" implementation="project = org.eclipse.lyo.oslc4j.codegenerator.emf.core&#xA;class = org.eclipse.lyo.oslc4j.codegenerator.emf.core.main.Generate">
+    <contractContainer xmi:id="__T-XoHQmEeSNOYUnvIeHIQ">
+      <contracts xmi:id="__s-tgHQmEeSNOYUnvIeHIQ" name="modelURI">
+        <type xmi:type="types:TypeURI" xmi:id="_ByzxkHQnEeSNOYUnvIeHIQ"/>
+      </contracts>
+      <contracts xmi:id="_AD9DEHQnEeSNOYUnvIeHIQ" name="output">
+        <type xmi:type="types:TypeString" xmi:id="_C5E2EHQnEeSNOYUnvIeHIQ"/>
+      </contracts>
+    </contractContainer>
+  </ftask:Task>
+  <ftask:Task xmi:id="_D54LwHQnEeSNOYUnvIeHIQ" name="OSLC4EMF Exposer Generator Task"
+      kind="Acceleo3" implementation="project = org.eclipse.lyo.oslc4j.codegenerator.emf.exposer&#xA;class = org.eclipse.lyo.oslc4j.codegenerator.emf.exposer.main.GenerateExposer">
+    <contractContainer xmi:id="_Iw-dkHQnEeSNOYUnvIeHIQ">
+      <contracts xmi:id="_JMD3EHQnEeSNOYUnvIeHIQ" name="modelURI">
+        <type xmi:type="types:TypeURI" xmi:id="_J2tWkHQnEeSNOYUnvIeHIQ"/>
+      </contracts>
+      <contracts xmi:id="_Jb7fEHQnEeSNOYUnvIeHIQ" name="output">
+        <type xmi:type="types:TypeString" xmi:id="_Kq07IHQnEeSNOYUnvIeHIQ"/>
+      </contracts>
+    </contractContainer>
+  </ftask:Task>
+  <ftask:Task xmi:id="_dLBDYHQoEeSNOYUnvIeHIQ" name="Configure Maven Plugins" kind="java"
+      implementation="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.tasks.ConfigureMavenTask">
+    <contractContainer xmi:id="_BuGwYHQqEeSNOYUnvIeHIQ">
+      <contracts xmi:id="_DZetEHQqEeSNOYUnvIeHIQ" name="config.maven.project.name">
+        <type xmi:type="types:TypeString" xmi:id="_Lo6ZwHSEEeSyHNXUmzOvaQ"/>
+      </contracts>
+    </contractContainer>
+  </ftask:Task>
+  <ftask:Task xmi:id="_NadxMHQnEeSNOYUnvIeHIQ" name="OSLC4EMF Common Generator Task"
+      kind="Acceleo3" implementation="project = org.eclipse.lyo.oslc4j.codegenerator.emf.exposer&#xA;class = org.eclipse.lyo.oslc4j.codegenerator.emf.exposer.main.GenerateCommon">
+    <contractContainer xmi:id="_TNPBEHQnEeSNOYUnvIeHIQ">
+      <contracts xmi:id="_T1D2EHQnEeSNOYUnvIeHIQ" name="modelURI">
+        <type xmi:type="types:TypeURI" xmi:id="_WTg1gHQnEeSNOYUnvIeHIQ"/>
+      </contracts>
+      <contracts xmi:id="_VwqAEHQnEeSNOYUnvIeHIQ" name="output">
+        <type xmi:type="types:TypeString" xmi:id="_W6RTgHQnEeSNOYUnvIeHIQ"/>
+      </contracts>
+    </contractContainer>
+  </ftask:Task>
+  <ftask:Task xmi:id="_red6cHSiEeSfHe5rS00gOQ" name="Configure Project Task" kind="java"
+      implementation="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.tasks.ConfigureProjectTask">
+    <contractContainer xmi:id="_KsyFsHSlEeSfHe5rS00gOQ">
+      <contracts xmi:id="_NK4f0HSlEeSfHe5rS00gOQ" name="config.project.name">
+        <type xmi:type="types:TypeString" xmi:id="_P-jhUHSlEeSfHe5rS00gOQ"/>
+      </contracts>
+      <contracts xmi:id="_Nfon0HSlEeSfHe5rS00gOQ" name="config.java.version">
+        <type xmi:type="types:TypeString" xmi:id="_Y63VAHSlEeSfHe5rS00gOQ"/>
+      </contracts>
+      <contracts xmi:id="_N1TV0HSlEeSfHe5rS00gOQ" name="config.dependencies">
+        <type xmi:type="types:TypeCollection" xmi:id="_Zu0hgHSlEeSfHe5rS00gOQ"/>
+      </contracts>
+      <contracts xmi:id="_OPKnUHSlEeSfHe5rS00gOQ" name="config.exportPackages">
+        <type xmi:type="types:TypeCollection" xmi:id="_aMgjEHSlEeSfHe5rS00gOQ"/>
+      </contracts>
+      <contracts xmi:id="_OgaIUHSlEeSfHe5rS00gOQ" name="config.activator.path">
+        <type xmi:type="types:TypeString" xmi:id="_bXfvgHSlEeSfHe5rS00gOQ"/>
+      </contracts>
+    </contractContainer>
+  </ftask:Task>
+</xmi:XMI>

@@ -1,0 +1,153 @@
+[comment encoding = UTF-8 /]
+[comment
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *     
+ *******************************************************************************/
+/]
+
+[module exposerServices('http://org.eclipse.lyo/oslc4j/emf', 'http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator', 'http://www.eclipse.org/emf/2002/Ecore')]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::services::services /]
+
+
+[comment Common queries for Resource Util class /]
+[query public javaClassPackageNameForResourceUtil(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ResourceUtil'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator))
+/]
+
+[query public javaClassNameForResourceUtil(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+'ResourceUtil'
+/]
+
+[query public javaClassFullNameForResourceUtil(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForResourceUtil(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForResourceUtil(anAdaptorInterfaceGenerator))
+/]
+
+[query public javaClassFullFileNameForResourceUtil(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForResourceUtil(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForResourceUtil(anAdaptorInterfaceGenerator)).concat('.java')
+/]
+
+[query public javaClassPackageNameForResourceManager(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ResourceManager'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator))
+/]
+
+[query public javaClassNameForResourceManager(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.adaptorInterface.name.toUpperFirst().concat('ResourceManager')
+/]
+
+[query public javaClassFullNameForResourceManager(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForResourceManager(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForResourceManager(anAdaptorInterfaceGenerator))
+/]
+
+[query public javaClassFullFileNameForResourceManager(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForResourceManager(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForResourceManager(anAdaptorInterfaceGenerator)).concat('.java')
+/]
+
+[query public corePluginId(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+findValue(anAdaptorInterfaceGenerator, 'corePluginId')
+/]
+
+[query public commonPluginId(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String =
+findValue(anAdaptorInterfaceGenerator, 'commonPluginId') 
+/]
+
+[query public exposerPluginId(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+findValue(anAdaptorInterfaceGenerator, 'exposerPluginId')
+/]
+
+[comment Common queries for Exposer Activator /]
+[query public javaClassPackageNameForExposerActivator(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ExposerActivator'})
+/]
+
+[query public javaClassNameForExposerActivator(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+'Activator'
+/]
+
+[query public javaClassFullNameForExposerActivator(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForExposerActivator(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForExposerActivator(anAdaptorInterfaceGenerator))
+/]
+
+[query public javaClassFullFileNameForExposerActivator(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForExposerActivator(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForExposerActivator(anAdaptorInterfaceGenerator)).concat('.java')
+/]
+
+
+[comment Common queries for Common Activator /]
+[query public javaClassPackageNameForCommonActivator(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'CommonActivator'})
+/]
+
+[query public javaClassNameForCommonActivator(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+'Activator'
+/]
+
+[query public javaClassFullNameForCommonActivator(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForCommonActivator(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForCommonActivator(anAdaptorInterfaceGenerator))
+/]
+
+[query public javaClassFullFileNameForCommonActivator(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForCommonActivator(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForCommonActivator(anAdaptorInterfaceGenerator)).concat('.java')
+/]
+
+[comment Common queries for Exposer Resource Set /]
+[query public javaClassPackageNameForExposerResourceSet(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ExposerResourceSet'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator))
+/]
+
+[query public javaClassNameForExposerResourceSet(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+'ExposerResourceSet'
+/]
+
+[query public javaClassFullNameForExposerResourceSet(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForExposerResourceSet(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForExposerResourceSet(anAdaptorInterfaceGenerator))
+/]
+
+[query public javaClassFullFileNameForExposerResourceSet(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForExposerResourceSet(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForExposerResourceSet(anAdaptorInterfaceGenerator)).concat('.java')
+/]
+
+
+[comment Common queries for Type Cache Adapter /]
+[query public javaClassPackageNameForTypeCacheAdapter(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'TypeCacheAdapter'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator))
+/]
+
+[query public javaClassNameForTypeCacheAdapter(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+'TypeCacheAdapter'
+/]
+
+[query public javaClassFullNameForTypeCacheAdapter(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForTypeCacheAdapter(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForTypeCacheAdapter(anAdaptorInterfaceGenerator))
+/]
+
+[query public javaClassFullFileNameForTypeCacheAdapter(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForTypeCacheAdapter(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForTypeCacheAdapter(anAdaptorInterfaceGenerator)).concat('.java')
+/]
+
+[comment Common queries for Exposer Extension Implementation /]
+[query public javaClassPackageNameForExposerExtensionImpl(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ExposerExtensionImpl'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator))
+/]
+
+[query public javaClassNameForExposerExtensionImpl(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aServiceProvider : ServiceProvider) : String = 
+'ExposerExtensionFor'.concat(aServiceProvider.title.substituteAll(' ', '').toUpperFirst())
+/]
+
+[query public javaClassFullNameForExposerExtensionImpl(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aServiceProvider : ServiceProvider) : String = 
+javaClassPackageNameForExposerExtensionImpl(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForExposerExtensionImpl(anAdaptorInterfaceGenerator, aServiceProvider))
+/]
+
+[query public javaClassFullFileNameForExposerExtensionImpl(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aServiceProvider : ServiceProvider) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForExposerExtensionImpl(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForExposerExtensionImpl(anAdaptorInterfaceGenerator, aServiceProvider)).concat('.java')
+/]

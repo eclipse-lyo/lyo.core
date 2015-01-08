@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.egf.core.fcore">
+      <fcore
+            id="egf/OSLC4EMFCoreGenerator.fcore">
+      </fcore>
+      <fcore
+            id="egf/OSLC4EMFExposerGenerator.fcore">
+      </fcore>
+      <fcore
+            id="egf/resources.fcore">
+      </fcore>
+      <fcore
+            id="egf/OSLC4EMFCommonGenerator.fcore">
+      </fcore>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.handlers.CoreGeneratorHandler"
+            commandId="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.commands.CoreCommand">
+      </handler>
+      <handler
+            class="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.handlers.ExposerGeneratorHandler"
+            commandId="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.commands.ExposerCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.commands.CoreCommand"
+               id="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.menus.CoreMenu"
+               style="push"
+               tooltip="%command.tooltip">
+            <visibleWhen
+                  checkEnabled="false">
+                      <with variable="selection">
+				        <count value="1"/>
+				        <iterate ifEmpty="false">
+		                  <adapt type="org.eclipse.emf.ecore.EObject">
+				            <instanceof value="org.eclipse.lyo.oslc4j.adaptormodel.emf.oslc4emfgenerator.OSLC4EMFCoreGenerator"/>
+            			  </adapt>
+				        </iterate>
+				    </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.commands.ExposerCommand"
+               id="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.menus.ExposerMenu"
+               style="push"
+               tooltip="%command.tooltip.0">
+            <visibleWhen
+                  checkEnabled="false">
+                      <with variable="selection">
+				        <count value="1"/>
+				        <iterate ifEmpty="false">
+		                  <adapt type="org.eclipse.emf.ecore.EObject">
+				            <instanceof value="org.eclipse.lyo.oslc4j.adaptormodel.emf.oslc4emfgenerator.OSLC4EMFExposerGenerator"/>
+            			  </adapt>
+				        </iterate>
+				    </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.commands.category"
+            name="%category.name">
+      </category>
+      <command
+            categoryId="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.commands.category"
+            id="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.commands.CoreCommand"
+            name="%command.name">
+      </command>
+      <command
+            categoryId="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.commands.category"
+            id="org.eclipse.lyo.oslc4j.codegenerator.emf.launcher.egf.commands.ExposerCommand"
+            name="%command.name.0">
+      </command>
+   </extension>
+
+</plugin>

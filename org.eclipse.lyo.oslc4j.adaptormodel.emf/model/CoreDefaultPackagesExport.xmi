@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ASCII"?>
+<oslc4emf:PackagesExportContainer
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:oslc4emf="http://org.eclipse.lyo/oslc4j/emf"
+    xsi:schemaLocation="http://org.eclipse.lyo/oslc4j/emf OSLC4EMFGenerator.ecore"
+    name="Core packages to export">
+  <packagesExport
+      id="org.eclipse.lyo.oslc4j.client"/>
+  <packagesExport
+      id="org.eclipse.lyo.oslc4j.core.annotation"/>
+  <packagesExport
+      id="org.eclipse.lyo.oslc4j.core.exception"/>
+  <packagesExport
+      id="org.eclipse.lyo.oslc4j.core.model"/>
+  <packagesExport
+      xsi:type="oslc4emf:PackageExportFeature"
+      id="{corePluginId}.{basePackage}"/>
+  <packagesExport
+      xsi:type="oslc4emf:PackageExportFeature"
+      id="{corePluginId}.{basePackage}.servlet"/>
+  <packagesExport
+      xsi:type="oslc4emf:PackageExportFeature"
+      id="{corePluginId}"/>
+</oslc4emf:PackagesExportContainer>

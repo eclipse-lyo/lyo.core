@@ -1,0 +1,102 @@
+[comment encoding = UTF-8 /]
+[comment
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *
+ *******************************************************************************/
+/]
+
+[module generateExposerExtensionImpl('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::services::exposerServices/]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::core::services::coreServices/]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderServices/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderCatalogServices/]
+
+[comment  Generate Exposer Extension implementation for a service provider/]
+[template public generateExposerExtensionImpl(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
+[file (javaClassFullFileNameForExposerExtensionImpl(anAdaptorInterfaceGenerator, aServiceProvider), false, 'UTF-8')]
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *     
+ *******************************************************************************/
+
+package [javaClassPackageNameForExposerExtensionImpl(anAdaptorInterfaceGenerator) /];
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+
+import org.eclipse.lyo.oslc4j.core.model.ServiceProvider;
+import org.eclipse.lyo.oslc4j.core.model.Publisher;
+
+import [aServiceProvider.javaClassFullNameForServiceProviderFactory(anAdaptorInterfaceGenerator)/];
+import [aServiceProvider.javaClassFullNameForService(anAdaptorInterfaceGenerator)/];
+import [javaClassFullNameForAdaptorServletListener(anAdaptorInterfaceGenerator)/];
+import [anAdaptorInterfaceGenerator.adaptorInterface.serviceProviderCatalog.javaClassFullNameForSingleton(anAdaptorInterfaceGenerator)/];
+import [javaInterfaceFullNameForExposerExtension(anAdaptorInterfaceGenerator)/];
+
+public class [javaClassNameForExposerExtensionImpl(anAdaptorInterfaceGenerator, aServiceProvider) /] implements [javaInterfaceNameForExposerExtension(anAdaptorInterfaceGenerator)/]{
+
+	@Override
+    public void initServiceProvider(HttpServletRequest httpServletRequest) {
+		try {		
+			String basePath = [javaClassNameForAdaptorServletListener(anAdaptorInterfaceGenerator.adaptorInterface) /].getServicesBase();
+	
+			[aServiceProvider.javaClassNameForServiceProviderInfo() /] serviceProviderInfo = new [aServiceProvider.javaClassNameForServiceProviderInfo() /]();
+
+			[for (instanceCompositeID: String | instanceCompositeID(aServiceProvider)) separator(lineSeparator())]
+				serviceProviderInfo.[instanceCompositeID /] = "Default[aServiceProvider.title.substituteAll(' ', '').toUpperFirst().concat(instanceCompositeID.toUpperFirst())/]";
+	        [/for]
+
+			boolean serviceProviderExists = [javaClassNameForSingleton(anAdaptorInterfaceGenerator.adaptorInterface.serviceProviderCatalog) /].containsIdentifier([for (instanceCompositeID: String | instanceCompositeID(aServiceProvider)) separator(',')]serviceProviderInfo.[instanceCompositeID /][/for]);
+
+	        if ( !serviceProviderExists ) {
+				serviceProviderInfo.name =  "[aServiceProvider.title/]";
+				String title = "[aServiceProvider.title.concat(' : ') /]" + "[ aServiceProvider.title.substituteAll(' ', '').concat('DefaultImpl') /]" ;
+				String description = "[aServiceProvider.description /]";
+				Publisher publisher = new Publisher("[aServiceProvider.publisher.title /]", "[aServiceProvider.publisher.identifier /]");
+	        	Map<String, Object> parameterMap = new HashMap<String, Object>();
+	            [for (instanceCompositeID: String | instanceCompositeID(aServiceProvider)) separator(lineSeparator())]
+	            parameterMap.put("[instanceCompositeID /]", serviceProviderInfo.[instanceCompositeID /]);
+	            [/for]
+	        	final ServiceProvider aServiceProvider = [javaClassNameForServiceProviderFactory(aServiceProvider) /].createServiceProvider(basePath, title, description, publisher, parameterMap);
+
+				[javaClassNameForSingleton(anAdaptorInterfaceGenerator.adaptorInterface.serviceProviderCatalog) /].registerServiceProvider(httpServletRequest, aServiceProvider, [aServiceProvider.javaClassNameForServiceProviderInfo() /].constructServiceProviderURI([for (instanceCompositeID: String | instanceCompositeID(aServiceProvider)) separator(',')]serviceProviderInfo.[instanceCompositeID /][/for]),[for (instanceCompositeID: String | instanceCompositeID(aServiceProvider)) separator(',')]serviceProviderInfo.[instanceCompositeID /][/for]);
+
+	    	}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new WebApplicationException(e, Status.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+}
+
+[/file]
+[/template]

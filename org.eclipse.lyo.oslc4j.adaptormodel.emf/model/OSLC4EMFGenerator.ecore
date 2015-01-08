@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="oslc4emfgenerator" nsURI="http://org.eclipse.lyo/oslc4j/emf" nsPrefix="oslc4emf">
+  <eClassifiers xsi:type="ecore:EClass" name="OSLC4EMFGenerator" abstract="true" eSuperTypes="../../org.eclipse.lyo.oslc4j.adaptormodel/model/adaptorInterfaceGenerator.ecore#//AdaptorInterfaceGenerator">
+    <eOperations name="getJavaFilesBasePath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="javaFilesBasePath"/>
+    </eOperations>
+    <eOperations name="getPrefix" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EString">
+      <eAnnotations source="prefix"/>
+      <eParameters name="key" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extends" eType="#//OSLC4EMFGenerator"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="javaVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="1.7"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="packagesExportContainer"
+        eType="#//PackagesExportContainer" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredPluginsContainer"
+        eType="#//RequiredPluginsContainer" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EStructuralFeatureMapping" eSuperTypes="../../org.eclipse.lyo.oslc4j.adaptormodel/model/adaptorInterfaceGenerator.ecore#//ResourcePropertyMapping">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eStructuralFeature" lowerBound="1"
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EStructuralFeature"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EClassMapping" eSuperTypes="../../org.eclipse.lyo.oslc4j.adaptormodel/model/adaptorInterfaceGenerator.ecore#//ResourceMapping">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eClass" lowerBound="1"
+        eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EClass"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OSLC4EMFCoreGenerator" eSuperTypes="#//OSLC4EMFGenerator">
+    <eOperations name="webApplicationBasePath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="webApplicationBasePath"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="corePluginId" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="applicationName"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="basePackage" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="javaClassBaseNamespace"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OSLC4EMFExposerGenerator" eSuperTypes="#//OSLC4EMFGenerator">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="commonPluginId" lowerBound="1"
+        eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exposerPluginId" lowerBound="1"
+        eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="basePackage" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="corePluginId" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="coreBasePackage" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exposerDependenciesContainer"
+        eType="ecore:EClass ../../org.eclipse.lyo.oslc4j.adaptormodel/model/adaptorInterfaceGenerator.ecore#//DependenciesContainer"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exposerRequiredPluginsContainer"
+        eType="#//RequiredPluginsContainer" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exposerPackagesExportContainer"
+        eType="#//PackagesExportContainer" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PackagesExportContainer">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="packagesExport" upperBound="-1"
+        eType="#//PackageExport" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PackageExport">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RequiredPluginsContainer">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requiredPlugins" upperBound="-1"
+        eType="#//RequiredPlugin" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RequiredPlugin">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RequiredPluginFeature" eSuperTypes="#//RequiredPlugin"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PackageExportFeature" eSuperTypes="#//PackageExport"/>
+</ecore:EPackage>

@@ -1,0 +1,180 @@
+[comment encoding = UTF-8 /]
+[comment
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *     
+ *******************************************************************************/
+/]
+
+[module generateResourceManager('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator', 'http://org.eclipse.lyo/oslc4j/emf', 'http://www.eclipse.org/emf/2002/Ecore')]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::services::exposerServices/]
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::services::mappingServices/]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::serviceServices/]
+
+[comment]Generate Resource Manager[/comment]
+[template public generateResourceManager(anExposerGenerator : OSLC4EMFExposerGenerator)]
+[file (javaClassFullFileNameForResourceManager(anExposerGenerator), false, 'UTF-8')]
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *     
+ *******************************************************************************/
+
+package [javaClassPackageNameForResourceManager(anExposerGenerator)/];
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Collection;
+import java.util.Iterator;
+import java.net.URI;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.lyo.oslc4j.core.model.AbstractResource;
+import org.eclipse.lyo.oslc4j.core.model.Link;
+import [javaClassFullNameForResourceUtil(anExposerGenerator)/];
+
+[for (aServiceProvider : ServiceProvider | anExposerGenerator.adaptorInterface.serviceProviderCatalog.serviceProviders)]
+[for (aResource: Resource | aServiceProvider.services.managedResources()->sortedBy(name))]
+import [javaClassFullName(aResource, aServiceProvider, anExposerGenerator)/];
+[/for]
+[/for]
+
+public class [javaClassNameForResourceManager(anExposerGenerator)/] {
+
+
+	static Map<Class, Class> EObjToResource = new HashMap<>();
+	static Map<Class, Map<String, String>> map = new HashMap<>();
+	
+	static {
+		Map<String, String> featureMap;
+		EClass eClass;
+		[for (r : ResourceMapping | anExposerGenerator.resourceMappings)]
+		[if (r.oclIsTypeOf(EClassMapping))]
+			//[r.resource.name/]
+			featureMap = new HashMap<String, String>();
+		[for (rp : ResourcePropertyMapping | r.resourcePropertyMappings)]
+		[if (rp.oclIsTypeOf(EStructuralFeatureMapping))]
+			featureMap.put("[rp.resourceProperty.name/]", "[rp.oclAsType(EStructuralFeatureMapping).eStructuralFeature.oclAsType(EStructuralFeature).name /]");
+		[/if]
+		[/for]
+			map.put([r.resource.name/].class, featureMap);
+
+			eClass = [anExposerGenerator.javaClassNameForResourceUtil()/].getEClass(
+			"[anExposerGenerator.getEStructuralFeatureMappings(r.resource)->asSequence()->first().eStructuralFeature.oclAsType(EStructuralFeature).eContainingClass.ePackage.nsURI/]",
+			"[anExposerGenerator.getEStructuralFeatureMappings(r.resource)->asSequence()->first().eStructuralFeature.oclAsType(EStructuralFeature).eContainingClass.name/]");
+
+
+			EObjToResource.put(eClass.getInstanceClass(), [r.resource.name/].class);
+		[/if]
+		[/for]
+		
+		
+	}
+
+	public static void setValues(AbstractResource element, EObject source) {
+		Class<? extends AbstractResource> clazz = element.getClass();
+		Map<String, String> featureMapping = map.get(clazz);
+		Field['[]'/] fields = clazz.getDeclaredFields();
+		for (Field field : fields) {
+			String featureName = featureMapping.get(field.getName());
+			Object value = source.eGet(source.eClass().getEStructuralFeature(featureName));
+			if (value == null) {
+				continue;
+			}
+			try {
+				if (value instanceof Collection) {
+					Collection values = (Collection) value;
+					Iterator iterator = values.iterator();
+					while (iterator.hasNext()) {
+						setValue(element, field, iterator.next(), true);
+					}
+				} else {
+					setValue(element, field, value, false);
+				}
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void setValue(AbstractResource element, Field field, Object value, Boolean isCollection)
+			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		Object result = value;
+		if (value instanceof EObject) {
+			result = getLink((EObject) value);
+		}
+		if (result != null) {
+			String prefix = isCollection?"add":"set";
+			Method method = element.getClass().getMethod(prefix + Character.toUpperCase(field.getName().charAt(0)) + field.getName().substring(1), result.getClass());
+			method.invoke(element, result);
+		}
+	}
+
+	public static Link getLink(EObject eObject) {
+		Class target = EObjToResource.get(eObject.eClass().getInstanceClass());
+		if (target != null) {
+			Map<String, String> featureMap = map.get(target);
+			 try {
+				Method method = target.getMethod("constructURI", String.class);
+				return new Link((URI)method.invoke(target.newInstance(), eObject.eGet(eObject.eClass().getEStructuralFeature(featureMap.get("identifier")))));
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			}
+			
+		} 
+		return getLinkFromParent(eObject);
+	}
+
+	private static Link getLinkFromParent(EObject eObject) {
+		[if (not anExposerGenerator.extends.oclIsUndefined())]
+			return [javaClassFullNameForResourceManager(anExposerGenerator.extends)/].getLink(eObject);
+		[else]
+			return null;
+		[/if]
+	}
+
+}
+[/file]
+[/template]

@@ -1,0 +1,110 @@
+[comment encoding = UTF-8 /]
+[comment
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *     
+ *******************************************************************************/
+/]
+
+[module generateExposerExtensionReader('http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::core::services::coreServices/]
+
+[comment]Generate Exposer Extension reader for the core plugin[/comment]
+[template public generateExposerExtensionReader(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
+[file (javaClassFullFileNameForExposerExtensionReader(anAdaptorInterfaceGenerator), false, 'UTF-8')]
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *     
+ *******************************************************************************/
+
+package [javaClassPackageNameForExposerExtensionReader(anAdaptorInterfaceGenerator) /];
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
+
+
+
+public class [javaClassNameForExposerExtensionReader(anAdaptorInterfaceGenerator) /] {
+
+    private static Collection<Class<?>> serviceProviderServices = new ArrayList<Class<?>>();
+	private static Collection<Class<?>> resourceServices = new ArrayList<Class<?>>();
+	private static Collection<Class<?>> resources = new ArrayList<Class<?>>();
+	private static Collection<IExposerExtension> exposerManagers = new ArrayList<IExposerExtension>();
+	
+	
+	static {
+		IExtensionRegistry reg = Platform.getExtensionRegistry();
+		IConfigurationElement['[]'/] extensions = reg.getConfigurationElementsFor("[corePluginId(anAdaptorInterfaceGenerator)/]", "exposerExtension");
+		for (IConfigurationElement iConfigurationElement : extensions) {
+				try {
+					serviceProviderServices.add(iConfigurationElement.createExecutableExtension("serviceProviderClass").getClass());
+					exposerManagers.add((IExposerExtension) iConfigurationElement.createExecutableExtension("exposerManager"));
+					IConfigurationElement['[]'/] resourceServiceConfigurationElements = iConfigurationElement.getChildren("resourceService");
+					for (IConfigurationElement resourceServiceConfigurationElement : resourceServiceConfigurationElements) {
+						resourceServices.add(resourceServiceConfigurationElement.createExecutableExtension("resourceServiceClass").getClass());
+					}
+					IConfigurationElement['[]'/] resourceConfigurationElements = iConfigurationElement.getChildren("resource");
+					for (IConfigurationElement resourceConfigurationElement : resourceConfigurationElements) {
+						resourceServices.add(resourceConfigurationElement.createExecutableExtension("resourceClass").getClass());
+					}
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+		}
+	}
+
+	private static ExposerExtensionReader INSTANCE;
+
+	private ExposerExtensionReader() {
+	}
+
+	public static ExposerExtensionReader getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new ExposerExtensionReader();
+		}
+		return INSTANCE;
+	}
+
+	public Collection<Class<?>> getServiceProviderServices() {
+		return serviceProviderServices;
+	}
+
+	public Collection<Class<?>> getResourceServices() {
+		return resourceServices;
+	}
+
+	public Collection<Class<?>> getResources() {
+		return resources;
+	}
+
+	public Collection<IExposerExtension> getExposerManagers() {
+		return exposerManagers;
+	}
+}
+
+[/file]
+[/template]

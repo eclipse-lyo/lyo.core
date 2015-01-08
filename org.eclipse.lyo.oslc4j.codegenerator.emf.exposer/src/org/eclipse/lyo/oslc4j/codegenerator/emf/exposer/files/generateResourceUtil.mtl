@@ -1,0 +1,122 @@
+[comment encoding = UTF-8 /]
+[comment
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *     
+ *******************************************************************************/
+/]
+
+[module generateResourceUtil('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::emf::exposer::services::exposerServices/]
+
+[comment]Generate Resource Util[/comment]
+[template public generateResourceUtil(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
+[file (javaClassFullFileNameForResourceUtil(anAdaptorInterfaceGenerator), false, 'UTF-8')]
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *     
+ *******************************************************************************/
+
+package [javaClassPackageNameForResourceUtil(anAdaptorInterfaceGenerator)/];
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EPackage.Registry;
+import org.eclipse.emf.ecore.EStructuralFeature;
+
+import org.eclipse.lyo.oslc4j.core.model.AbstractResource;
+
+public class [javaClassNameForResourceUtil(anAdaptorInterfaceGenerator)/] {
+
+	/**
+	 * @param eClass The source EClass
+	 * @param element The source element
+	 * @param role The role name
+	 * @return The Reference EObject
+	 * @throws WebApplicationException with Status.NOT_FOUND when 
+	 */
+	public static EObject getReference(EClass eClass, EObject element, String role) throws WebApplicationException {
+		EStructuralFeature aSFeature = eClass.getEStructuralFeature(role);
+		Object reference = element.eGet(aSFeature);
+
+		if (reference == null) {
+			return null;
+		}
+
+		if (reference instanceof EObject) {
+			return (EObject) reference;
+		}
+
+		throw new WebApplicationException(Status.NOT_FOUND);
+	}
+	
+	/**
+	 * @param eObject The EObject where to look
+	 * @param featureName The feature name corresponding to the Resource ID
+	 * @return String to be used as the resource id
+	 */
+	public static String getIdentifier(EObject eObject, String featureName) {
+		if (eObject == null) {
+			return null;
+		}
+		EStructuralFeature feature = eObject.eClass().getEStructuralFeature(featureName);
+		if (feature != null) {
+			Object objectId = eObject.eGet(feature);
+			if (objectId instanceof String) {
+				return (String) objectId;
+			}
+		}
+		throw new WebApplicationException(Status.NOT_FOUND);
+	}
+	
+	/**
+	 * @param eClass The source EClass
+	 * @param element The source element
+	 * @param role The role name
+	 * @param featureName The feature name corresponding to the Resource ID
+	 * @return String to be used as the resource id
+	 */
+	public static String getReferenceIdentifier(EClass eClass, EObject element, String role, String featureName) {
+		EObject eObject = getReference(eClass, element, role);
+		return getIdentifier(eObject, featureName);
+	}
+
+	
+	/**
+	 * @param nsUri Package NsURI
+	 * @param name EClass Name
+	 * @return The EClass if found
+	 */
+	public static EClass getEClass(String nsUri, String name) {
+		EClass eClass = null;
+		EPackage ePackage = EPackage.Registry.INSTANCE.getEPackage(nsUri);
+		eClass = (EClass) ePackage.getEClassifier(name);
+		return eClass;
+	}
+
+}
+[/file]
+[/template]
