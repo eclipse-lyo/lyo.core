@@ -15,12 +15,20 @@
  *
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
  *     Matthieu Helleboid   - Use the service provider title for the service provider factory class name
+ *	   						- Use of Adapator Interface Generator
+ *							- Add prefix meta value to get package queries
+ *								with prefix, the generator object can change files location (to generate them in different plugins for example)
+ *							- Add web application path queries
  *     Anass Radouani       - Use the service provider title for the service provider factory class name
+ *	   						- Use of Adapator Interface Generator
+ *							- Add prefix meta value to get package queries
+ *								with prefix, the generator object can change files location (to generate them in different plugins for example)
+ *							- Add web application path queries 
  *     
  *******************************************************************************/
 /]
 
-[module adaptorInterfaceServices('http://org.eclipse.lyo/oslc4j/adaptorInterface')/]
+[module adaptorInterfaceServices('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')/]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::serviceServices/]
@@ -56,80 +64,80 @@ relevantResources(anAdaptorInterface)->collectNested(aResource : Resource |
 /]
 
 [comment Services for AdaptorPackageInfo /]
-[query public javaClassPackageNameForAdaptorPackageInfo(anAdaptorInterface : AdaptorInterface) : String = 
-javaClassBaseNamespace(anAdaptorInterface).concat('.resources')
+[query public javaClassPackageNameForAdaptorPackageInfo(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'AdaptorPackageInfo'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator)).concat('.resources')
 /]
 
-[query public javaClassFullFileNameForAdaptorPackageInfo(anAdaptorInterface : AdaptorInterface) : String = 
-javaFilesBasePath(anAdaptorInterface).concat(javaClassPackageNameForAdaptorPackageInfo(anAdaptorInterface).substituteAll('.', '/')).concat('/').concat('package-info').concat('.java')
+[query public javaClassFullFileNameForAdaptorPackageInfo(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForAdaptorPackageInfo(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat('package-info').concat('.java')
 /]
 
 [comment Services for AdaptorApplication /]
-[query public javaClassPackageNameForAdaptorApplication(anAdaptorInterface : AdaptorInterface) : String = 
-javaClassBaseNamespace(anAdaptorInterface).concat('.servlet')
+[query public javaClassPackageNameForAdaptorApplication(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'AdaptorApplication'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator)).concat('.servlet')
 /]
 
 [query public javaClassNameForAdaptorApplication(anAdaptorInterface : AdaptorInterface) : String = 
 'Application'
 /]
 
-[query public javaClassFullNameForAdaptorApplication(anAdaptorInterface : AdaptorInterface) : String = 
-javaClassPackageNameForAdaptorApplication(anAdaptorInterface).concat('.').concat(javaClassNameForAdaptorApplication(anAdaptorInterface))
+[query public javaClassFullNameForAdaptorApplication(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForAdaptorApplication(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForAdaptorApplication(anAdaptorInterfaceGenerator.adaptorInterface))
 /]
 
-[query public javaClassFullFileNameForAdaptorApplication(anAdaptorInterface : AdaptorInterface) : String = 
-javaFilesBasePath(anAdaptorInterface).concat(javaClassPackageNameForAdaptorApplication(anAdaptorInterface).substituteAll('.', '/')).concat('/').concat(javaClassNameForAdaptorApplication(anAdaptorInterface)).concat('.java')
+[query public javaClassFullFileNameForAdaptorApplication(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForAdaptorApplication(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForAdaptorApplication(anAdaptorInterfaceGenerator.adaptorInterface)).concat('.java')
 /]
 
 [comment Services for AdaptorServletListener /]
-[query public javaClassPackageNameForAdaptorServletListener(anAdaptorInterface : AdaptorInterface) : String = 
-javaClassBaseNamespace(anAdaptorInterface).concat('.servlet')
+[query public javaClassPackageNameForAdaptorServletListener(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'AdaptorServletListener'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator)).concat('.servlet')
 /]
 
 [query public javaClassNameForAdaptorServletListener(anAdaptorInterface : AdaptorInterface) : String = 
 'ServletListener'
 /]
 
-[query public javaClassFullNameForAdaptorServletListener(anAdaptorInterface : AdaptorInterface) : String = 
-javaClassPackageNameForAdaptorServletListener(anAdaptorInterface).concat('.').concat(javaClassNameForAdaptorServletListener(anAdaptorInterface))
+[query public javaClassFullNameForAdaptorServletListener(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForAdaptorServletListener(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForAdaptorServletListener(anAdaptorInterfaceGenerator.adaptorInterface))
 /]
 
-[query public javaClassFullFileNameForAdaptorServletListener(anAdaptorInterface : AdaptorInterface) : String = 
-javaFilesBasePath(anAdaptorInterface).concat(javaClassPackageNameForAdaptorServletListener(anAdaptorInterface).substituteAll('.', '/')).concat('/').concat(javaClassNameForAdaptorServletListener(anAdaptorInterface)).concat('.java')
+[query public javaClassFullFileNameForAdaptorServletListener(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForAdaptorServletListener(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForAdaptorServletListener(anAdaptorInterfaceGenerator.adaptorInterface)).concat('.java')
 /]
 
 [comment Services for AdaptorManager /]
-[query public javaClassPackageNameForAdaptorManager(anAdaptorInterface : AdaptorInterface) : String = 
-javaClassBaseNamespace(anAdaptorInterface)
+[query public javaClassPackageNameForAdaptorManager(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'AdaptorManager'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator))
 /]
 
 [query public javaClassNameForAdaptorManager(anAdaptorInterface : AdaptorInterface) : String = 
 anAdaptorInterface.name.toUpperFirst().concat('Manager')
 /]
 
-[query public javaClassFullNameForAdaptorManager(anAdaptorInterface : AdaptorInterface) : String = 
-javaClassPackageNameForAdaptorManager(anAdaptorInterface).concat('.').concat(javaClassNameForAdaptorManager(anAdaptorInterface))
+[query public javaClassFullNameForAdaptorManager(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForAdaptorManager(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForAdaptorManager(anAdaptorInterfaceGenerator.adaptorInterface))
 /]
 
-[query public javaClassFullFileNameForAdaptorManager(anAdaptorInterface : AdaptorInterface) : String = 
-javaFilesBasePath(anAdaptorInterface).concat(javaClassPackageNameForAdaptorManager(anAdaptorInterface).substituteAll('.', '/')).concat('/').concat(javaClassNameForAdaptorManager(anAdaptorInterface)).concat('.java')
+[query public javaClassFullFileNameForAdaptorManager(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForAdaptorManager(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForAdaptorManager(anAdaptorInterfaceGenerator.adaptorInterface)).concat('.java')
 /]
 
 [comment Services for AdaptorConstants /]
-[query public javaInterfacePackageNameForAdaptorConstants(anAdaptorInterface : AdaptorInterface) : String = 
-javaClassBaseNamespace(anAdaptorInterface)
+[query public javaInterfacePackageNameForAdaptorConstants(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'AdaptorConstant'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator))
 /]
 
 [query public javaInterfaceNameForAdaptorConstants(anAdaptorInterface : AdaptorInterface) : String = 
 anAdaptorInterface.name.toUpperFirst().concat('Constants')
 /]
 
-[query public javaInterfaceFullNameForAdaptorConstants(anAdaptorInterface : AdaptorInterface) : String = 
-javaInterfacePackageNameForAdaptorConstants(anAdaptorInterface).concat('.').concat(javaInterfaceNameForAdaptorConstants(anAdaptorInterface))
+[query public javaInterfaceFullNameForAdaptorConstants(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaInterfacePackageNameForAdaptorConstants(anAdaptorInterfaceGenerator).concat('.').concat(javaInterfaceNameForAdaptorConstants(anAdaptorInterfaceGenerator.adaptorInterface))
 /]
 
-[query public javaInterfaceFullFileNameForAdaptorConstants(anAdaptorInterface : AdaptorInterface) : String = 
-javaFilesBasePath(anAdaptorInterface).concat(javaInterfacePackageNameForAdaptorConstants(anAdaptorInterface).substituteAll('.', '/')).concat('/').concat(javaInterfaceNameForAdaptorConstants(anAdaptorInterface)).concat('.java')
+[query public javaInterfaceFullFileNameForAdaptorConstants(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaInterfacePackageNameForAdaptorConstants(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaInterfaceNameForAdaptorConstants(anAdaptorInterfaceGenerator.adaptorInterface)).concat('.java')
 /]
 
 
@@ -158,19 +166,27 @@ aResource.name.toUpperCase().substituteAll(' ', '_')
 /]
 
 [comment Services for AdaptorServiceProviderFactory /]
-[query public javaClassPackageNameForServiceProviderFactory(anAdaptorInterface : AdaptorInterface) : String = 
-javaClassBaseNamespace(anAdaptorInterface).concat('.servlet')
+[query public javaClassPackageNameForServiceProviderFactory(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ServiceProviderFactory'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator).concat('.servlet'))
 /]
 
 [query public javaClassNameForServiceProviderFactory(aServiceProvider : ServiceProvider) : String = 
 aServiceProvider.title.substituteAll(' ', '').toUpperFirst().concat('ServiceProviderFactory')
 /]
 
-[query public javaClassFullNameForServiceProviderFactory(aServiceProvider : ServiceProvider) : String = 
-javaClassPackageNameForServiceProviderFactory(containingAdaptorInterface(aServiceProvider)).concat('.').concat(javaClassNameForServiceProviderFactory(aServiceProvider))
+[query public javaClassFullNameForServiceProviderFactory(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForServiceProviderFactory(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForServiceProviderFactory(aServiceProvider))
 /]
 
-[query public javaClassFullFileNameForServiceProviderFactory(aServiceProvider : ServiceProvider) : String = 
-javaFilesBasePath(containingAdaptorInterface(aServiceProvider)).concat(javaClassPackageNameForServiceProviderFactory(containingAdaptorInterface(aServiceProvider)).substituteAll('.', '/')).concat('/').concat(javaClassNameForServiceProviderFactory(aServiceProvider)).concat('.java')
+[query public javaClassFullFileNameForServiceProviderFactory(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForServiceProviderFactory(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForServiceProviderFactory(aServiceProvider)).concat('.java')
+/]
+
+[query public webApplicationFileName(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+'web.xml'
+/]
+
+[query public webApplicationFullFileName(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+webApplicationBasePath(anAdaptorInterfaceGenerator).concat('WEB-INF').concat('/').concat(webApplicationFileName(anAdaptorInterfaceGenerator))
 /]
 

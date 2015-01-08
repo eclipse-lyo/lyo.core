@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="adaptorinterfacegenerator" nsURI="http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator"
+    nsPrefix="oslc4j_aig">
+  <eClassifiers xsi:type="ecore:EClass" name="AdaptorInterfaceGeneratorContainer">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="generator" upperBound="-1"
+        eType="#//AdaptorInterfaceGenerator" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Dependency" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MavenDependency" eSuperTypes="#//Dependency">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="artifactId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="groupId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="classifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="scope" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="systemPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="optional" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceMapping" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resource" lowerBound="1"
+        eType="ecore:EClass adaptorInterface.ecore#//Resource"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourcePropertyMappings"
+        upperBound="-1" eType="#//ResourcePropertyMapping" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourcePropertyMapping" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceProperty" lowerBound="1"
+        eType="ecore:EClass adaptorInterface.ecore#//ResourceProperty"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AdaptorInterfaceGenerator" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="adaptorInterface" lowerBound="1"
+        eType="ecore:EClass adaptorInterface.ecore#//AdaptorInterface"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependenciesContainer"
+        eType="#//DependenciesContainer" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceMappings" upperBound="-1"
+        eType="#//ResourceMapping" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DependenciesContainer">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" upperBound="-1"
+        eType="#//Dependency" containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>

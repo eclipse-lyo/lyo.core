@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fcore:FactoryComponent xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:fcore="http://www.eclipse.org/egf/1.0.0/fcore"
+    xmlns:fprod="http://www.eclipse.org/egf/1.0.0/fprod" xmlns:ftask="http://www.eclipse.org/egf/1.0.0/ftask"
+    xmlns:types="http://www.eclipse.org/egf/1.0.0/types" xmi:id="_QwZ9sHM0EeSNPfvc3w24Wg" name="adaptorManagerGenerator">
+  <contractContainer xmi:id="_82WpEHM-EeSNPfvc3w24Wg">
+    <contracts xmi:type="fcore:FactoryComponentContract" xmi:id="_9SWokHM-EeSNPfvc3w24Wg"
+        name="project.name" invocationContracts="#_igi-gnM0EeSNPfvc3w24Wg #_1iN4onM0EeSNPfvc3w24Wg #_3DvVwnM0EeSNPfvc3w24Wg #__GVI0nNYEeSNPfvc3w24Wg">
+      <type xmi:type="types:TypeString" xmi:id="_C-0cIHM_EeSNPfvc3w24Wg" value=""/>
+    </contracts>
+    <contracts xmi:type="fcore:FactoryComponentContract" xmi:id="_BObckHM_EeSNPfvc3w24Wg"
+        name="java.version" invocationContracts="#_igi-g3M0EeSNPfvc3w24Wg">
+      <type xmi:type="types:TypeString" xmi:id="_EPTMkHM_EeSNPfvc3w24Wg" value="1.7"/>
+    </contracts>
+    <contracts xmi:type="fcore:FactoryComponentContract" xmi:id="_Me8ukHM_EeSNPfvc3w24Wg"
+        name="webmodule.version" invocationContracts="#_aRri0HM4EeSNPfvc3w24Wg">
+      <type xmi:type="types:TypeString" xmi:id="_NEP0AHM_EeSNPfvc3w24Wg" value="3.0"/>
+    </contracts>
+    <contracts xmi:type="fcore:FactoryComponentContract" xmi:id="_TnBkgHM_EeSNPfvc3w24Wg"
+        name="output" invocationContracts="#_HAQ8g3M4EeSNPfvc3w24Wg">
+      <type xmi:type="types:TypeString" xmi:id="_h3KkIHNREeSNPfvc3w24Wg"/>
+    </contracts>
+    <contracts xmi:type="fcore:FactoryComponentContract" xmi:id="_WOy4AHM_EeSNPfvc3w24Wg"
+        name="modelURI" invocationContracts="#_HAQ8gnM4EeSNPfvc3w24Wg">
+      <type xmi:type="types:TypeURI" xmi:id="_hJ6ckHNREeSNPfvc3w24Wg"/>
+    </contracts>
+    <contracts xmi:type="fcore:FactoryComponentContract" xmi:id="_DkGoMHVoEeSy_u9--RscPQ"
+        name="mavenDependencies" invocationContracts="#_3DvVw3M0EeSNPfvc3w24Wg">
+      <type xmi:type="types:TypeCollection" xmi:id="_F60A4HVoEeSy_u9--RscPQ"/>
+    </contracts>
+  </contractContainer>
+  <orchestration xmi:type="fprod:ProductionPlan" xmi:id="_Sc8YAHM0EeSNPfvc3w24Wg">
+    <invocations xmi:id="_igi-gHM0EeSNPfvc3w24Wg" invokedActivity="ftask:Task platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_UPQIwGZzEeScK4ThG9us1g">
+      <invocationContractContainer xmi:id="_igi-gXM0EeSNPfvc3w24Wg">
+        <invocationContracts xmi:id="_igi-gnM0EeSNPfvc3w24Wg" factoryComponentContract="#_9SWokHM-EeSNPfvc3w24Wg"
+            invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_UPQIwmZzEeScK4ThG9us1g"/>
+        <invocationContracts xmi:id="_igi-g3M0EeSNPfvc3w24Wg" factoryComponentContract="#_BObckHM_EeSNPfvc3w24Wg"
+            invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_UPQIxGZzEeScK4ThG9us1g"/>
+        <invocationContracts xmi:id="_aRri0HM4EeSNPfvc3w24Wg" factoryComponentContract="#_Me8ukHM_EeSNPfvc3w24Wg"
+            invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_YXrUQHM4EeSNPfvc3w24Wg"/>
+      </invocationContractContainer>
+    </invocations>
+    <invocations xmi:id="_HAQ8gHM4EeSNPfvc3w24Wg" invokedActivity="ftask:Task platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_5DTSYHM3EeSNPfvc3w24Wg">
+      <invocationContractContainer xmi:id="_HAQ8gXM4EeSNPfvc3w24Wg">
+        <invocationContracts xmi:id="_HAQ8gnM4EeSNPfvc3w24Wg" factoryComponentContract="#_WOy4AHM_EeSNPfvc3w24Wg"
+            invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_9qQPYHM3EeSNPfvc3w24Wg"/>
+        <invocationContracts xmi:id="_HAQ8g3M4EeSNPfvc3w24Wg" factoryComponentContract="#_TnBkgHM_EeSNPfvc3w24Wg"
+            invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#__VqoUHM3EeSNPfvc3w24Wg"/>
+      </invocationContractContainer>
+    </invocations>
+    <invocations xmi:id="_1iN4oHM0EeSNPfvc3w24Wg" invokedActivity="ftask:Task platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_UNfOMGZzEeScK4ThG9us1g">
+      <invocationContractContainer xmi:id="_1iN4oXM0EeSNPfvc3w24Wg">
+        <invocationContracts xmi:id="_1iN4onM0EeSNPfvc3w24Wg" factoryComponentContract="#_9SWokHM-EeSNPfvc3w24Wg"
+            invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_UNfOMmZzEeScK4ThG9us1g"/>
+        <invocationContracts xmi:id="_1iN4o3M0EeSNPfvc3w24Wg" invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_V5hAQGjmEeSw8J0jFL_E1A"/>
+        <invocationContracts xmi:id="_1iN4pHM0EeSNPfvc3w24Wg" invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_2BmZwHMoEeSNPfvc3w24Wg"/>
+        <invocationContracts xmi:id="_1iN4pXM0EeSNPfvc3w24Wg" invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_D6EI8HMqEeSNPfvc3w24Wg"/>
+        <invocationContracts xmi:id="_1iN4pnM0EeSNPfvc3w24Wg" invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_GagFYHMqEeSNPfvc3w24Wg"/>
+      </invocationContractContainer>
+    </invocations>
+    <invocations xmi:id="_3DvVwHM0EeSNPfvc3w24Wg" invokedActivity="ftask:Task platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_4zXWwHMoEeSNPfvc3w24Wg">
+      <invocationContractContainer xmi:id="_3DvVwXM0EeSNPfvc3w24Wg">
+        <invocationContracts xmi:id="_3DvVwnM0EeSNPfvc3w24Wg" factoryComponentContract="#_9SWokHM-EeSNPfvc3w24Wg"
+            invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_vor6cHMpEeSNPfvc3w24Wg"/>
+        <invocationContracts xmi:id="_3DvVw3M0EeSNPfvc3w24Wg" factoryComponentContract="#_DkGoMHVoEeSy_u9--RscPQ"
+            invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_1-848HMpEeSNPfvc3w24Wg"/>
+      </invocationContractContainer>
+    </invocations>
+    <invocations xmi:id="__GVI0HNYEeSNPfvc3w24Wg" invokedActivity="ftask:Task platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_7AlQ4HNXEeSNPfvc3w24Wg">
+      <invocationContractContainer xmi:id="__GVI0XNYEeSNPfvc3w24Wg">
+        <invocationContracts xmi:id="__GVI0nNYEeSNPfvc3w24Wg" factoryComponentContract="#_9SWokHM-EeSNPfvc3w24Wg"
+            invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_5O8esHNYEeSNPfvc3w24Wg"/>
+        <invocationContracts xmi:id="__GVI03NYEeSNPfvc3w24Wg" invokedContract="platform:/plugin/org.eclipse.lyo.oslc4j.codegenerator.launcher.egf/egf/resources.fcore#_5jQh0HNYEeSNPfvc3w24Wg"/>
+      </invocationContractContainer>
+    </invocations>
+  </orchestration>
+</fcore:FactoryComponent>

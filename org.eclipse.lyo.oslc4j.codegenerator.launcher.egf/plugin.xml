@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.egf.core.fcore">
+      <fcore
+            id="egf/resources.fcore">
+      </fcore>
+      <fcore
+            id="egf/adaptorManagerGenerator.fcore">
+      </fcore>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.eclipse.lyo.oslc4j.codegenerator.launcher.egf.handlers.AdaptorManagerGeneratorHandler"
+            commandId="org.eclipse.lyo.oslc4j.codegenerator.launcher.egf.commands.AMGCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="org.eclipse.lyo.oslc4j.codegenerator.launcher.egf.commands.AMGCommand"
+               id="org.eclipse.lyo.oslc4j.codegenerator.launcher.egf.menus.AMGMenu"
+               style="push"
+               tooltip="%command.tooltip">
+            <visibleWhen
+                  checkEnabled="false">
+                      <with variable="selection">
+				        <count value="1"/>
+				        <iterate ifEmpty="false">
+		                  <adapt type="org.eclipse.emf.ecore.EObject">
+				            <instanceof value="org.eclipse.lyo.oslc4j.adaptormodel.adaptormanagergenerator.AdaptorManagerGenerator"/>
+            			  </adapt>
+				        </iterate>
+				    </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.eclipse.lyo.oslc4j.codegenerator.launcher.egf.commands.category"
+            name="%category.name">
+      </category>
+      <command
+            categoryId="org.eclipse.lyo.oslc4j.codegenerator.launcher.egf.commands.category"
+            id="org.eclipse.lyo.oslc4j.codegenerator.launcher.egf.commands.AMGCommand"
+            name="%command.name">
+      </command>
+   </extension>
+
+</plugin>

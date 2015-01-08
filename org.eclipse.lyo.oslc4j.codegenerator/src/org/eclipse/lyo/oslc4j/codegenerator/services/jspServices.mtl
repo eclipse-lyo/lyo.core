@@ -15,80 +15,81 @@
  *
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
  *     Matthieu Helleboid   - Add resourceCreatorJspRelativeFileName and resourceCreatorJspFullFileName with a Service Provider attribute
+ *	   						- Use of Adapator Interface Generator
+ *							- Add prefix meta value to get package queries
+ *								with prefix, the generator object can change files location (to generate them in different plugins for example)
  *     Anass Radouani       - Add resourceCreatorJspRelativeFileName and resourceCreatorJspFullFileName with a Service Provider attribute
+ *	   						- Use of Adapator Interface Generator
+ *							- Add prefix meta value to get package queries
+ *								with prefix, the generator object can change files location (to generate them in different plugins for example)
  *     
  *******************************************************************************/
 /]
 
-[module jspServices('http://org.eclipse.lyo/oslc4j/adaptorInterface')/]
+[module jspServices('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')/]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices/]
 
-[query public filteredResourceCollectionJspRelativeFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesWebappPath(anAdaptorInterface).concat('/').concat(aResource.name.toLower()).concat('filteredcollection_json').concat('.jsp')
+[query public filteredResourceCollectionJspRelativeFileName(aResource: Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'FilteredResourceCollectionJsp'}).concat(jspFilesWebappPath(anAdaptorInterfaceGenerator)).concat('/').concat(aResource.name.toLower()).concat('filteredcollection_json').concat('.jsp')
 /]
-[query public filteredResourceCollectionJspFullFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesBasePath(anAdaptorInterface).concat(filteredResourceCollectionJspRelativeFileName(aResource, anAdaptorInterface))
-/]
-
-[query public resourceCollectionJspRelativeFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesWebappPath(anAdaptorInterface).concat('/').concat(aResource.name.toLower()).concat('collection_html').concat('.jsp')
-/]
-[query public resourceCollectionJspFullFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesBasePath(anAdaptorInterface).concat(resourceCollectionJspRelativeFileName(aResource, anAdaptorInterface))
+[query public filteredResourceCollectionJspFullFileName(aResource: Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+jspFilesBasePath(anAdaptorInterfaceGenerator).concat(filteredResourceCollectionJspRelativeFileName(aResource, anAdaptorInterfaceGenerator))
 /]
 
-[query public getResourceJspRelativeFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesWebappPath(anAdaptorInterface).concat('/').concat(aResource.name.toLower()).concat('_html').concat('.jsp')
+[query public resourceCollectionJspRelativeFileName(aResource: Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ResourceCollectionJsp'}).concat(jspFilesWebappPath(anAdaptorInterfaceGenerator)).concat('/').concat(aResource.name.toLower()).concat('collection_html').concat('.jsp')
 /]
-[query public getResourceJspFullFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesBasePath(anAdaptorInterface).concat(getResourceJspRelativeFileName(aResource, anAdaptorInterface))
-/]
-
-[query public resourceCreatorJspRelativeFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesWebappPath(anAdaptorInterface).concat('/').concat(aResource.name.toLower()).concat('creator_html').concat('.jsp')
+[query public resourceCollectionJspFullFileName(aResource: Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+jspFilesBasePath(anAdaptorInterfaceGenerator).concat(resourceCollectionJspRelativeFileName(aResource, anAdaptorInterfaceGenerator))
 /]
 
-[query public resourceCreatorJspRelativeFileName(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
-jspFilesWebappPath(containingAdaptorInterface(aServiceProvider)).concat('/').concat(aResource.name.toLower()).concat('creator').concat(aServiceProvider.title.substituteAll(' ', '').toUpperFirst()).concat('_html').concat('.jsp')
+[query public getResourceJspRelativeFileName(aResource: Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ResourceJsp'}).concat(jspFilesWebappPath(anAdaptorInterfaceGenerator)).concat('/').concat(aResource.name.toLower()).concat('_html').concat('.jsp')
+/]
+[query public getResourceJspFullFileName(aResource: Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+jspFilesBasePath(anAdaptorInterfaceGenerator).concat(getResourceJspRelativeFileName(aResource, anAdaptorInterfaceGenerator))
 /]
 
-[query public resourceCreatorJspFullFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesBasePath(anAdaptorInterface).concat(resourceCreatorJspRelativeFileName(aResource, anAdaptorInterface))
+[query public resourceCreatorJspRelativeFileName(aResource: Resource, aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ResourceCreatorJsp'}).concat(jspFilesWebappPath(anAdaptorInterfaceGenerator)).concat('/').concat(aResource.name.toLower()).concat('creator').concat(aServiceProvider.title.substituteAll(' ', '').toUpperFirst()).concat('_html').concat('.jsp')
 /]
 
-[query public resourceCreatorJspFullFileName(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
-jspFilesBasePath(containingAdaptorInterface(aServiceProvider)).concat(resourceCreatorJspRelativeFileName(aResource, aServiceProvider))
+[query public resourceCreatorJspFullFileName(aResource: Resource, aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+jspFilesBasePath(anAdaptorInterfaceGenerator).concat(resourceCreatorJspRelativeFileName(aResource, aServiceProvider, anAdaptorInterfaceGenerator))
 /]
 
-[query public resourceSelectorJspRelativeFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesWebappPath(anAdaptorInterface).concat('/').concat(aResource.name.toLower()).concat('selector_html').concat('.jsp')
-/]
-[query public resourceSelectorJspFullFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesBasePath(anAdaptorInterface).concat(resourceSelectorJspRelativeFileName(aResource, anAdaptorInterface))
+[query public resourceSelectorJspRelativeFileName(aResource: Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ResourceSelectorJsp'}).concat(jspFilesWebappPath(anAdaptorInterfaceGenerator)).concat('/').concat(aResource.name.toLower()).concat('selector_html').concat('.jsp')
 /]
 
-[query public serviceProviderCatalogJspRelativeFileName(aServiceProviderCatalog : ServiceProviderCatalog) : String = 
-jspFilesWebappPath(containingAdaptorInterface(aServiceProviderCatalog)).concat('/').concat('serviceProviderCatalog_html').concat('.jsp')
-/]
-[query public serviceProviderCatalogJspFullFileName(aServiceProviderCatalog : ServiceProviderCatalog) : String = 
-jspFilesBasePath(containingAdaptorInterface(aServiceProviderCatalog)).concat(serviceProviderCatalogJspRelativeFileName(aServiceProviderCatalog))
+[query public resourceSelectorJspFullFileName(aResource: Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+jspFilesBasePath(anAdaptorInterfaceGenerator).concat(resourceSelectorJspRelativeFileName(aResource, anAdaptorInterfaceGenerator))
 /]
 
-[query public serviceProviderJspRelativeFileName(aServiceProvider : ServiceProvider, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesWebappPath(anAdaptorInterface).concat('/').concat(aServiceProvider.title.substituteAll(' ','').toUpperFirst()).concat('serviceProvider_html').concat('.jsp')
+[query public serviceProviderCatalogJspRelativeFileName(aServiceProviderCatalog : ServiceProviderCatalog, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'SPCatalogJsp'}).concat(jspFilesWebappPath(anAdaptorInterfaceGenerator)).concat('/').concat('serviceProviderCatalog_html').concat('.jsp')
 /]
-[query public serviceProviderJspFullFileName(aServiceProvider : ServiceProvider, anAdaptorInterface : AdaptorInterface) : String = 
-jspFilesBasePath(anAdaptorInterface).concat(serviceProviderJspRelativeFileName(aServiceProvider, anAdaptorInterface))
+
+[query public serviceProviderCatalogJspFullFileName(aServiceProviderCatalog : ServiceProviderCatalog, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+jspFilesBasePath(anAdaptorInterfaceGenerator).concat(serviceProviderCatalogJspRelativeFileName(aServiceProviderCatalog, anAdaptorInterfaceGenerator))
+/]
+
+[query public serviceProviderJspRelativeFileName(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ServiceProviderJsp'}).concat(jspFilesWebappPath(anAdaptorInterfaceGenerator)).concat('/').concat(aServiceProvider.title.substituteAll(' ','').toUpperFirst()).concat('serviceProvider_html').concat('.jsp')
+/]
+
+[query public serviceProviderJspFullFileName(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+jspFilesBasePath(anAdaptorInterfaceGenerator).concat(serviceProviderJspRelativeFileName(aServiceProvider, anAdaptorInterfaceGenerator))
 /]
 
 [comment TODO: I need to work out how to properly set hte javascript path. This is hard-coded :-)/]
-[query public delegatedUIJavaScriptsRelativeFileName(anAdaptorInterface : AdaptorInterface) : String = 
-'delegatedUI'.concat('.js')
+[query public delegatedUIJavaScriptsRelativeFileName(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'DelegateUIJs'}).concat('delegatedUI').concat('.js')
 /]
-[query public delegatedUIJavaScriptsFullFileName(anAdaptorInterface : AdaptorInterface) : String = 
-javascriptFilesBasePath(anAdaptorInterface).concat('/').concat(delegatedUIJavaScriptsRelativeFileName(anAdaptorInterface))
+[query public delegatedUIJavaScriptsFullFileName(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javascriptFilesBasePath(anAdaptorInterfaceGenerator).concat('/').concat(delegatedUIJavaScriptsRelativeFileName(anAdaptorInterfaceGenerator))
 /]
 
 

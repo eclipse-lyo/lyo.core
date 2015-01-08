@@ -12,8 +12,17 @@ http://www.eclipse.org/org/documents/edl-v10.php.
 Contributors:
 
     Jad El-khoury          - initial API and implementation
+    Matthieu Helleboid	   - Helper to invoke EOperation
+    Anass Radouani		   - Helper to invoke EOperation
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.codegenerator.services;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EOperation;
 
 public class Services {
 
@@ -41,5 +50,21 @@ public class Services {
 
 	return type;
   }
+	
+	/**
+	 * invoke EOperation
+	 * @param self EObject containing the EOperation
+	 * @param operation the EOperation to invoke
+	 * @param arguments EOperation arguments
+	 * @return
+	 */
+	public Object invoke(EObject self, EOperation operation, Collection<Object> arguments){
+		try {
+			Object eInvoke = self.eInvoke(operation, new BasicEList<Object>(arguments));
+			return eInvoke;
+		} catch (InvocationTargetException e) {
+			return "";
+		}
+	}
 
 }

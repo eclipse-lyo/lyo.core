@@ -15,12 +15,16 @@
  *
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
  *     Matthieu Helleboid   - Use the service provider title in the service provider class name and the service provider info class name
+ *	   						- Use of Adapator Interface Generator
+ * 							- add instanceMethodParameterList to get parameters list with their container
  *     Anass Radouani       - Use the service provider title in the service provider class name and the service provider info class name
+ *	   						- Use of Adapator Interface Generator
+ * 							- add instanceMethodParameterList to get parameters list with their container
  *     
  *******************************************************************************/
 /]
 
-[module serviceProviderServices('http://org.eclipse.lyo/oslc4j/adaptorInterface')/]
+[module serviceProviderServices('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')/]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::serviceServices/]
@@ -33,37 +37,37 @@ aServiceProvider.eContainer(AdaptorInterface)
 /]
 
 [comment Services for serviceProviderService /]
-[query public javaClassPackageNameForService(aServiceProvider : ServiceProvider) : String = 
-javaClassBaseNamespace(containingAdaptorInterface(aServiceProvider)).concat('.services')
+[query public javaClassPackageNameForService(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ServiceProviderService'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator)).concat('.services')
 /]
 
 [query public javaClassNameForService(aServiceProvider : ServiceProvider) : String = 
 aServiceProvider.title.substituteAll(' ', '').toUpperFirst().concat('ServiceProviderService')
 /]
 
-[query public javaClassFullNameForService(aServiceProvider : ServiceProvider) : String = 
-javaClassPackageNameForService(aServiceProvider).concat('.').concat(javaClassNameForService(aServiceProvider))
+[query public javaClassFullNameForService(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForService(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForService(aServiceProvider))
 /]
 
-[query public javaClassFullFileNameForService(aServiceProvider : ServiceProvider) : String = 
-javaFilesBasePath(containingAdaptorInterface(aServiceProvider)).concat(javaClassPackageNameForService(aServiceProvider).substituteAll('.', '/')).concat('/').concat(javaClassNameForService(aServiceProvider)).concat('.java')
+[query public javaClassFullFileNameForService(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForService(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForService(aServiceProvider)).concat('.java')
 /]
 
 [comment Services for ServiceProviderInfo /]
-[query public javaClassPackageNameForServiceProviderInfo(aServiceProvider : ServiceProvider) : String = 
-javaClassBaseNamespace(containingAdaptorInterface(aServiceProvider))
+[query public javaClassPackageNameForServiceProviderInfo(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ServiceProviderInfo'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator))
 /]
 
 [query public javaClassNameForServiceProviderInfo(aServiceProvider : ServiceProvider) : String = 
 aServiceProvider.title.substituteAll(' ', '').toUpperFirst().concat('ServiceProviderInfo')
 /]
 
-[query public javaClassFullNameForServiceProviderInfo(aServiceProvider : ServiceProvider) : String = 
-javaClassPackageNameForServiceProviderInfo(aServiceProvider).concat('.').concat(javaClassNameForServiceProviderInfo(aServiceProvider))
+[query public javaClassFullNameForServiceProviderInfo(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForServiceProviderInfo(anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForServiceProviderInfo(aServiceProvider))
 /]
 
-[query public javaClassFullFileNameForServiceProviderInfo(aServiceProvider : ServiceProvider) : String = 
-javaFilesBasePath(containingAdaptorInterface(aServiceProvider)).concat(javaClassPackageNameForServiceProviderInfo(aServiceProvider).substituteAll('.', '/')).concat('/').concat(javaClassNameForServiceProviderInfo(aServiceProvider)).concat('.java')
+[query public javaClassFullFileNameForServiceProviderInfo(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForServiceProviderInfo(anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForServiceProviderInfo(aServiceProvider)).concat('.java')
 /]
 
 [query public serviceBaseURI (aServiceProvider : ServiceProvider) : String = 
@@ -108,4 +112,8 @@ endif)
 
 [template public instanceMethodParameterList(aServiceProvider : ServiceProvider)] 
 [for (instanceCompositeID: String | aServiceProvider.instanceCompositeID()) separator(', ')][instanceCompositeID /][/for]
+[/template]
+
+[template public instanceMethodParameterList(aServiceProvider : ServiceProvider, attrbuteContainer : String)] 
+[for (instanceCompositeID: String | aServiceProvider.instanceCompositeID()) separator(', ')][attrbuteContainer.concat('.').concat(instanceCompositeID) /][/for]
 [/template]

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oslc4j_aig:DependenciesContainer xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oslc4j_aig="http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator">
+  <dependencies xsi:type="oslc4j_aig:MavenDependency" artifactId="oslc4j-core" groupId="org.eclipse.lyo.oslc4j.core" version="2.0.0"/>
+  <dependencies xsi:type="oslc4j_aig:MavenDependency" artifactId="oslc4j-jena-provider" groupId="org.eclipse.lyo.oslc4j.core" version="2.0.0"/>
+  <dependencies xsi:type="oslc4j_aig:MavenDependency" artifactId="oslc4j-wink" groupId="org.eclipse.lyo.oslc4j.core" version="2.0.0"/>
+  <dependencies xsi:type="oslc4j_aig:MavenDependency" artifactId="oslc4j-json4j-provider" groupId="org.eclipse.lyo.oslc4j.core" version="2.0.0"/>
+  <dependencies xsi:type="oslc4j_aig:MavenDependency" artifactId="javax.servlet" groupId="org.glassfish" version="3.1-b33"/>
+  <dependencies xsi:type="oslc4j_aig:MavenDependency" artifactId="oauth" groupId="net.oauth.core" version="20100527"/>
+  <dependencies xsi:type="oslc4j_aig:MavenDependency" artifactId="oauth-provider" groupId="net.oauth.core" version="20100527" type=""/>
+  <dependencies xsi:type="oslc4j_aig:MavenDependency" artifactId="oauth-core" groupId="org.eclipse.lyo.server" version="2.0.0"/>
+  <dependencies xsi:type="oslc4j_aig:MavenDependency" artifactId="oauth-consumer-store" groupId="org.eclipse.lyo.server" version="2.0.0"/>
+  <dependencies xsi:type="oslc4j_aig:MavenDependency" artifactId="oauth-webapp" groupId="org.eclipse.lyo.server" version="2.0.0" type="war"/>
+</oslc4j_aig:DependenciesContainer>

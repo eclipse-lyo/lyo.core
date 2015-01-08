@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2014 Jad El-khoury.&#xD;&#xA;&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;and Eclipse Distribution License v. 1.0 which accompanies this distribution.&#xD;&#xA;&#xD;&#xA;The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA;and the Eclipse Distribution License is available at&#xD;&#xA;http://www.eclipse.org/org/documents/edl-v10.php.&#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;&#xD;&#xA;Jad El-khoury&#x9;&#x9;- Adaptor Manager Generator&#xD;&#xA;Matthieu Helleboid&#x9;- Extract generation information from Adaptor Interface and move them to tje Adaptor Manager Generator&#xD;&#xA;Anass Radouani&#x9;&#x9;- Extract generation information from Adaptor Interface and move them to tje Adaptor Manager Generator"
+    modelDirectory="/org.eclipse.lyo.oslc4j.adaptormodel/src" editDirectory="/org.eclipse.lyo.oslc4j.adaptormodel.amgen.edit/src"
+    editorDirectory="" modelPluginID="org.eclipse.lyo.oslc4j.adaptormodel" modelName="AdaptorManagerGenerator"
+    rootExtendsInterface="org.eclipse.emf.cdo.CDOObject" rootExtendsClass="org.eclipse.emf.internal.cdo.CDOObjectImpl"
+    reflectiveDelegation="true" testsDirectory="" importerID="org.eclipse.emf.importer.cdo"
+    featureDelegation="Reflective" complianceLevel="7.0" copyrightFields="false" editPluginID="org.eclipse.lyo.oslc4j.adaptormodel.amgen.edit"
+    editorPluginID="org.eclipse.lyo.oslc4j.adaptormodel.amgen.editor" language=""
+    usedGenPackages="adaptorInterface.genmodel#//adaptorinterface adaptorInterfaceGenerator.genmodel#//adaptorinterfacegenerator"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>adaptorManagerGenerator.ecore</foreignModel>
+  <modelPluginVariables>CDO=org.eclipse.emf.cdo</modelPluginVariables>
+  <genPackages prefix="AdaptorManagerGenerator" basePackage="org.eclipse.lyo.oslc4j.adaptormodel"
+      disposableProviderFactory="true" extensibleProviderFactory="true" childCreationExtenders="true"
+      ecorePackage="adaptorManagerGenerator.ecore#/">
+    <genClasses ecoreClass="adaptorManagerGenerator.ecore#//AdaptorManagerGenerator">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorManagerGenerator.ecore#//AdaptorManagerGenerator/javaClassBaseNamespace"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorManagerGenerator.ecore#//AdaptorManagerGenerator/javaFilesBasePath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorManagerGenerator.ecore#//AdaptorManagerGenerator/jspFilesBasePath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorManagerGenerator.ecore#//AdaptorManagerGenerator/javascriptFilesBasePath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorManagerGenerator.ecore#//AdaptorManagerGenerator/applicationName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorManagerGenerator.ecore#//AdaptorManagerGenerator/webApplicationBasePath"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

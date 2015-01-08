@@ -13,21 +13,23 @@
  
  Contributors:
  
-    Sam Padgett	  	- initial API and implementation
-    Michael Fiedler	- adapted for OSLC4J
-	Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+    Sam Padgett	  		- initial API and implementation
+    Michael Fiedler		- adapted for OSLC4J
+	Jad El-khoury       - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+	Matthieu Helleboid	- Use of Adapator Interface Generator
+	Anass Radouani		- Use of Adapator Interface Generator
 --%>
 /]
 
-[module generateGetResourceJsp('http://org.eclipse.lyo/oslc4j/adaptorInterface')]
+[module generateGetResourceJsp('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourcePropertyServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::jspServices/]
 
-[template public generateGetResourceJsp(aResource : Resource, anAdaptorInterface : AdaptorInterface)]
-[file (getResourceJspFullFileName(aResource, anAdaptorInterface), false, 'UTF-8')]
+[template public generateGetResourceJsp(aResource : Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
+[file (getResourceJspFullFileName(aResource, anAdaptorInterfaceGenerator), false, 'UTF-8')]
 <!DOCTYPE html>
 <%--
  Copyright (c) 2011, 2012 IBM Corporation and others.
@@ -51,7 +53,7 @@
 
 <%@page import="org.eclipse.lyo.oslc4j.core.model.ServiceProvider"%>
 <%@page import="java.util.List" %>
-<%@page import="[javaClassFullName(aResource, anAdaptorInterface) /]"%>
+<%@page import="[javaClassFullName(aResource, anAdaptorInterfaceGenerator) /]"%>
 <%--
 [protected ('imports')]
 --%>

@@ -17,13 +17,15 @@
  *     Alberto Giammaria    - initial API and implementation
  *     Chris Peters         - initial API and implementation
  *     Gianluca Bernardini  - initial API and implementation
- *	   Sam Padgett	       - initial API and implementation
- *     Michael Fiedler     - adapted for OSLC4J
+ *	   Sam Padgett	        - initial API and implementation
+ *     Michael Fiedler      - adapted for OSLC4J
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *	   Matthieu Helleboid	- Use of Adapator Interface Generator
+ *	   Anass Radouani		- Use of Adapator Interface Generator
  *******************************************************************************/
 /]
 
-[module generateResource('http://org.eclipse.lyo/oslc4j/adaptorInterface')]
+[module generateResource('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices/]
@@ -31,8 +33,8 @@
 [import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::domainSpecificationServices/]
 
-[template public generateResource(aResource : Resource, anAdaptorInterface : AdaptorInterface)]
-[file (javaClassFullFileName(aResource, anAdaptorInterface), false, 'UTF-8')]
+[template public generateResource(aResource : Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
+[file (javaClassFullFileName(aResource, anAdaptorInterfaceGenerator), false, 'UTF-8')]
 /*******************************************************************************
  * Copyright (c) 2012 IBM Corporation and others.
  *
@@ -58,7 +60,7 @@
  *******************************************************************************/
 
 
-package [javaClassPackageName(aResource, anAdaptorInterface) /];
+package [javaClassPackageName(aResource, anAdaptorInterfaceGenerator) /];
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -97,12 +99,12 @@ import org.eclipse.lyo.oslc4j.core.model.OslcConstants;
 import org.eclipse.lyo.oslc4j.core.model.Representation;
 import org.eclipse.lyo.oslc4j.core.model.ValueType;
 
-import [javaClassFullNameForAdaptorServletListener(anAdaptorInterface) /]; 
-import [javaInterfaceFullNameForAdaptorConstants(anAdaptorInterface) /];
+import [javaClassFullNameForAdaptorServletListener(anAdaptorInterfaceGenerator) /]; 
+import [javaInterfaceFullNameForAdaptorConstants(anAdaptorInterfaceGenerator) /];
 [for (aProperty: ResourceProperty | allProperties(aResource)->sortedBy(name))]
 [if(Sequence{'Resource', 'LocalResource'}->includes(aProperty.valueType.toString())) ]
 [if (not aProperty.range.oclIsUndefined())]
-import [javaClassFullName(aProperty.range, anAdaptorInterface) /];	
+import [javaClassFullName(aProperty.range, anAdaptorInterfaceGenerator) /];	
 [/if]
 [/if]
 [/for]
@@ -110,9 +112,9 @@ import [javaClassFullName(aProperty.range, anAdaptorInterface) /];
 // [protected ('imports')]
 // [/protected]
 
-@OslcNamespace([javaInterfaceNameForAdaptorConstants(anAdaptorInterface) /].[domainSpecificationNamespaceConstantName(aResource.definingDomainSpecification()) /])
-@OslcName([javaInterfaceNameForAdaptorConstants(anAdaptorInterface) /].[resourceConstantName(aResource) /]) 
-@OslcResourceShape(title = "[aResource.name /] Resource Shape", describes = [javaInterfaceNameForAdaptorConstants(anAdaptorInterface) /].[resourceTypeConstantName(aResource) /])
+@OslcNamespace([javaInterfaceNameForAdaptorConstants(anAdaptorInterfaceGenerator.adaptorInterface) /].[domainSpecificationNamespaceConstantName(aResource.definingDomainSpecification()) /])
+@OslcName([javaInterfaceNameForAdaptorConstants(anAdaptorInterfaceGenerator.adaptorInterface) /].[resourceConstantName(aResource) /]) 
+@OslcResourceShape(title = "[aResource.name /] Resource Shape", describes = [javaInterfaceNameForAdaptorConstants(anAdaptorInterfaceGenerator.adaptorInterface) /].[resourceTypeConstantName(aResource) /])
 public class [javaClassName(aResource) /]
        extends [parentJavaClassName(aResource) /]
 {
@@ -139,35 +141,35 @@ public [javaClassName(aResource) /](final URI about)
 	// [/protected]
 }
 
-public [javaClassName(aResource) /]([commaSeparate(aResource.instanceMethodSignature(anAdaptorInterface), false, false)/])
+public [javaClassName(aResource) /]([commaSeparate(aResource.instanceMethodSignature(anAdaptorInterfaceGenerator.adaptorInterface), false, false)/])
        throws URISyntaxException
 {
-	this (constructURI([commaSeparate(aResource.instanceMethodParameterList(anAdaptorInterface), false, false)/]));
+	this (constructURI([commaSeparate(aResource.instanceMethodParameterList(anAdaptorInterfaceGenerator.adaptorInterface), false, false)/]));
 	// [protected ('constructor3')]
 	// [/protected]
 }
 
-public static URI constructURI([commaSeparate(aResource.instanceMethodSignature(anAdaptorInterface), false, false)/])
+public static URI constructURI([commaSeparate(aResource.instanceMethodSignature(anAdaptorInterfaceGenerator.adaptorInterface), false, false)/])
 {
-    String basePath = [javaClassNameForAdaptorServletListener(anAdaptorInterface) /].getServicesBase();
+    String basePath = [javaClassNameForAdaptorServletListener(anAdaptorInterfaceGenerator.adaptorInterface) /].getServicesBase();
     Map<String, Object> pathParameters = new HashMap<String, Object>();
-    [for (instanceCompositeID: String | aResource.instanceCompositeID(anAdaptorInterface)) separator(lineSeparator())]
+    [for (instanceCompositeID: String | aResource.instanceCompositeID(anAdaptorInterfaceGenerator.adaptorInterface)) separator(lineSeparator())]
     pathParameters.put("[instanceCompositeID /]", [instanceCompositeID /]);
     [/for]
-    String instanceURI = "[aResource.instanceURI(anAdaptorInterface) /]";
+    String instanceURI = "[aResource.instanceURI(anAdaptorInterfaceGenerator.adaptorInterface) /]";
   
     final UriBuilder builder = UriBuilder.fromUri(basePath);
     return builder.path(instanceURI).buildFromMap(pathParameters);
 }
 
-public static Link constructLink([commaSeparate(aResource.instanceMethodSignature(anAdaptorInterface), false, true)/] final String label)
+public static Link constructLink([commaSeparate(aResource.instanceMethodSignature(anAdaptorInterfaceGenerator.adaptorInterface), false, true)/] final String label)
 {
-	return new Link(constructURI([commaSeparate(aResource.instanceMethodParameterList(anAdaptorInterface), false, false)/]), label);
+	return new Link(constructURI([commaSeparate(aResource.instanceMethodParameterList(anAdaptorInterfaceGenerator.adaptorInterface), false, false)/]), label);
 }
 
-public static Link constructLink([commaSeparate(aResource.instanceMethodSignature(anAdaptorInterface), false, false)/])
+public static Link constructLink([commaSeparate(aResource.instanceMethodSignature(anAdaptorInterfaceGenerator.adaptorInterface), false, false)/])
 {
-	return new Link(constructURI([commaSeparate(aResource.instanceMethodParameterList(anAdaptorInterface), false, false)/]));
+	return new Link(constructURI([commaSeparate(aResource.instanceMethodParameterList(anAdaptorInterfaceGenerator.adaptorInterface), false, false)/]));
 }
 
 public String toString()
@@ -233,12 +235,12 @@ public String toHtml(boolean asLocalResource)
 
 [for (aProperty: ResourceProperty | aResource.resourceProperties)]
    	[nameAnnotation(aProperty) /]
-   	[propertyDefinitionAnnotation(aProperty, aResource, anAdaptorInterface) /]
+   	[propertyDefinitionAnnotation(aProperty, aResource, anAdaptorInterfaceGenerator.adaptorInterface) /]
 	[descriptionAnnotation(aProperty) /]
 	[occursAnnotation(aProperty) /]
 	[valueTypeAnnotation(aProperty) /]
 	[representationAnnotation(aProperty) /]
-	[rangeAnnotation(aProperty, aResource, anAdaptorInterface) /]
+	[rangeAnnotation(aProperty, aResource, anAdaptorInterfaceGenerator.adaptorInterface) /]
 	[readOnlyAnnotation(aProperty) /]
 	[titleAnnotation(aProperty) /]
     public [javaAttributeTypeDeclaration(aProperty) /] [if (aProperty.valueType.toString() = 'Boolean')]is[else]get[/if][javaAttributeName(aProperty, aResource).toUpperFirst() /]()
@@ -265,7 +267,7 @@ public String toHtml(boolean asLocalResource)
 [/for]
 
 [for (aProperty: ResourceProperty | aResource.resourceProperties)]
-    static public String [javaAttributeName(aProperty, aResource) /]ToHtmlForCreation (final HttpServletRequest httpServletRequest[commaSeparate(aResource.collectionMethodSignature(anAdaptorInterface), true, false)/])
+    static public String [javaAttributeName(aProperty, aResource) /]ToHtmlForCreation (final HttpServletRequest httpServletRequest[commaSeparate(aResource.collectionMethodSignature(anAdaptorInterfaceGenerator.adaptorInterface), true, false)/])
     {
 		String s = "";
 

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ftask="http://www.eclipse.org/egf/1.0.0/ftask"
+    xmlns:types="http://www.eclipse.org/egf/1.0.0/types">
+  <ftask:Task xmi:id="_UPQIwGZzEeScK4ThG9us1g" name="Create Dynamic Web Project" kind="java"
+      implementation="org.eclipse.lyo.oslc4j.codegenerator.launcher.egf.tasks.CreateDynamicWebProjectTask">
+    <contractContainer xmi:id="_UPQIwWZzEeScK4ThG9us1g">
+      <contracts xmi:id="_UPQIwmZzEeScK4ThG9us1g" name="dwp.project.name">
+        <type xmi:type="types:TypeString" xmi:id="_UPQIw2ZzEeScK4ThG9us1g"/>
+      </contracts>
+      <contracts xmi:id="_UPQIxGZzEeScK4ThG9us1g" name="dwp.java.version">
+        <type xmi:type="types:TypeString" xmi:id="_UPQIxWZzEeScK4ThG9us1g"/>
+      </contracts>
+      <contracts xmi:id="_YXrUQHM4EeSNPfvc3w24Wg" name="dwp.webmodule.version">
+        <type xmi:type="types:TypeString" xmi:id="_Za0MQHM4EeSNPfvc3w24Wg"/>
+      </contracts>
+    </contractContainer>
+  </ftask:Task>
+  <ftask:Task xmi:id="_4zXWwHMoEeSNPfvc3w24Wg" name="Add Maven Dependencies to pom"
+      kind="java" implementation="org.eclipse.lyo.oslc4j.codegenerator.launcher.egf.tasks.AddMavenDependenciesTask">
+    <contractContainer xmi:id="_vMYY8HMpEeSNPfvc3w24Wg">
+      <contracts xmi:id="_vor6cHMpEeSNPfvc3w24Wg" name="add.maven.project.name">
+        <type xmi:type="types:TypeString" xmi:id="_4aS6AHMpEeSNPfvc3w24Wg"/>
+      </contracts>
+      <contracts xmi:id="_1-848HMpEeSNPfvc3w24Wg" name="add.maven.dependencies">
+        <type xmi:type="types:TypeCollection" xmi:id="_2vVNAHMpEeSNPfvc3w24Wg"/>
+      </contracts>
+    </contractContainer>
+  </ftask:Task>
+  <ftask:Task xmi:id="_UNfOMGZzEeScK4ThG9us1g" name="Convert Project To Maven" kind="java"
+      implementation="org.eclipse.lyo.oslc4j.codegenerator.launcher.egf.tasks.ConvertProject2MavenTask">
+    <contractContainer xmi:id="_UNfOMWZzEeScK4ThG9us1g">
+      <contracts xmi:id="_UNfOMmZzEeScK4ThG9us1g" name="convert.maven.project.name">
+        <type xmi:type="types:TypeString" xmi:id="_UNfOM2ZzEeScK4ThG9us1g"/>
+      </contracts>
+      <contracts xmi:id="_V5hAQGjmEeSw8J0jFL_E1A" name="convert.maven.type">
+        <type xmi:type="types:TypeString" xmi:id="_aKtIoGjmEeSw8J0jFL_E1A"/>
+      </contracts>
+      <contracts xmi:id="_2BmZwHMoEeSNPfvc3w24Wg" name="convert.maven.project.version">
+        <type xmi:type="types:TypeString" xmi:id="_InfhYHMqEeSNPfvc3w24Wg"/>
+      </contracts>
+      <contracts xmi:id="_D6EI8HMqEeSNPfvc3w24Wg" name="convert.maven.artifactId">
+        <type xmi:type="types:TypeString" xmi:id="_JZxS4HMqEeSNPfvc3w24Wg"/>
+      </contracts>
+      <contracts xmi:id="_GagFYHMqEeSNPfvc3w24Wg" name="convert.maven.groupId">
+        <type xmi:type="types:TypeString" xmi:id="_J07k4HMqEeSNPfvc3w24Wg"/>
+      </contracts>
+    </contractContainer>
+  </ftask:Task>
+  <ftask:Task xmi:id="_5DTSYHM3EeSNPfvc3w24Wg" name="Generate Adaptor Manager" kind="Acceleo3"
+      implementation="project = org.eclipse.lyo.oslc4j.codegenerator&#xA;class = org.eclipse.lyo.oslc4j.codegenerator.main.Generate">
+    <contractContainer xmi:id="_9JSQUHM3EeSNPfvc3w24Wg">
+      <contracts xmi:id="_9qQPYHM3EeSNPfvc3w24Wg" name="modelURI">
+        <type xmi:type="types:TypeURI" xmi:id="_XylWQHNQEeSNPfvc3w24Wg"/>
+      </contracts>
+      <contracts xmi:id="__VqoUHM3EeSNPfvc3w24Wg" name="output">
+        <type xmi:type="types:TypeString" xmi:id="_YPqT0HNQEeSNPfvc3w24Wg"/>
+      </contracts>
+    </contractContainer>
+  </ftask:Task>
+  <ftask:Task xmi:id="_7AlQ4HNXEeSNPfvc3w24Wg" name="Refresh project" kind="java"
+      implementation="org.eclipse.lyo.oslc4j.codegenerator.launcher.egf.tasks.RefreshProject">
+    <contractContainer xmi:id="_2wjJoHNYEeSNPfvc3w24Wg" description="">
+      <contracts xmi:id="_5O8esHNYEeSNPfvc3w24Wg" name="refresh.project.name">
+        <type xmi:type="types:TypeString" xmi:id="_8deQMHNYEeSNPfvc3w24Wg"/>
+      </contracts>
+      <contracts xmi:id="_5jQh0HNYEeSNPfvc3w24Wg" name="refresh.depth">
+        <type xmi:type="types:TypeInteger" xmi:id="_6YfgsHNYEeSNPfvc3w24Wg"/>
+      </contracts>
+    </contractContainer>
+  </ftask:Task>
+</xmi:XMI>

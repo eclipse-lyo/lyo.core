@@ -13,13 +13,15 @@
  
  Contributors:
  
-    Sam Padgett		 - initial API and implementation
-    Michael Fiedler	 - adapted for OSLC4J
+    Sam Padgett		 	 - initial API and implementation
+    Michael Fiedler	 	 - adapted for OSLC4J
 	Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ 	Matthieu Helleboid	 - Use of Adapator Interface Generator
+ 	Anass Radouani		 - Use of Adapator Interface Generator
 --%>
 /]
 
-[module generateResourceSelectorJsp('http://org.eclipse.lyo/oslc4j/adaptorInterface')]
+[module generateResourceSelectorJsp('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices/]
@@ -27,8 +29,8 @@
 [import org::eclipse::lyo::oslc4j::codegenerator::services::jspServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices/]
 
-[template public generateResourceSelectorJsp(aResource : Resource, anAdaptorInterface : AdaptorInterface)]
-[file (resourceSelectorJspFullFileName(aResource, anAdaptorInterface), false, 'UTF-8')]
+[template public generateResourceSelectorJsp(aResource : Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
+[file (resourceSelectorJspFullFileName(aResource, anAdaptorInterfaceGenerator), false, 'UTF-8')]
 <!DOCTYPE html>
 <%--
  Copyright (c) 2011, 2012 IBM Corporation and others.
@@ -51,8 +53,8 @@
 --%>
 
 <%@page import="org.eclipse.lyo.oslc4j.core.model.ServiceProvider"%>
-<%@page import="[javaClassFullName(aResource, anAdaptorInterface) /]"%>
-<%@page import="[javaClassFullNameForAdaptorServletListener(anAdaptorInterface) /]"%>
+<%@page import="[javaClassFullName(aResource, anAdaptorInterfaceGenerator) /]"%>
+<%@page import="[javaClassFullNameForAdaptorServletListener(anAdaptorInterfaceGenerator) /]"%>
 <%--
 [protected ('imports')]
 --%>
@@ -84,7 +86,7 @@
 		<%-- 
 		[/protected] 
 		--%>
-		<script type="text/javascript" src="<%=[javaClassNameForAdaptorServletListener(anAdaptorInterface) /].getServletBase() %>/[delegatedUIJavaScriptsRelativeFileName(anAdaptorInterface) /]"></script>
+		<script type="text/javascript" src="<%=[javaClassNameForAdaptorServletListener(anAdaptorInterfaceGenerator.adaptorInterface) /].getServletBase() %>/[delegatedUIJavaScriptsRelativeFileName(anAdaptorInterfaceGenerator) /]"></script>
 	</head>
 	[comment TODO: make a more powerfull/flexible search form, by allowing user to entry values on each resource property, and not just "summary" as is expected here./]
 	<body style="padding: 10px;">

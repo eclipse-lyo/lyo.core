@@ -21,11 +21,13 @@
  *     Michael Fiedler      - adapted for OSLC4J
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
  *     Matthieu Helleboid   - Resource containing specific methods for its managing Service Provider
+ *							- Use of Adapator Interface Generator
  *     Anass Radouani       - Resource containing specific methods for its managing Service Provider
+ *							- Use of Adapator Interface Generator
  *******************************************************************************/
 /]
 
-[module generateResourceForSP('http://org.eclipse.lyo/oslc4j/adaptorInterface')]
+[module generateResourceForSP('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices/]
@@ -34,8 +36,8 @@
 [import org::eclipse::lyo::oslc4j::codegenerator::services::domainSpecificationServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderServices/]
 
-[template public generateResourceForSP(aResource : Resource, anAdaptorInterface : AdaptorInterface, aServiceProvider : ServiceProvider)]
-[file (javaClassFullFileName(aResource, aServiceProvider), false, 'UTF-8')]
+[template public generateResourceForSP(aResource : Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aServiceProvider : ServiceProvider)]
+[file (javaClassFullFileName(aResource, aServiceProvider, anAdaptorInterfaceGenerator), false, 'UTF-8')]
 /*******************************************************************************
  * Copyright (c) 2012 IBM Corporation and others.
  *
@@ -63,7 +65,7 @@
  *******************************************************************************/
 
 
-package [javaClassPackageName(aResource, anAdaptorInterface) /];
+package [javaClassPackageName(aResource, anAdaptorInterfaceGenerator) /];
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -102,13 +104,13 @@ import org.eclipse.lyo.oslc4j.core.model.OslcConstants;
 import org.eclipse.lyo.oslc4j.core.model.Representation;
 import org.eclipse.lyo.oslc4j.core.model.ValueType;
 
-import [javaClassFullName(aResource, anAdaptorInterface)/];
-import [javaClassFullNameForAdaptorServletListener(anAdaptorInterface) /]; 
-import [javaInterfaceFullNameForAdaptorConstants(anAdaptorInterface) /];
+import [javaClassFullName(aResource, anAdaptorInterfaceGenerator)/];
+import [javaClassFullNameForAdaptorServletListener(anAdaptorInterfaceGenerator) /]; 
+import [javaInterfaceFullNameForAdaptorConstants(anAdaptorInterfaceGenerator) /];
 [for (aProperty: ResourceProperty | allProperties(aResource)->sortedBy(name))]
 [if(Sequence{'Resource', 'LocalResource'}->includes(aProperty.valueType.toString())) ]
 [if (not aProperty.range.oclIsUndefined())]
-import [javaClassFullName(aProperty.range, anAdaptorInterface) /];	
+import [javaClassFullName(aProperty.range, anAdaptorInterfaceGenerator) /];	
 [/if]
 [/if]
 [/for]
@@ -116,9 +118,9 @@ import [javaClassFullName(aProperty.range, anAdaptorInterface) /];
 // [protected ('imports')]
 // [/protected]
 
-@OslcNamespace([javaInterfaceNameForAdaptorConstants(anAdaptorInterface) /].[domainSpecificationNamespaceConstantName(aResource.definingDomainSpecification()) /])
-@OslcName([javaInterfaceNameForAdaptorConstants(anAdaptorInterface) /].[resourceConstantName(aResource) /]) 
-@OslcResourceShape(title = "[aResource.name /] Resource Shape", describes = [javaInterfaceNameForAdaptorConstants(anAdaptorInterface) /].[resourceTypeConstantName(aResource) /])
+@OslcNamespace([javaInterfaceNameForAdaptorConstants(anAdaptorInterfaceGenerator.adaptorInterface) /].[domainSpecificationNamespaceConstantName(aResource.definingDomainSpecification()) /])
+@OslcName([javaInterfaceNameForAdaptorConstants(anAdaptorInterfaceGenerator.adaptorInterface) /].[resourceConstantName(aResource) /]) 
+@OslcResourceShape(title = "[aResource.name /] Resource Shape", describes = [javaInterfaceNameForAdaptorConstants(anAdaptorInterfaceGenerator.adaptorInterface) /].[resourceTypeConstantName(aResource) /])
 public class [javaClassName(aResource, aServiceProvider) /]
        extends [javaClassName(aResource) /]
 {
@@ -152,7 +154,7 @@ public [javaClassName(aResource, aServiceProvider) /]([commaSeparate(aResource.i
 
 public static URI constructURI([commaSeparate(aResource.instanceMethodSignature(aServiceProvider), false, false)/])
 {
-    String basePath = [javaClassNameForAdaptorServletListener(anAdaptorInterface) /].getServicesBase();
+    String basePath = [javaClassNameForAdaptorServletListener(anAdaptorInterfaceGenerator.adaptorInterface) /].getServicesBase();
     Map<String, Object> pathParameters = new HashMap<String, Object>();
     [for (instanceCompositeID: String | aResource.instanceCompositeID(aServiceProvider)) separator(lineSeparator())]
     pathParameters.put("[instanceCompositeID /]", [instanceCompositeID /]);

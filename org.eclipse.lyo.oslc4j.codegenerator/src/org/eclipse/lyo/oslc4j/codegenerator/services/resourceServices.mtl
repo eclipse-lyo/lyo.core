@@ -19,16 +19,22 @@
  *							- Use the Service Provider title for the Resource Service
  *							- Check if the resource service namespace is relative to a given Service Provider in the query
  *							- Add templates to use directly a specific Service Provider instead of searching in all Service Providers
+ *	   						- Use of Adapator Interface Generator
+ *							- Add prefix meta value to get package queries
+ *								with prefix, the generator object can change files location (to generate them in different plugins for example)
  *     Anass Radouani       - Retrieve queryCapabilities, CreationFactories, SelectionDialogs and CreationDialogs from the Service Provider
  *							- get the resource java class name from the service provider and the resource when its service namespace is relative to the service provider
  *							- Use the Service Provider title for the Resource Service
  *							- Check if the resource service namespace is relative to a given Service Provider in the query
  *							- Add templates to use directly a specific Service Provider instead of searching in all Service Providers
+ *	   						- Use of Adapator Interface Generator
+ *							- Add prefix meta value to get package queries
+ *								with prefix, the generator object can change files location (to generate them in different plugins for example)
  *     
  *******************************************************************************/
 /]
 
-[module resourceServices('http://org.eclipse.lyo/oslc4j/adaptorInterface')/]
+[module resourceServices('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')/]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderServices/]
@@ -86,8 +92,8 @@ Make sure this query and the Constants generation are based on the same set of b
 aResource.definingDomainSpecification().namespaceURI.concat('#').concat(aResource.name)
 /]
 
-[query public javaClassPackageName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-javaClassBaseNamespace(anAdaptorInterface).concat('.resources')
+[query public javaClassPackageName(aResource: Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'Resource'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator)).concat('.resources')
 /]
 
 [query public javaClassName(aResource: Resource) : String = 
@@ -122,40 +128,40 @@ else
 endif)
 /]
 
-[query public javaClassFullName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-javaClassPackageName(aResource, anAdaptorInterface).concat('.').concat(javaClassName(aResource))
+[query public javaClassFullName(aResource: Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageName(aResource, anAdaptorInterfaceGenerator).concat('.').concat(javaClassName(aResource))
 /]
 
-[query public javaClassFullName(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
+[query public javaClassFullName(aResource: Resource, aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
 (if(serviceNamespaceRelativeToServiceProvider(aResource, aServiceProvider)) then
-aResource.javaClassPackageName(containingAdaptorInterface(aServiceProvider)).concat('.').concat(javaClassName(aResource, aServiceProvider))
+aResource.javaClassPackageName(anAdaptorInterfaceGenerator).concat('.').concat(javaClassName(aResource, aServiceProvider))
 else 
-aResource.javaClassFullName(containingAdaptorInterface(aServiceProvider))
+aResource.javaClassFullName(anAdaptorInterfaceGenerator)
 endif)
 /]
 
-[query public javaClassFullFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-javaFilesBasePath(anAdaptorInterface).concat(javaClassPackageName(aResource, anAdaptorInterface).substituteAll('.', '/')).concat('/').concat(javaClassName(aResource)).concat('.java')
+[query public javaClassFullFileName(aResource: Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageName(aResource, anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassName(aResource)).concat('.java')
 /]
 
-[query public javaClassFullFileName(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
-javaFilesBasePath(containingAdaptorInterface(aServiceProvider)).concat(javaClassPackageName(aResource, containingAdaptorInterface(aServiceProvider)).substituteAll('.', '/')).concat('/').concat(javaClassName(aResource)).concat('For').concat(aServiceProvider.title.substituteAll(' ', '').toUpperFirst()).concat('.java')
+[query public javaClassFullFileName(aResource: Resource, aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageName(aResource, anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassName(aResource)).concat('For').concat(aServiceProvider.title.substituteAll(' ', '').toUpperFirst()).concat('.java')
 /]
 
-[query public javaClassPackageNameForService(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
-javaClassBaseNamespace(anAdaptorInterface).concat('.services')
+[query public javaClassPackageNameForService(aResource: Resource, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'ResourceService'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator)).concat('.services')
 /]
 
 [query public javaClassNameForService(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
 aResource.name.substituteAll(' ', '').toUpperFirst().concat('For').concat(aServiceProvider.title.substituteAll(' ', '').toUpperFirst()).concat('Service')
 /]
 
-[query public javaClassFullNameForService(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
-javaClassPackageNameForService(aResource, containingAdaptorInterface(aServiceProvider)).concat('.').concat(javaClassNameForService(aResource, aServiceProvider))
+[query public javaClassFullNameForService(aResource: Resource, aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForService(aResource, anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForService(aResource, aServiceProvider))
 /]
 
-[query public javaClassFullFileNameForService(aResource: Resource, aServiceProvider : ServiceProvider) : String = 
-javaFilesBasePath(containingAdaptorInterface(aServiceProvider)).concat(javaClassPackageNameForService(aResource, containingAdaptorInterface(aServiceProvider)).substituteAll('.', '/')).concat('/').concat(javaClassNameForService(aResource, aServiceProvider)).concat('.java')
+[query public javaClassFullFileNameForService(aResource: Resource, aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForService(aResource, anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForService(aResource, aServiceProvider)).concat('.java')
 /]
 
 [comment default to true if the property is not explicitly defined /]

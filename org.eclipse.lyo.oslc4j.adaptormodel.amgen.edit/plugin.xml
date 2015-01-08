@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+      <!-- @generated adaptorManagerGenerator -->
+      <factory
+            uri="http://org.eclipse.lyo/oslc4j/adaptorManagerGenerator"
+            class="org.eclipse.lyo.oslc4j.adaptormodel.adaptormanagergenerator.provider.AdaptorManagerGeneratorItemProviderAdapterFactory"
+            supportedTypes=
+              "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
+               org.eclipse.emf.edit.provider.IStructuredItemContentProvider
+               org.eclipse.emf.edit.provider.ITreeItemContentProvider
+               org.eclipse.emf.edit.provider.IItemLabelProvider
+               org.eclipse.emf.edit.provider.IItemPropertySource"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.edit.childCreationExtenders">
+      <!-- @generated adaptorManagerGenerator -->
+      <extender
+            uri="http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator"
+            class="org.eclipse.lyo.oslc4j.adaptormodel.adaptormanagergenerator.provider.AdaptorManagerGeneratorItemProviderAdapterFactory$AdaptorInterfaceGeneratorChildCreationExtender"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.eclipse.lyo.oslc4j.adaptormodel.amgen.edit.handlers.InitAdaptorManagerGenerator"
+            commandId="org.eclipse.lyo.oslc4j.adaptormodel.amgen.edit.commands.InitAMGCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="org.eclipse.lyo.oslc4j.adaptormodel.amgen.edit.commands.InitAMGCommand"
+               id="org.eclipse.lyo.oslc4j.adaptormodel.amgen.edit.menus.InitAMGMenu"
+               style="push"
+               tooltip="%command.tooltip">
+            <visibleWhen
+                  checkEnabled="false">
+                      <with variable="selection">
+				        <count value="1"/>
+				        <iterate ifEmpty="false">
+		                  <adapt type="org.eclipse.emf.ecore.EObject">
+				            <instanceof value="org.eclipse.lyo.oslc4j.adaptormodel.adaptormanagergenerator.AdaptorManagerGenerator"/>
+            			  </adapt>
+				        </iterate>
+				    </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.eclipse.lyo.oslc4emf.model.edit.commands.category"
+            name="%category.name">
+      </category>
+      <command
+            categoryId="org.eclipse.lyo.oslc4emf.model.edit.commands.category"
+            id="org.eclipse.lyo.oslc4j.adaptormodel.amgen.edit.commands.InitAMGCommand"
+            name="%command.name">
+      </command>
+   </extension>
+   
+
+</plugin>

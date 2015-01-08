@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.eclipse.lyo.oslc4j.adaptormodel.migration"
+            class="org.eclipse.lyo.oslc4j.adaptormodel.migration.ImportAIWizard"
+            id="org.eclipse.lyo.oslc4j.adaptormodel.migration.wizard"
+            name="%wizard.name">
+      </wizard>
+      <category
+            id="org.eclipse.lyo.oslc4j.adaptormodel.migration"
+            name="%category.name">
+      </category>
+   </extension>
+
+</plugin>

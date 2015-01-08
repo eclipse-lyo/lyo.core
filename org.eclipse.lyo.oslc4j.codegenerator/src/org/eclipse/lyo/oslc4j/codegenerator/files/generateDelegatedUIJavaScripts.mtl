@@ -13,20 +13,22 @@
  *  
  *  Contributors:
  *  
- *     IBM Corporation - initial API and implementation
+ *     IBM Corporation 		- initial API and implementation
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *	   Matthieu Helleboid	- Use of Adapator Interface Generator
+ *	   Anass Radouani		- Use of Adapator Interface Generator
  *******************************************************************************/
 /]
 
-[module generateDelegatedUIJavaScripts('http://org.eclipse.lyo/oslc4j/adaptorInterface')]
+[module generateDelegatedUIJavaScripts('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::jspServices/]
 
-[template public generateDelegatedUIJavaScripts(anAdaptorInterface : AdaptorInterface)]
-[file (delegatedUIJavaScriptsFullFileName(anAdaptorInterface), false, 'UTF-8')]
+[template public generateDelegatedUIJavaScripts(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
+[file (delegatedUIJavaScriptsFullFileName(anAdaptorInterfaceGenerator), false, 'UTF-8')]
 /*******************************************************************************
  * Copyright (c) 2011, 2012 IBM Corporation and others.
  *

@@ -14,11 +14,17 @@
  * Contributors:
  *
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *	   Matthieu Helleboid	- Use of Adapator Interface Generator
+ *							- Add prefix meta value to get package queries
+ *								with prefix, the generator object can change files location (to generate them in different plugins for example)
+ *	   Anass Radouani		- Use of Adapator Interface Generator
+ *							- Add prefix meta value to get package queries
+ *								with prefix, the generator object can change files location (to generate them in different plugins for example)
  *     
  *******************************************************************************/
 /]
 
-[module serviceProviderCatalogServices('http://org.eclipse.lyo/oslc4j/adaptorInterface')/]
+[module serviceProviderCatalogServices('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')/]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices/]
@@ -28,35 +34,35 @@ obj.eContainer(ServiceProviderCatalog)
 /]
 
 [comment Services for serviceProviderCatalogSingleton /]
-[query public javaClassPackageNameForSingleton(aServiceProviderCatalog : ServiceProviderCatalog) : String = 
-javaClassBaseNamespace(containingAdaptorInterface(aServiceProviderCatalog)).concat('.servlet')
+[query public javaClassPackageNameForSingleton(aServiceProviderCatalog : ServiceProviderCatalog, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'SPCatalogSingleton'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator)).concat('.servlet')
 /]
 
 [query public javaClassNameForSingleton(aServiceProviderCatalog : ServiceProviderCatalog) : String = 
 'ServiceProviderCatalogSingleton'
 /]
 
-[query public javaClassFullNameForSingleton(aServiceProviderCatalog : ServiceProviderCatalog) : String = 
-javaClassPackageNameForSingleton(aServiceProviderCatalog).concat('.').concat(javaClassNameForSingleton(aServiceProviderCatalog))
+[query public javaClassFullNameForSingleton(aServiceProviderCatalog : ServiceProviderCatalog, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForSingleton(aServiceProviderCatalog, anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForSingleton(aServiceProviderCatalog))
 /]
 
-[query public javaClassFullFileNameForSingleton(aServiceProviderCatalog : ServiceProviderCatalog) : String = 
-javaFilesBasePath(containingAdaptorInterface(aServiceProviderCatalog)).concat(javaClassPackageNameForSingleton(aServiceProviderCatalog).substituteAll('.', '/')).concat('/').concat(javaClassNameForSingleton(aServiceProviderCatalog)).concat('.java')
+[query public javaClassFullFileNameForSingleton(aServiceProviderCatalog : ServiceProviderCatalog, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForSingleton(aServiceProviderCatalog, anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForSingleton(aServiceProviderCatalog)).concat('.java')
 /]
 
 [comment Services for serviceProviderCatalogService /]
-[query public javaClassPackageNameForService(aServiceProviderCatalog : ServiceProviderCatalog) : String = 
-javaClassBaseNamespace(containingAdaptorInterface(aServiceProviderCatalog)).concat('.services')
+[query public javaClassPackageNameForService(aServiceProviderCatalog : ServiceProviderCatalog, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+anAdaptorInterfaceGenerator.metaValue('prefix', Sequence{'SPCatalogService'}).concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator)).concat('.services')
 /]
 
 [query public javaClassNameForService(aServiceProviderCatalog : ServiceProviderCatalog) : String = 
 'ServiceProviderCatalogService'
 /]
 
-[query public javaClassFullNameForService(aServiceProviderCatalog : ServiceProviderCatalog) : String = 
-javaClassPackageNameForService(aServiceProviderCatalog).concat('.').concat(javaClassNameForService(aServiceProviderCatalog))
+[query public javaClassFullNameForService(aServiceProviderCatalog : ServiceProviderCatalog, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaClassPackageNameForService(aServiceProviderCatalog, anAdaptorInterfaceGenerator).concat('.').concat(javaClassNameForService(aServiceProviderCatalog))
 /]
 
-[query public javaClassFullFileNameForService(aServiceProviderCatalog : ServiceProviderCatalog) : String = 
-javaFilesBasePath(containingAdaptorInterface(aServiceProviderCatalog)).concat(javaClassPackageNameForService(aServiceProviderCatalog).substituteAll('.', '/')).concat('/').concat(javaClassNameForService(aServiceProviderCatalog)).concat('.java')
+[query public javaClassFullFileNameForService(aServiceProviderCatalog : ServiceProviderCatalog, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+javaFilesBasePath(anAdaptorInterfaceGenerator).concat(javaClassPackageNameForService(aServiceProviderCatalog, anAdaptorInterfaceGenerator).substituteAll('.', '/')).concat('/').concat(javaClassNameForService(aServiceProviderCatalog)).concat('.java')
 /]

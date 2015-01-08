@@ -18,10 +18,12 @@
  *     Chris Peters         - initial API and implementation
  *     Gianluca Bernardini  - initial API and implementation
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *     Matthieu Helleboid   - Use of Adapator Interface Generator
+ *     Anass Radouani       - Use of Adapator Interface Generator
  *******************************************************************************/
 /]
 
-[module generateAdaptorPackageInfo('http://org.eclipse.lyo/oslc4j/adaptorInterface')]
+[module generateAdaptorPackageInfo('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices/]
@@ -30,8 +32,8 @@
 [import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderCatalogServices/]
 
-[template public generateAdaptorPackageInfo(anAdaptorInterface : AdaptorInterface)]
-[file (javaClassFullFileNameForAdaptorPackageInfo(anAdaptorInterface), false, 'UTF-8')]
+[template public generateAdaptorPackageInfo(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
+[file (javaClassFullFileNameForAdaptorPackageInfo(anAdaptorInterfaceGenerator), false, 'UTF-8')]
 /*******************************************************************************
  * Copyright (c) 2012 IBM Corporation and others.
  *
@@ -60,17 +62,17 @@
 	@OslcNamespaceDefinition(prefix = OslcConstants.OSLC_DATA_NAMESPACE_PREFIX,           namespaceURI = OslcConstants.OSLC_DATA_NAMESPACE),
 	@OslcNamespaceDefinition(prefix = OslcConstants.RDF_NAMESPACE_PREFIX,                 namespaceURI = OslcConstants.RDF_NAMESPACE),
 	@OslcNamespaceDefinition(prefix = OslcConstants.RDFS_NAMESPACE_PREFIX,                namespaceURI = OslcConstants.RDFS_NAMESPACE),
-	[for (aDomainSpecification: DomainSpecification | relevantDomainSpecifications(anAdaptorInterface)->sortedBy(name)) separator(','.concat(lineSeparator()))]
-		@OslcNamespaceDefinition(prefix = [javaInterfaceNameForAdaptorConstants(anAdaptorInterface)/].[domainSpecificationNamespacePrefixConstantName(aDomainSpecification) /], namespaceURI = [javaInterfaceNameForAdaptorConstants(anAdaptorInterface)/].[domainSpecificationNamespaceConstantName(aDomainSpecification) /])
+	[for (aDomainSpecification: DomainSpecification | relevantDomainSpecifications(anAdaptorInterfaceGenerator.adaptorInterface)->sortedBy(name)) separator(','.concat(lineSeparator()))]
+		@OslcNamespaceDefinition(prefix = [javaInterfaceNameForAdaptorConstants(anAdaptorInterfaceGenerator.adaptorInterface)/].[domainSpecificationNamespacePrefixConstantName(aDomainSpecification) /], namespaceURI = [javaInterfaceNameForAdaptorConstants(anAdaptorInterfaceGenerator.adaptorInterface)/].[domainSpecificationNamespaceConstantName(aDomainSpecification) /])
 	[/for]
 })
-package [javaClassPackageNameForAdaptorPackageInfo(anAdaptorInterface) /];
+package [javaClassPackageNameForAdaptorPackageInfo(anAdaptorInterfaceGenerator) /];
 
 import org.eclipse.lyo.oslc4j.core.annotation.OslcNamespaceDefinition;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcSchema;
 import org.eclipse.lyo.oslc4j.core.model.OslcConstants;
 
-import [javaInterfaceFullNameForAdaptorConstants(anAdaptorInterface) /];
+import [javaInterfaceFullNameForAdaptorConstants(anAdaptorInterfaceGenerator) /];
 
 [/file]
 [/template]

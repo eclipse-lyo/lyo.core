@@ -1,0 +1,56 @@
+[comment encoding = UTF-8 /]
+[comment
+/*******************************************************************************
+ * Copyright (c) 2014 THALES GLOBAL SERVICES.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *    Helleboid Matthieu - initial API and implementation
+ *    Anass Radouani 	 - initial API and implementation
+ *******************************************************************************/
+/]
+
+[module generateWebConf('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
+
+[import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
+[import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices/]
+
+[template public generateWebConf(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
+[file (webApplicationFullFileName(anAdaptorInterfaceGenerator), false, 'UTF-8')]
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>[applicationName(anAdaptorInterfaceGenerator).substituteAll(' ','')/]</display-name>
+  <context-param>
+    <description>Scheme used for URI when registering ServiceProvider.  Can be overridden by System property of the same name.</description>
+    <param-name>[javaClassPackageNameForAdaptorServletListener(anAdaptorInterfaceGenerator)/].scheme</param-name>
+    <param-value>http</param-value>
+  </context-param>
+  <context-param>
+    <description>Port used for URI when registering ServiceProvider.  Can be overridden by System property of the same name.</description>
+    <param-name>[javaClassPackageNameForAdaptorServletListener(anAdaptorInterfaceGenerator)/].port</param-name>
+    <param-value>8080</param-value>
+  </context-param>
+  <listener>
+    <description>Listener for ServletContext lifecycle changes</description>
+    <listener-class>[javaClassFullNameForAdaptorServletListener(anAdaptorInterfaceGenerator)/]</listener-class>
+  </listener>
+  <servlet>
+    <description>JAX-RS Tools Generated - Do not modify</description>
+    <servlet-name>JAX-RS Servlet</servlet-name>
+    <servlet-class>org.apache.wink.server.internal.servlet.RestServlet</servlet-class>
+    <init-param>
+      <param-name>javax.ws.rs.Application</param-name>
+      <param-value>[javaClassFullNameForAdaptorApplication(anAdaptorInterfaceGenerator)/]</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>JAX-RS Servlet</servlet-name>
+    <url-pattern>/services/*</url-pattern>
+  </servlet-mapping>
+</web-app>
+[/file]
+[/template]

@@ -16,14 +16,16 @@
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
  *     Matthieu Helleboid   - Create an Adaptor Service Provider Factory for each service provider.
  *                          - Create a Resource Service for each managing Service Provider
- *                          - Create a Specific Resource for managing Service Provider when its service namespace is relative to the Service Provider				
+ *                          - Create a Specific Resource for managing Service Provider when its service namespace is relative to the Service Provider
+ *	   						- Use of Adapator Interface Generator				
  *     Anass Radouani       - Create an Adaptor Service Provider Factory for each service provider.
  *                          - Create a Resource Service for each managing Service Provider
- *                          - Create a Specific Resource for managing Service Provider when its service namespace is relative to the Service Provider				
+ *                          - Create a Specific Resource for managing Service Provider when its service namespace is relative to the Service Provider
+ *	   						- Use of Adapator Interface Generator				
  *******************************************************************************/
 /]
 
-[module generate('http://org.eclipse.lyo/oslc4j/adaptorInterface')]
+[module generate('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices/]
@@ -50,42 +52,42 @@
 [import org::eclipse::lyo::oslc4j::codegenerator::files::generateResourceService/]
 [import org::eclipse::lyo::oslc4j::codegenerator::staticFiles::generateLicenseFiles/]
 
-[template public generate(anAdaptorInterface : AdaptorInterface)]
+[template public generate(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
 [comment @main/]
 
 [comment TODO: Produce "package-info.java" under the Resources package. See the original instructions on how to setup a OSLC4J project for details./]
-[anAdaptorInterface.serviceProviderCatalog.generateServiceProviderCatalogService() /]
-[anAdaptorInterface.serviceProviderCatalog.generateServiceProviderCatalogSingleton() /]
+[anAdaptorInterfaceGenerator.generateServiceProviderCatalogService(anAdaptorInterfaceGenerator.adaptorInterface.serviceProviderCatalog) /]
+[anAdaptorInterfaceGenerator.generateServiceProviderCatalogSingleton(anAdaptorInterfaceGenerator.adaptorInterface.serviceProviderCatalog) /]
 
-[anAdaptorInterface.generateLicenseFiles() /]
-[anAdaptorInterface.generateAdaptorApplication() /]
-[anAdaptorInterface.generateAdaptorPackageInfo() /]
-[anAdaptorInterface.generateAdaptorServletListener() /]
-[anAdaptorInterface.generateAdaptorManager() /]
-[anAdaptorInterface.generateAdaptorConstants() /]
-[anAdaptorInterface.generateDelegatedUIJavaScripts() /]
+[anAdaptorInterfaceGenerator.adaptorInterface.generateLicenseFiles() /]
+[anAdaptorInterfaceGenerator.generateAdaptorApplication() /]
+[anAdaptorInterfaceGenerator.generateAdaptorPackageInfo() /]
+[anAdaptorInterfaceGenerator.generateAdaptorServletListener() /]
+[anAdaptorInterfaceGenerator.generateAdaptorManager() /]
+[anAdaptorInterfaceGenerator.generateAdaptorConstants() /]
+[anAdaptorInterfaceGenerator.generateDelegatedUIJavaScripts() /]
 
-[anAdaptorInterface.serviceProviderCatalog.generateServiceProviderCatalogHTML() /]
+[anAdaptorInterfaceGenerator.generateServiceProviderCatalogHTML(anAdaptorInterfaceGenerator.adaptorInterface.serviceProviderCatalog) /]
 
-[for (aResource: Resource | relevantResources(anAdaptorInterface))]
-	[aResource.generateResource(anAdaptorInterface) /]
+[for (aResource: Resource | relevantResources(anAdaptorInterfaceGenerator.adaptorInterface))]
+	[aResource.generateResource(anAdaptorInterfaceGenerator) /]
 [/for]
 
 
 
-[for (aServiceProvider: ServiceProvider | anAdaptorInterface.serviceProviderCatalog.serviceProviders)]
+[for (aServiceProvider: ServiceProvider | anAdaptorInterfaceGenerator.adaptorInterface.serviceProviderCatalog.serviceProviders)]
 
 	[for (aResource: Resource | aServiceProvider.services.managedResources())]
-		[aResource.generateResourceService(anAdaptorInterface, aServiceProvider) /]
+		[aResource.generateResourceService(anAdaptorInterfaceGenerator, aServiceProvider) /]
 		[if (aResource.serviceNamespaceRelativeToServiceProvider(aServiceProvider))]
-		[aResource.generateResourceForSP(anAdaptorInterface, aServiceProvider)/]
+		[aResource.generateResourceForSP(anAdaptorInterfaceGenerator, aServiceProvider)/]
 		[/if]
 	[/for]
 
-	[aServiceProvider.generateAdaptorServiceProviderFactory(anAdaptorInterface) /]
-	[aServiceProvider.generateServiceProviderService(anAdaptorInterface)/]
-	[aServiceProvider.generateServiceProviderHTML(anAdaptorInterface) /]
-[aServiceProvider.generateServiceProviderInfo(anAdaptorInterface) /]
+	[aServiceProvider.generateAdaptorServiceProviderFactory(anAdaptorInterfaceGenerator) /]
+	[aServiceProvider.generateServiceProviderService(anAdaptorInterfaceGenerator)/]
+	[aServiceProvider.generateServiceProviderHTML(anAdaptorInterfaceGenerator) /]
+	[aServiceProvider.generateServiceProviderInfo(anAdaptorInterfaceGenerator) /]
 
 [/for]
 

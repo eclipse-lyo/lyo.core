@@ -17,11 +17,13 @@
     Michael Fiedler	    - adapted for OSLC4J
 	Jad El-khoury       - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
     Matthieu Helleboid  - create a Resource Creator jsp file for each managing service provider
+ 						- Use of Adapator Interface Generator
     Anass Radouani      - create a Resource Creator jsp file for each managing service provider
+ 						- Use of Adapator Interface Generator
 --%>
 /]
 
-[module generateResourceCreatorJsp('http://org.eclipse.lyo/oslc4j/adaptorInterface')]
+[module generateResourceCreatorJsp('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderServices/]
@@ -29,8 +31,8 @@
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourcePropertyServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::jspServices/]
 
-[template public generateResourceCreatorJsp(aResource : Resource, aServiceProvider : ServiceProvider)]
-[file (resourceCreatorJspFullFileName(aResource, aServiceProvider), false, 'UTF-8')]
+[template public generateResourceCreatorJsp(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, aResource : Resource, aServiceProvider : ServiceProvider)]
+[file (resourceCreatorJspFullFileName(aResource, aServiceProvider, anAdaptorInterfaceGenerator), false, 'UTF-8')]
 <!DOCTYPE html>
 <%--
  Copyright (c) 2011, 2012 IBM Corporation and others.
@@ -56,7 +58,7 @@
 
 <%@page import="org.eclipse.lyo.oslc4j.core.model.ServiceProvider"%>
 <%@page import="java.util.List" %>
-<%@page import="[javaClassFullName(aResource, aServiceProvider) /]"%>
+<%@page import="[javaClassFullName(aResource, aServiceProvider, anAdaptorInterfaceGenerator) /]"%>
 <%--
 [protected ('imports')]
 --%>

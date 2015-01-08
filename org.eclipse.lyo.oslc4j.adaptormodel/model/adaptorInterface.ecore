@@ -6,16 +6,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="serviceProviderCatalog"
         lowerBound="1" eType="#//ServiceProviderCatalog" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="javaClassBaseNamespace"
-        lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="specification" lowerBound="1"
         eType="#//Specification" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="javaFilesBasePath" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="jspFilesBasePath" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="javascriptFilesBasePath"
-        lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Specification">
     <eStructuralFeatures xsi:type="ecore:EReference" name="domainSpecifications" upperBound="-1"
@@ -70,10 +62,10 @@
         eType="#//BasicCapability" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Resource">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="extends" eType="#//Resource"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="resourceProperties" upperBound="-1"
         eType="#//ResourceProperty"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ResourceProperty">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -83,7 +75,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="readOnly" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueType" eType="#//ResourcePropertyValueType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="representation" eType="#//ResourcePropertyRepresentation"
-        defaultValueLiteral="n/a"/>
+        defaultValueLiteral="na"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="range" eType="#//Resource"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
@@ -109,7 +101,7 @@
     <eLiterals name="reference" literal="reference"/>
     <eLiterals name="inline" value="1" literal="inline"/>
     <eLiterals name="either" value="2" literal="either"/>
-    <eLiterals name="n/a" value="3" literal="n/a"/>
+    <eLiterals name="na" value="3" literal="na"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CreationFactory">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

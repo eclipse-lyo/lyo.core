@@ -14,31 +14,42 @@
  * Contributors:
  *
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *	   Matthieu Helleboid	- Use of Adapator Interface Generator
+ *	   						- Retrieve generation information using EAttribute, EOpertion and EAnnotation
+ *	   Anass Radouani		- Use of Adapator Interface Generator
+ *	   						- Retrieve generation information using EAttribute, EOpertion and EAnnotation
  *     
  *******************************************************************************/
 /]
 
-[module services('http://org.eclipse.lyo/oslc4j/adaptorInterface')/]
+[module services('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator', 'http://www.eclipse.org/emf/2002/Ecore')/]
 
-[query public javaClassBaseNamespace(anAdaptorInterface : AdaptorInterface) : String = 
-anAdaptorInterface.javaClassBaseNamespace
+[query public javaClassBaseNamespace(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+findValue(anAdaptorInterfaceGenerator, 'javaClassBaseNamespace')
 /]
 
-[query public javaFilesBasePath(anAdaptorInterface : AdaptorInterface) : String = 
-anAdaptorInterface.javaFilesBasePath
+[query public javaFilesBasePath(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+findValue(anAdaptorInterfaceGenerator, 'javaFilesBasePath')
 /]
 
-[query public jspFilesBasePath(anAdaptorInterface : AdaptorInterface) : String = 
-anAdaptorInterface.jspFilesBasePath
+[query public jspFilesBasePath(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String =
+findValue(anAdaptorInterfaceGenerator, 'jspFilesBasePath') 
 /]
 
-[query public javascriptFilesBasePath(anAdaptorInterface : AdaptorInterface) : String = 
-anAdaptorInterface.javascriptFilesBasePath
+[query public javascriptFilesBasePath(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String =
+findValue(anAdaptorInterfaceGenerator, 'javascriptFilesBasePath') 
 /]
 
+[query public webApplicationBasePath(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String =
+findValue(anAdaptorInterfaceGenerator, 'webApplicationBasePath') 
+/]
 
-[query public jspFilesWebappPath(anAdaptorInterface : AdaptorInterface) : String = 
-'/'.concat(javaClassBaseNamespace(anAdaptorInterface)).substituteAll('.', '/')
+[query public applicationName(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String =
+findValue(anAdaptorInterfaceGenerator, 'applicationName') 
+/]
+
+[query public jspFilesWebappPath(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator) : String = 
+'/'.concat(javaClassBaseNamespace(anAdaptorInterfaceGenerator)).substituteAll('.', '/')
 /]
 
 [query public JAXRSPathAnnotation(pathAnnotation : String) : String = 
@@ -97,4 +108,44 @@ endif)
 .concat(
 (if appendIfNotEmpty._and(commaSeparatedString.size() > 0) then ' ,' else ''endif)
 )
+/]
+
+[comment Retrieve Value from EAttribute with the same name if exist or with metaValue if not/]
+[query public findValue(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, key : String) : String = 
+let feature : EStructuralFeature = anAdaptorInterfaceGenerator.eClass().eAllAttributes->select(
+ f : EAttribute | f.name = key)->first() in
+if not feature.oclIsUndefined() then
+	anAdaptorInterfaceGenerator.eGet(feature)
+else
+	metaValue(anAdaptorInterfaceGenerator, key, Sequence{})
+endif
+/]
+
+[comment Retrieve Value from an EAttribute using EAnnotations, if not found call metaOperationValue /]
+[query public metaValue(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, annotation : String, keys : Sequence(OclAny)) : String = 
+let feature : EAttribute = anAdaptorInterfaceGenerator.eClass().eAllAttributes->select(
+	f : EAttribute | f.eAnnotations->exists(e : EAnnotation | e.source = annotation)
+	)->first() in
+	if not feature.oclIsUndefined() then
+			anAdaptorInterfaceGenerator.eGet(feature)
+	else
+		metaOperationValue(anAdaptorInterfaceGenerator, annotation, keys)
+	endif
+/]
+
+[comment Retrieve Value from an EOperation /]
+[query public metaOperationValue(anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator, annotation : String, keys : Sequence(OclAny)) : String = 
+let operation : EOperation = anAdaptorInterfaceGenerator.eClass().eAllOperations->select(
+	f : EOperation | f.eAnnotations->exists(e : EAnnotation | e.source = annotation)
+	)->first() in
+	if not operation.oclIsUndefined() then
+		invokeJava(anAdaptorInterfaceGenerator.oclAsType(EObject), operation, keys).oclAsType(String)
+	else
+		''
+	endif
+ /]
+
+[comment  Helper invoking EOperation /]
+[query public invokeJava(eobject : EObject, eoperation : EOperation, arg : Sequence(OclAny)) : OclAny =  
+invoke('org.eclipse.lyo.oslc4j.codegenerator.services.Services', 'invoke(org.eclipse.emf.ecore.EObject,org.eclipse.emf.ecore.EOperation,java.util.Collection)', Sequence{eobject,eoperation,arg})
 /]

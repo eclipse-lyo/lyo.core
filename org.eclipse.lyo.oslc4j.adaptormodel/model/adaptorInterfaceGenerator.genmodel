@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright (c) 2014 THALES GLOBAL SERVICES.&#xD;&#xA;All rights reserved. This program and the accompanying materials&#xD;&#xA;are made available under the terms of the Eclipse Public License v1.0&#xD;&#xA;which accompanies this distribution, and is available at&#xD;&#xA;http://www.eclipse.org/legal/epl-v10.html&#xD;&#xA;&#xD;&#xA;Contributors:&#xD;&#xA;&#xD;&#xA;Helleboid Matthieu &#x9;- initial API and implementation&#xD;&#xA;Anass Radouani &#x9; &#x9;- initial API and implementation"
+    modelDirectory="/org.eclipse.lyo.oslc4j.adaptormodel/src" editDirectory="/org.eclipse.lyo.oslc4j.adaptormodel.aigen.edit/src"
+    editorDirectory="/org.eclipse.lyo.oslc4j.adaptormodel.aigen.editor/src" modelPluginID="org.eclipse.lyo.oslc4j.adaptormodel"
+    modelName="AdaptorInterfaceGenerator" rootExtendsInterface="org.eclipse.emf.cdo.CDOObject"
+    rootExtendsClass="org.eclipse.emf.internal.cdo.CDOObjectImpl" reflectiveDelegation="true"
+    testsDirectory="" importerID="org.eclipse.emf.importer.cdo" featureDelegation="Reflective"
+    complianceLevel="7.0" copyrightFields="false" editPluginID="org.eclipse.lyo.oslc4j.adaptormodel.aigen.edit"
+    editorPluginID="org.eclipse.lyo.oslc4j.adaptormodel.aigen.editor" language=""
+    usedGenPackages="adaptorInterface.genmodel#//adaptorinterface" operationReflection="true"
+    importOrganizing="true">
+  <foreignModel>adaptorInterfaceGenerator.ecore</foreignModel>
+  <modelPluginVariables>CDO=org.eclipse.emf.cdo</modelPluginVariables>
+  <genPackages prefix="AdaptorInterfaceGenerator" basePackage="org.eclipse.lyo.oslc4j.adaptormodel"
+      disposableProviderFactory="true" extensibleProviderFactory="true" fileExtensions="aigen"
+      ecorePackage="adaptorInterfaceGenerator.ecore#/">
+    <genClasses ecoreClass="adaptorInterfaceGenerator.ecore#//AdaptorInterfaceGeneratorContainer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference adaptorInterfaceGenerator.ecore#//AdaptorInterfaceGeneratorContainer/generator"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="adaptorInterfaceGenerator.ecore#//Dependency"/>
+    <genClasses ecoreClass="adaptorInterfaceGenerator.ecore#//MavenDependency">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorInterfaceGenerator.ecore#//MavenDependency/artifactId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorInterfaceGenerator.ecore#//MavenDependency/groupId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorInterfaceGenerator.ecore#//MavenDependency/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorInterfaceGenerator.ecore#//MavenDependency/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorInterfaceGenerator.ecore#//MavenDependency/classifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorInterfaceGenerator.ecore#//MavenDependency/scope"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorInterfaceGenerator.ecore#//MavenDependency/systemPath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorInterfaceGenerator.ecore#//MavenDependency/optional"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="adaptorInterfaceGenerator.ecore#//ResourceMapping">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference adaptorInterfaceGenerator.ecore#//ResourceMapping/resource"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference adaptorInterfaceGenerator.ecore#//ResourceMapping/resourcePropertyMappings"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="adaptorInterfaceGenerator.ecore#//ResourcePropertyMapping">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference adaptorInterfaceGenerator.ecore#//ResourcePropertyMapping/resourceProperty"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="adaptorInterfaceGenerator.ecore#//AdaptorInterfaceGenerator">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference adaptorInterfaceGenerator.ecore#//AdaptorInterfaceGenerator/adaptorInterface"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference adaptorInterfaceGenerator.ecore#//AdaptorInterfaceGenerator/dependenciesContainer"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute adaptorInterfaceGenerator.ecore#//AdaptorInterfaceGenerator/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference adaptorInterfaceGenerator.ecore#//AdaptorInterfaceGenerator/resourceMappings"/>
+    </genClasses>
+    <genClasses ecoreClass="adaptorInterfaceGenerator.ecore#//DependenciesContainer">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference adaptorInterfaceGenerator.ecore#//DependenciesContainer/dependencies"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

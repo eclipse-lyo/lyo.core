@@ -13,19 +13,21 @@
  
  Contributors:
  
-    Sam Padgett		 - initial API and implementation
-    Michael Fiedler	 - adapted for OSLC4J
-    Jad El-khoury    - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+    Sam Padgett		 	- initial API and implementation
+    Michael Fiedler	 	- adapted for OSLC4J
+    Jad El-khoury    	- initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ 	Matthieu Helleboid	- Use of Adapator Interface Generator
+ 	Anass Radouani		- Use of Adapator Interface Generator
 --%>
 /]
 
-[module generateServiceProviderHTML('http://org.eclipse.lyo/oslc4j/adaptorInterface')]
+[module generateServiceProviderHTML('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::jspServices/]
 
-[template public generateServiceProviderHTML(aServiceProvider : ServiceProvider, anAdaptorInterface : AdaptorInterface)]
-[file (serviceProviderJspFullFileName(aServiceProvider, anAdaptorInterface), false, 'UTF-8')]
+[template public generateServiceProviderHTML(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
+[file (serviceProviderJspFullFileName(aServiceProvider, anAdaptorInterfaceGenerator), false, 'UTF-8')]
 <!DOCTYPE html>
 <%--
  Copyright (c) 2011, 2012 IBM Corporation and others.

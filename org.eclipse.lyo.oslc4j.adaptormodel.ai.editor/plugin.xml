@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated adaptorInterface -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="org.eclipse.lyo.oslc4j.adaptormodel.adaptorinterface.presentation.AdaptorInterfaceModelWizardID"
+            name="%_UI_AdaptorInterfaceModelWizard_label"
+            class="org.eclipse.lyo.oslc4j.adaptormodel.adaptorinterface.presentation.AdaptorInterfaceModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/AdaptorInterfaceModelFile.gif">
+         <description>%_UI_AdaptorInterfaceModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated adaptorInterface -->
+      <editor
+            id="org.eclipse.lyo.oslc4j.adaptormodel.adaptorinterface.presentation.AdaptorInterfaceEditorID"
+            name="%_UI_AdaptorInterfaceEditor_label"
+            icon="icons/full/obj16/AdaptorInterfaceModelFile.gif"
+            extensions="ai"
+            class="org.eclipse.lyo.oslc4j.adaptormodel.adaptorinterface.presentation.AdaptorInterfaceEditor"
+            contributorClass="org.eclipse.lyo.oslc4j.adaptormodel.adaptorinterface.presentation.AdaptorInterfaceActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

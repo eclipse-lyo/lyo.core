@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated AdaptorInterface -->
+      <package
+            uri="http://org.eclipse.lyo/oslc4j/adaptorInterface"
+            class="org.eclipse.lyo.oslc4j.adaptormodel.adaptorinterface.AdaptorInterfacePackage"
+            genModel="model/adaptorInterface.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated AdaptorInterfaceGenerator -->
+      <package
+            uri="http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator"
+            class="org.eclipse.lyo.oslc4j.adaptormodel.adaptorinterfacegenerator.AdaptorInterfaceGeneratorPackage"
+            genModel="model/adaptorInterfaceGenerator.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated AdaptorManagerGenerator -->
+      <package
+            uri="http://org.eclipse.lyo/oslc4j/adaptorManagerGenerator"
+            class="org.eclipse.lyo.oslc4j.adaptormodel.adaptormanagergenerator.AdaptorManagerGeneratorPackage"
+            genModel="model/adaptorManagerGenerator.genmodel"/>
+   </extension>
+
+</plugin>

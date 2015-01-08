@@ -20,11 +20,13 @@
  *     Michael Fiedler      - Bugzilla adapter implementation
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
  *     Matthieu Helleboid   - Add Service Provider title in the class name and use only managed resources
+ *							- Use of Adapator Interface Generator
  *     Anass Radouani       - Add Service Provider title in the class name and use only managed resources
+ *							- Use of Adapator Interface Generator
  *******************************************************************************/
 /]
 
-[module generateAdaptorServiceProviderFactory('http://org.eclipse.lyo/oslc4j/adaptorInterface')]
+[module generateAdaptorServiceProviderFactory('http://org.eclipse.lyo/oslc4j/adaptorInterface', 'http://org.eclipse.lyo/oslc4j/adaptorInterfaceGenerator')]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::services::services/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::adaptorInterfaceServices/]
@@ -32,8 +34,8 @@
 [import org::eclipse::lyo::oslc4j::codegenerator::services::serviceProviderServices/]
 [import org::eclipse::lyo::oslc4j::codegenerator::services::resourceServices/]
 
-[template public generateAdaptorServiceProviderFactory(aServiceProvider : ServiceProvider, anAdaptorInterface : AdaptorInterface)]
-[file (javaClassFullFileNameForServiceProviderFactory(aServiceProvider), false, 'UTF-8')]
+[template public generateAdaptorServiceProviderFactory(aServiceProvider : ServiceProvider, anAdaptorInterfaceGenerator : AdaptorInterfaceGenerator)]
+[file (javaClassFullFileNameForServiceProviderFactory(aServiceProvider, anAdaptorInterfaceGenerator), false, 'UTF-8')]
 /*******************************************************************************
  * Copyright (c) 2012 IBM Corporation and others.
  *
@@ -60,7 +62,7 @@
  *******************************************************************************/
 
 
-package [javaClassPackageNameForServiceProviderFactory(anAdaptorInterface) /];
+package [javaClassPackageNameForServiceProviderFactory(anAdaptorInterfaceGenerator) /];
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -74,8 +76,8 @@ import org.eclipse.lyo.oslc4j.core.model.Publisher;
 import org.eclipse.lyo.oslc4j.core.model.ServiceProvider;
 import org.eclipse.lyo.oslc4j.core.model.ServiceProviderFactory;
 
-import [javaInterfaceFullNameForAdaptorConstants(anAdaptorInterface) /];
-[for (aResource: Resource | aServiceProvider.services.managedResources()->sortedBy(name)) separator(lineSeparator())]import [javaClassFullNameForService(aResource, aServiceProvider) /];[/for]
+import [javaInterfaceFullNameForAdaptorConstants(anAdaptorInterfaceGenerator) /];
+[for (aResource: Resource | aServiceProvider.services.managedResources()->sortedBy(name)) separator(lineSeparator())]import [javaClassFullNameForService(aResource, aServiceProvider, anAdaptorInterfaceGenerator) /];[/for]
 
 // [protected ('imports')]
 // [/protected]
@@ -121,8 +123,8 @@ public class [javaClassNameForServiceProviderFactory(aServiceProvider) /]
             new PrefixDefinition(OslcConstants.OSLC_DATA_NAMESPACE_PREFIX, new URI(OslcConstants.OSLC_DATA_NAMESPACE)),
             new PrefixDefinition(OslcConstants.RDF_NAMESPACE_PREFIX, new URI(OslcConstants.RDF_NAMESPACE)),
             new PrefixDefinition(OslcConstants.RDFS_NAMESPACE_PREFIX, new URI(OslcConstants.RDFS_NAMESPACE)),
-			[for (aDomainSpecification: DomainSpecification | relevantDomainSpecifications(anAdaptorInterface)->sortedBy(name)) separator(','.concat(lineSeparator()))]
-			new PrefixDefinition([javaInterfaceNameForAdaptorConstants(anAdaptorInterface)/].[domainSpecificationNamespacePrefixConstantName(aDomainSpecification) /], new URI([javaInterfaceNameForAdaptorConstants(anAdaptorInterface)/].[domainSpecificationNamespaceConstantName(aDomainSpecification) /]))
+			[for (aDomainSpecification: DomainSpecification | relevantDomainSpecifications(anAdaptorInterfaceGenerator.adaptorInterface)->sortedBy(name)) separator(','.concat(lineSeparator()))]
+			new PrefixDefinition([javaInterfaceNameForAdaptorConstants(anAdaptorInterfaceGenerator.adaptorInterface)/].[domainSpecificationNamespacePrefixConstantName(aDomainSpecification) /], new URI([javaInterfaceNameForAdaptorConstants(anAdaptorInterfaceGenerator.adaptorInterface)/].[domainSpecificationNamespaceConstantName(aDomainSpecification) /]))
 			[/for]
         };
 
