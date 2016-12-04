@@ -9,7 +9,8 @@
     testsPluginID="org.eclipse.lyo.tools.adaptormodel.tests" operationReflection="true"
     importOrganizing="true">
   <foreignModel>adaptorInterface.ecore</foreignModel>
-  <genPackages prefix="Adaptorinterface" disposableProviderFactory="true" ecorePackage="adaptorInterface.ecore#/">
+  <genPackages prefix="Adaptorinterface" disposableProviderFactory="true" contentTypeIdentifier=""
+      fileExtensions="xml,adaptorinterface,ai" ecorePackage="adaptorInterface.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="adaptorInterface.ecore#//ResourcePropertyOccurs">
       <genEnumLiterals ecoreEnumLiteral="adaptorInterface.ecore#//ResourcePropertyOccurs/exactlyOne"/>
       <genEnumLiterals ecoreEnumLiteral="adaptorInterface.ecore#//ResourcePropertyOccurs/zeroOrOne"/>
