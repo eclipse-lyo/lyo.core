@@ -51,23 +51,19 @@ package [javaClassPackageName(aServiceProvider) /];
 // [protected ('imports')]
 // [/protected]
 
-
 // [protected ('pre_class_code')]
 // [/protected]
-
 public class [javaClassName(aServiceProvider) /] {
-
     public String name;
     [for (instanceCompositeID: String | instanceCompositeID(aServiceProvider)) separator(';'.concat(lineSeparator()))]
     public String [instanceCompositeID /];
     [/for]
 
-	// [protected ('class_attributes')]
-	// [/protected]
+    // [protected ('class_attributes')]
+    // [/protected]
 
-	// [protected ('class_methods')]
-	// [/protected]
-
+    // [protected ('class_methods')]
+    // [/protected]
 }
 
 [/file]

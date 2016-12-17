@@ -67,9 +67,9 @@
 
 {
 <%
-	String selectionUri = (String) request.getAttribute("selectionUri");
+    String selectionUri = (String) request.getAttribute("selectionUri");
     List<[dialogMethodResourceType(aSelectionDialog)/]> resources = (List<[dialogMethodResourceType(aSelectionDialog)/]>) request.getAttribute("resources");
-	String terms = (String) request.getAttribute("terms");
+    String terms = (String) request.getAttribute("terms");
 %>
 <%--
 [protected ('getRequestAttributes')]
