@@ -154,7 +154,7 @@ public class [javaClassNameForSingleton(aServiceProviderCatalog) /]
 
     [for (aServiceProvider: ServiceProvider | aServiceProviderCatalog.serviceProviders)]
 
-    private static URI construct[aServiceProvider.javaName(true)/]URI([aServiceProvider.instanceMethodSignature() /])
+    public static URI construct[aServiceProvider.javaName(true)/]URI([aServiceProvider.instanceMethodSignature() /])
     {
         String basePath = [javaClassNameForAdaptorServletListener(containingAdaptorInterface(aServiceProviderCatalog)) /].getServicesBase();
         Map<String, Object> pathParameters = new HashMap<String, Object>();
@@ -321,7 +321,7 @@ public class [javaClassNameForSingleton(aServiceProviderCatalog) /]
                 String identifier = [aServiceProvider.javaName(false)/]Identifier([for (instanceCompositeID: String | instanceCompositeID(aServiceProvider)) separator(', ')]serviceProviderInfo.[instanceCompositeID /][/for]);
                 if (! serviceProviders.containsKey(identifier)) {
                     String serviceProviderName = serviceProviderInfo.name;
-                    String title = "[aServiceProvider.title.concat(': ') /]" + serviceProviderName + "(" + identifier + ")";
+                    String title = "[aServiceProvider.title.concat(': ') /]" + "(" + identifier + ")";
                     String description = "[aServiceProvider.description.concat(': ') /]" + serviceProviderName + "(" + identifier + ")";
                     [if (aServiceProvider.publisher.oclIsUndefined())]
                     Publisher publisher = null;

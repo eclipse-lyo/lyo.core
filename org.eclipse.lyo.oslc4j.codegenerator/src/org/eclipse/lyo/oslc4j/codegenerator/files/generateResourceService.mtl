@@ -15,6 +15,7 @@
  *
  *     Michael Fiedler     - initial API and implementation for Bugzilla adapter
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *	   Frederic Loiret 		- updated JSP files for generated HTML pages and generated OSLC UI Previews
  *
  *******************************************************************************/
 /]
@@ -112,6 +113,7 @@ import [javaClassFullNameForSingleton(anAdaptorInterface.serviceProviderCatalog)
 [for (aResource: Resource | aService.relevantResources()->sortedBy(name))]
 import [javaClassFullName(aResource, anAdaptorInterface) /];
 [/for]
+import [javaClassFullNameForAdaptorServeletListener(anAdaptorInterface) /];
 
 // [protected ('imports')]
 // [/protected]
@@ -135,6 +137,11 @@ public class [javaClassName(aService) /]
     public [javaClassName(aService) /]()
     {
         super();
+    }
+
+	private String getCurrentPathString() {
+        return String.format("%s/%s", ServletListener.getServicesBase(), uriInfo.getPath());
+        //return uriInfo.getAbsolutePath().toString();
     }
 
     [for (aQueryCapability: QueryCapability | aService.queryCapabilities)]
@@ -201,11 +208,11 @@ public class [javaClassName(aService) /]
             // [/protected]
 
             httpServletRequest.setAttribute("queryUri",
-                    uriInfo.getAbsolutePath().toString() + "?oslc.paging=true");
+                    getCurrentPathString() + "?oslc.paging=true");
             if (resources.size() > limit) {
                 resources.remove(resources.size() - 1);
                 httpServletRequest.setAttribute("nextPageUri",
-                        uriInfo.getAbsolutePath().toString() + "?oslc.paging=true&amp;page=" + (page + 1));
+                        getCurrentPathString() + "?oslc.paging=true&amp;page=" + (page + 1));
             }
             RequestDispatcher rd = httpServletRequest.getRequestDispatcher("[resourceCollectionJspRelativeFileName(aQueryCapability) /]");
             rd.forward(httpServletRequest,httpServletResponse);
@@ -238,7 +245,7 @@ public class [javaClassName(aService) /]
             // [protected (dialogMethodName(aSelectionDialog, true).concat('_init'))]
             // [/protected]
 
-            httpServletRequest.setAttribute("selectionUri",uriInfo.getAbsolutePath().toString());
+            httpServletRequest.setAttribute("selectionUri",getCurrentPathString());
             // [protected (dialogMethodName(aSelectionDialog, true).concat('_setAttributes'))]
             // [/protected]
 
@@ -319,7 +326,7 @@ public class [javaClassName(aService) /]
         // [protected (dialogMethodName(aCreationDialog, false))]
         // [/protected]
 
-        httpServletRequest.setAttribute("creatorUri", uriInfo.getAbsolutePath().toString());
+        httpServletRequest.setAttribute("creatorUri", getCurrentPathString());
         [for (aPathParameter: String | JAXRSPathParameters(aCreationDialog.URI(false)))]
         httpServletRequest.setAttribute("[aPathParameter/]", [aPathParameter/]);
         [/for]
@@ -440,6 +447,75 @@ public class [javaClassName(aService) /]
         throw new WebApplicationException(Status.NOT_FOUND);
     }
 
+	[if (aBasicCapability.uIPreview)]
+	@GET
+    [JAXRSPathAnnotation(aResource.instanceURISegment(aBasicCapability))/]
+	@Produces({OslcMediaType.APPLICATION_X_OSLC_COMPACT_XML})
+    public Compact [getResourceCompactMethodName(aBasicCapability, aResource, false)/](
+        [commaSeparate(instanceMethodSignature(aResource, aBasicCapability, true), false, false)/]
+        ) throws ServletException, IOException, URISyntaxException
+    {
+        // [protected (getResourceMethodName(aBasicCapability, aResource, false).concat('_init'))]
+        // [/protected]
+
+        final [getResourceMethodResourceType(aBasicCapability, aResource)/] a[javaName(aResource, true)/] = [javaClassNameForAdaptorManager(anAdaptorInterface) /].[getResourceMethodName(aBasicCapability, aResource, true)/](httpServletRequest[commaSeparate(instanceMethodParameterList(aResource, aBasicCapability), true, false)/]);
+
+        if (a[javaName(aResource, true)/] != null) {
+            final Compact compact = new Compact();
+
+            compact.setAbout(a[javaName(aResource, true)/].getAbout());
+
+            //String iconUri = "https://landfill.bugzilla.org/bugzilla-4.4-branch/images/favicon.ico";
+            //compact.setIcon(new URI(iconUri));
+
+            //Create and set attributes for OSLC preview resource
+        // [protected (getResourceMethodName(aBasicCapability, aResource, false).concat('_smallPreview'))]
+            final Preview smallPreview = new Preview();
+            smallPreview.setHintHeight("11em");
+            smallPreview.setHintWidth("45em");
+            smallPreview.setDocument(new URI(compact.getAbout().toString() + "/smallPreview"));
+            compact.setSmallPreview(smallPreview);
+		// [/protected]
+
+            //Use the HTML representation of a change request as the large preview as well
+		// [protected (getResourceMethodName(aBasicCapability, aResource, false).concat('_largePreview'))]
+            final Preview largePreview = new Preview();
+            largePreview.setHintHeight("20em");
+            largePreview.setHintWidth("45em");
+            largePreview.setDocument(compact.getAbout());
+            compact.setLargePreview(largePreview);
+		// [/protected]
+
+            return compact;
+        }
+
+        throw new WebApplicationException(Status.NOT_FOUND);
+    }
+
+	@GET
+    [JAXRSPathAnnotation(aResource.instanceURISegment(aBasicCapability).concat('/smallPreview'))/]
+    @Produces({ MediaType.TEXT_HTML })
+    public void [getResourceSmallPreviewMethodName(aBasicCapability, aResource, false)/] (
+        [commaSeparate(instanceMethodSignature(aResource, aBasicCapability, true), false, false)/]
+        ) throws ServletException, IOException, URISyntaxException
+    {
+        // [protected (getResourceMethodName(aBasicCapability, aResource, false).concat('_init'))]
+        // [/protected]
+
+        final [getResourceMethodResourceType(aBasicCapability, aResource)/] a[javaName(aResource, true)/] = [javaClassNameForAdaptorManager(anAdaptorInterface) /].[getResourceMethodName(aBasicCapability, aResource, true)/](httpServletRequest[commaSeparate(instanceMethodParameterList(aResource, aBasicCapability), true, false)/]);
+
+        if (a[javaName(aResource, true)/] != null) {
+            httpServletRequest.setAttribute("a[javaName(aResource, true)/]", a[javaName(aResource, true)/]);
+
+            RequestDispatcher rd = httpServletRequest.getRequestDispatcher("[getResourceJspRelativeFileNameForPreview(aResource, anAdaptorInterface) /]");
+            rd.forward(httpServletRequest,httpServletResponse);
+            return;
+        }
+
+        throw new WebApplicationException(Status.NOT_FOUND);
+    }
+	[/if]
+
     @GET
     [JAXRSPathAnnotation(aResource.instanceURISegment(aBasicCapability))/]
     @Produces({ MediaType.TEXT_HTML })
@@ -532,6 +608,7 @@ public class [javaClassName(aService) /]
             throw new WebApplicationException(Status.NOT_FOUND);
         }
     }
+
 
     [/for]
     [/if]

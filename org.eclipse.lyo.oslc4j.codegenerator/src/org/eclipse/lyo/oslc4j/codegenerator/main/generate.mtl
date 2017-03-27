@@ -16,6 +16,7 @@
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
  *     Matthieu Helleboid   - Support for multiple Service Providers.
  *     Anass Radouani       - Support for multiple Service Providers.
+ *	   Frederic Loiret 		- updated JSP files for generated HTML pages and generated OSLC UI Previews
  *******************************************************************************/
 /]
 
@@ -40,6 +41,7 @@
 [import org::eclipse::lyo::oslc4j::codegenerator::files::generateResourceInterface/]
 [import org::eclipse::lyo::oslc4j::codegenerator::files::generateResourceService/]
 [import org::eclipse::lyo::oslc4j::codegenerator::staticFiles::generateLicenseFiles/]
+[import org::eclipse::lyo::oslc4j::codegenerator::staticFiles::generateCssAndJsFiles/]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::jsp::generateResourceCollectionJsp/]
 [import org::eclipse::lyo::oslc4j::codegenerator::jsp::generateFilteredResourceCollectionJsp/]
@@ -51,11 +53,13 @@
 [import org::eclipse::lyo::oslc4j::codegenerator::jsp::generateServiceProviderCatalogHTML/]
 [import org::eclipse::lyo::oslc4j::codegenerator::jsp::generateServiceProviderHTML/]
 [import org::eclipse::lyo::oslc4j::codegenerator::jsp::generateDelegatedUIJavaScripts/]
+[import org::eclipse::lyo::oslc4j::codegenerator::jsp::generateSmallPreviewJsp/]
 
 [import org::eclipse::lyo::oslc4j::codegenerator::files::generateAdaptorClient/]
 
 [template public generateForAdaptorManager(anAdaptorInterface : AdaptorInterface)]
 [anAdaptorInterface.generateLicenseFiles() /]
+[anAdaptorInterface.generateCssAndJsFiles() /]
 [anAdaptorInterface.generateAdaptorApplication() /]
 [anAdaptorInterface.generateAdaptorConstants() /]
 [anAdaptorInterface.generateAdaptorPackageInfo() /]
@@ -130,6 +134,7 @@
 [for (aResource: Resource | relevantResources(anAdaptorInterface))]
     [if (not basicCapabilities(anAdaptorInterface, aResource)->isEmpty())]
         [aResource.generateGetResourceJsp(anAdaptorInterface, anAdaptorInterface) /]
+		[aResource.generateSmallPreviewJsp(anAdaptorInterface, anAdaptorInterface) /]
     [/if]
 [/for]
 [/template]

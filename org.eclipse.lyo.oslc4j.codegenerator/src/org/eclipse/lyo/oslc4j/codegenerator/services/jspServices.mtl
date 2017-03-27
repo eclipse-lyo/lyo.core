@@ -39,6 +39,17 @@ jspFilesWebappPath(anAdaptorInterface).concatenatePaths(aResource.javaName(true)
 jspFilesBasePath(anAdaptorInterface).concatenatePaths(getResourceJspRelativeFileName(aResource, anAdaptorInterface))
 /]
 
+[query public getResourceSmallPreviewJspRelativeFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
+jspFilesWebappPath(anAdaptorInterface).concatenatePaths(aResource.javaName(true)).concat('_preview_small').concat('.jsp').toLower()
+/]
+[query public getResourcesSmallPreviewJspFullFileName(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
+jspFilesBasePath(anAdaptorInterface).concatenatePaths(getResourceSmallPreviewJspRelativeFileName(aResource, anAdaptorInterface))
+/]
+
+[query public getResourceJspRelativeFileNameForPreview(aResource: Resource, anAdaptorInterface : AdaptorInterface) : String = 
+jspFilesWebappPath(anAdaptorInterface).concatenatePaths(aResource.javaName(true)).concat('_preview_small').concat('.jsp').toLower()
+/]
+
 [query public resourceCreatorJspRelativeFileName(aCreationDialog: Dialog) : String = 
 jspFilesWebappPath(containingAdaptorInterface(aCreationDialog)).concatenatePaths(concatenate(aCreationDialog.resourceTypes.javaName(true)->sep('', 'And', '').oclAsType(String))).concat('creator').concat('.jsp').toLower()
 /]
@@ -87,6 +98,10 @@ jspFilesWebappPath(containingAdaptorInterface(aServiceProvider)).concatenatePath
 /]
 [query public serviceProviderJspFullFileName(aServiceProvider : ServiceProvider) : String = 
 jspFilesBasePath(containingAdaptorInterface(aServiceProvider)).concatenatePaths(serviceProviderJspRelativeFileName(aServiceProvider))
+/]
+
+[query public getJspImportFolder(anAdaptorInterface : AdaptorInterface) : String = 
+jspFilesBasePath(anAdaptorInterface).concat('/import')
 /]
 
 [comment TODO: I need to work out how to properly set hte javascript path. This is hard-coded :-)/]

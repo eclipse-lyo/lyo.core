@@ -19,6 +19,7 @@
  *     Gianluca Bernardini  - initial API and implementation
  *     Michael Fiedler      - Bugzilla adpater implementations
  *     Jad El-khoury        - initial implementation of code generator (https://bugs.eclipse.org/bugs/show_bug.cgi?id=422448)
+ *	   Frederic Loiret 		- updated JSP files for generated HTML pages and generated OSLC UI Previews
  *******************************************************************************/
 /]
 
@@ -87,6 +88,11 @@ public interface [javaInterfaceNameForAdaptorConstants(anAdaptorInterface) /]
     [for (aResource: Resource | relevantResources(anAdaptorInterface)->sortedBy(name))]
     [generateResourceConstants(aResource) /]
     [/for]
+
+	// [protected ('user code parameters for HTML pages')]
+	public static String [titleHTMLConstantName(anAdaptorInterface)/] = "[anAdaptorInterface.name/]";
+    public static String [footerHTMLConstantName(anAdaptorInterface)/] = "[anAdaptorInterface.name/] Demo";
+    // [/protected]
 
     public static final String HDR_OSLC_VERSION = "OSLC-Core-Version";
 

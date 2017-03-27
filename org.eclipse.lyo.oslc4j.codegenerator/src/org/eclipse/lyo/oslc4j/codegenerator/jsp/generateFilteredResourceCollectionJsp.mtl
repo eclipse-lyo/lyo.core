@@ -81,8 +81,15 @@
 <% int i = 0; for ([dialogMethodResourceType(aSelectionDialog)/] r : resources) { %>
   <% if (i > 0) { %>,<% } %>
   {
+<%--
+[protected ('(RECOMMENDED) display filtered results')]
+--%>
+
     "oslc:label" : "<%= r.toString() %>",
     "rdf:resource" : "<%= r.getAbout() %>"
+<%--
+[/protected]
+--%>
   }
 <% i++; } %>
 [']'/]

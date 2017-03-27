@@ -159,8 +159,33 @@ javaName(anAdaptorInterface, true).concat('Manager')
 javaClassPackageNameForAdaptorManager(anAdaptorInterface).concat('.').concat(javaClassNameForAdaptorManager(anAdaptorInterface))
 /]
 
+[query public javaClassFullNameForAdaptorServeletListener(anAdaptorInterface : AdaptorInterface) : String = 
+javaClassPackageNameForAdaptorManager(anAdaptorInterface).concat('.').concat('servlet.ServletListener')
+/]
+
 [query public javaClassFullFileNameForAdaptorManager(anAdaptorInterface : AdaptorInterface) : String = 
 javaFilesBasePath(anAdaptorInterface).concatenatePaths(javaClassPackageNameForAdaptorManager(anAdaptorInterface).substituteAll('.', '/')).concat('/').concat(javaClassNameForAdaptorManager(anAdaptorInterface)).concat('.java')
+/]
+
+[comment Services for JSPHelper /]
+[query public javaClassNameForAdaptorJSPHelper(anAdaptorInterface : AdaptorInterface) : String = 
+javaName(anAdaptorInterface, true).concat('JSPHelper')
+/]
+
+[query public javaClassPackageNameForAdaptorJSPHelper(anAdaptorInterface : AdaptorInterface) : String = 
+javaClassBaseNamespace(anAdaptorInterface)
+/]
+
+[query public javaClassFullNameForAdaptorJSPHelper(anAdaptorInterface : AdaptorInterface) : String = 
+javaClassPackageNameForAdaptorJSPHelper(anAdaptorInterface).concat('.').concat(javaClassNameForAdaptorJSPHelper(anAdaptorInterface))
+/]
+
+[query public javaClassFullFileNameForAdaptorJSPHelper(anAdaptorInterface : AdaptorInterface) : String = 
+javaFilesBasePath(anAdaptorInterface).concatenatePaths(javaClassPackageNameForAdaptorManager(anAdaptorInterface).substituteAll('.', '/')).concat('/').concat(javaClassNameForAdaptorJSPHelper(anAdaptorInterface)).concat('.java')
+/]
+
+[query public javaInterfacePackageNameForAdaptorJSPHelper(anAdaptorInterface : AdaptorInterface) : String = 
+javaClassBaseNamespace(anAdaptorInterface)
 /]
 
 [comment Services for AdaptorConstants /]
@@ -206,6 +231,14 @@ aResource.javaName(true).toUpperCase()
 
 [query public resourceTypeConstantName(aResource : Resource) : String = 
 'TYPE_'.concat(aResource.javaName(true).toUpperCase())
+/]
+
+[query public titleHTMLConstantName(anAdaptorInterface : AdaptorInterface) : String = 
+'ADAPTOR_TITLE_LABEL_FOR_HTML'
+/]
+
+[query public footerHTMLConstantName(anAdaptorInterface : AdaptorInterface) : String = 
+'ADAPTOR_FOOTER_LABEL_FOR_HTML'
 /]
 
 [comment Services for RequiredAdaptor /]

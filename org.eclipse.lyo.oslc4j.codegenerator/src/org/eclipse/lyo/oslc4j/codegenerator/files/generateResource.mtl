@@ -54,8 +54,8 @@ static public String [propertyToHtmlForCreationMethodName(aProperty, aResource, 
 
     [let valueType : String = aProperty.valueType.toString()]
     [if (Sequence{'String', 'XMLLiteral', 'DateTime', 'URI', 'Double', 'Float', 'Integer'}->includes(valueType))]
-    s= s + [resourcePropertyAsTextInputForCreation(aProperty) /];
-    [elseif(valueType = 'Boolean')]
+	s= s + [resourcePropertyAsTextInputForCreation(aProperty) /];
+	[elseif(valueType = 'Boolean')]
     s= s + "<input name=\"[javaName(aProperty, false)/]\" type=\"radio\" value=\"true\">True<input name=\"[javaName(aProperty, false)/]\" type=\"radio\" value=\"false\">False";
     [elseif(Sequence{'Resource', 'LocalResource'}->includes(valueType))]
     [comment TODO: How to deal with properties that are resources? Should then also be created, or should hte user get a list of existing such resources to choose from.
@@ -406,7 +406,7 @@ public String [javaAttributeName(aProperty, aResource) /]ToHtml()
     // [protected (javaAttributeName(aProperty, aResource).concat('toHtml_init'))]
     // [/protected]
 
-    s = s + "<label for=\"[aProperty.name/]\"><strong>[aProperty.name/]</strong>: </LABEL>";
+    s = s + "<label for=\"[aProperty.name/]\"><strong>[aProperty.name/]</strong>: &nbsp;</LABEL>";
 
     // [protected (javaAttributeName(aProperty, aResource).concat('toHtml_mid'))]
     // [/protected]
@@ -428,7 +428,11 @@ public String [javaAttributeName(aProperty, aResource) /]ToHtml()
             s= s + "<em>null</em>";
         }
         else {
-            s= s + [javaAttributeName(aProperty, aResource)/].toString();
+			[if aProperty.valueType.toString() = 'URI']
+			s = s + "<a href=\"" + [javaAttributeName(aProperty, aResource)/].toString() + "\">" + [javaAttributeName(aProperty, aResource)/].toString() + "</a>";
+			[else]          
+			s= s + [javaAttributeName(aProperty, aResource)/].toString();
+			[/if]
         }
         [/if]
     [comment a property with valueType of resource or LocalResource can return either a Class directly referring to a Resource, or Link.
@@ -443,14 +447,17 @@ public String [javaAttributeName(aProperty, aResource) /]ToHtml()
                 [if (aProperty.range->size() = 1)]
                     [comment Even if it is a Link, there are cases where I actually know that the link should point to a particular resource class.
                     (For example, for valueType = Resource, we get a Link irrespective of whether the valueType is set to a specific resource or not. ) /]
-            s = s + (new [javaClassName(aProperty.range->first()) /] (next.getValue())).toHtml([if (aProperty.valueType.toString() = 'LocalResource')]true[else]false[/if]);
+			s = s + (new [javaClassName(aProperty.range->first()) /] (next.getValue())).toHtml([if (aProperty.valueType.toString() = 'LocalResource')]true[else]false[/if]);
                 [else]
                     [comment just print the Link's URI as a String /]
             if (next.getValue() == null) {
                 s= s + "<em>null</em>";
             }
             else {
+				[comment
                 s = s + next.getValue().toString();
+				/]
+				s = s + "<a href=\"" + next.getValue().toString() + "\">" + next.getValue().toString() + "</a>";
             }
                 [/if]
             [else]
@@ -465,8 +472,12 @@ public String [javaAttributeName(aProperty, aResource) /]ToHtml()
                 [if (aProperty.range->size() = 1)]
                     [comment Even if it is a Link, there are cases where I actually know that the link should point to a particular resource class.
                     (For example, for valueType = Resource, we get a Link irrespective of whether the valueType is set to a specific resource or not. ) /]
-        s = s + (new [javaClassName(aProperty.range->first()) /] ([javaAttributeName(aProperty, aResource)/].getValue())).toHtml([if (aProperty.valueType.toString() = 'LocalResource')]true[else]false[/if]);
-                [else]
+        if ([javaAttributeName(aProperty, aResource)/].getValue() != null) {
+			s = s + (new [javaClassName(aProperty.range->first()) /] ([javaAttributeName(aProperty, aResource)/].getValue())).toHtml([if (aProperty.valueType.toString() = 'LocalResource')]true[else]false[/if]);
+        } else {
+			s = s + "<em>null</em>";
+		} 
+		       [else]
                     [comment just print the Link's URI as a String /]
         if ([javaAttributeName(aProperty, aResource)/].getValue() == null) {
             s = s + "<em>null</em>";
