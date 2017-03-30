@@ -17,6 +17,7 @@ package org.eclipse.lyo.oslc4j.core.model;
 
 import java.net.URI;
 
+import java.util.Objects;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcName;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcPropertyDefinition;
 
@@ -55,6 +56,21 @@ public class Link extends AbstractReifiedResource<URI>
 	public String getLabel()
 	{
 		return label;
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof Link))
+			return false;
+		final Link link = (Link) o;
+		return Objects.equals(this.getValue(), link.getValue()) && Objects.equals(label, link.label);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getValue(), label);
 	}
 
 	/**
