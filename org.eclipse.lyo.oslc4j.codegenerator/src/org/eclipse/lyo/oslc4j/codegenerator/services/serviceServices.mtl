@@ -52,9 +52,20 @@ aService.eContainer(ServiceProvider).oclAsType(ServiceProvider)
 javaClassBaseNamespace(containingAdaptorInterface(aService)).concat('.services')
 /]
 
+[comment 
+For backward compatibility, we name the service after the names of the resources it manages. We do this if the service manages 1 or 2 resources.  We predict this to be the most likely case.
+If there are 3+ resources, we call the service Service_i, where i is the order of the service within its SP.
+The name is also prefixed by the javaName of the SP, since there might be more than 1 SP in the project.
+/]
 [query public javaClassName(aService: Service) : String = 
-(concatenate(servicedResources(aService).javaName(true)->sep('', 'And', '').oclAsType(String))).toUpperFirst()
-.concat('Service')
+(if (servicedResources(aService)->size() < 3) then
+	(concatenate(servicedResources(aService)->sortedBy(name).javaName(true)->sep('', 'And', '').oclAsType(String))).toUpperFirst()
+	.concat('Service')
+else
+	javaName(containingServiceProvider(aService), true)
+	.concat('Service')
+	.concat(containingServiceProvider(aService).services->indexOf(aService).toString())
+endif)
 /]
 
 [query public javaClassFullName(aService: Service) : String = 
