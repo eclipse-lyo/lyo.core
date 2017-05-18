@@ -1,0 +1,7 @@
+Verified+1: Hudson CI
+Code-Review+2: Jad El-khoury <jad@kth.se>
+Submitted-by: Jim Amsden <jamsden@us.ibm.com>
+Submitted-at: Thu, 18 May 2017 11:06:42 -0400
+Reviewed-on: https://git.eclipse.org/r/97378
+Project: lyo/org.eclipse.lyo.core
+Branch: refs/heads/master
