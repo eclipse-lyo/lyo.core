@@ -29,12 +29,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.UriBuilder;
-
 import org.eclipse.lyo.oslc4j.core.annotation.OslcCreationFactory;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcDialog;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcDialogs;
@@ -127,7 +125,8 @@ public final class ServiceProviderFactory {
 					final OslcCreationFactory creationFactoryAnnotation = method.getAnnotation(OslcCreationFactory.class);
 					String[] resourceShapes = null;
 					if (creationFactoryAnnotation != null) {
-						service.addCreationFactory(createCreationFactory(baseURI, method, pathParameterValues));
+						service.addCreationFactory(createCreationFactory(baseURI,
+								pathParameterValues, method));
 						resourceShapes = creationFactoryAnnotation.resourceShapes();
 					}
 					final OslcDialogs dialogsAnnotation = method.getAnnotation(OslcDialogs.class);
@@ -151,8 +150,13 @@ public final class ServiceProviderFactory {
 		}
 	}
 
-	private static CreationFactory createCreationFactory(final String baseURI, final Method method, final Map<String,Object> pathParameterValues) throws URISyntaxException {
-		final OslcCreationFactory creationFactoryAnnotation = method.getAnnotation(OslcCreationFactory.class);
+	protected static CreationFactory createCreationFactory(final String baseURI,
+			final Map<String, Object> pathParameterValues, final Method method)
+			throws URISyntaxException {
+		final Path classPathAnnotation = method.getDeclaringClass().getAnnotation(Path.class);
+		final OslcCreationFactory creationFactoryAnnotation = method.getAnnotation(
+				OslcCreationFactory.class);
+		final Path methodPathAnnotation = method.getAnnotation(Path.class);
 
 		final String title = creationFactoryAnnotation.title();
 		final String label = creationFactoryAnnotation.label();
@@ -162,17 +166,12 @@ public final class ServiceProviderFactory {
 
 		final String basePath = baseURI + "/";
 
-		final Path classPathAnnotation	= method.getDeclaringClass().getAnnotation(Path.class);
-		String creation = resolvePathParameters(basePath, classPathAnnotation.value(), pathParameterValues);
-		final Path methodPathAnnotation = method.getAnnotation(Path.class);
-		if (methodPathAnnotation != null) {
-			final String methodPath =
-					resolvePathParameters(basePath, methodPathAnnotation.value(), pathParameterValues);
-			creation = creation + '/' + methodPath;
-		}
+		String creation = resolvePathParameters(basePath,
+				pathAnnotationStringValue(classPathAnnotation),
+				pathAnnotationStringValue(methodPathAnnotation), pathParameterValues);
 
-		CreationFactory creationFactory = null;
-		creationFactory = new CreationFactory(title, new URI(creation).normalize());
+		CreationFactory creationFactory = new CreationFactory(title, new URI(creation).normalize());
+
 
 		if ((label != null) && (label.length() > 0)) {
 			creationFactory.setLabel(label);
@@ -193,6 +192,10 @@ public final class ServiceProviderFactory {
 		return creationFactory;
 	}
 
+	private static String pathAnnotationStringValue(final Path pathAnnotation) {
+		return pathAnnotation == null ? null : pathAnnotation.value();
+	}
+
 	private static QueryCapability createQueryCapability(final String baseURI, final Method method, final Map<String,Object> pathParameterValues) throws URISyntaxException {
 		final OslcQueryCapability queryCapabilityAnnotation = method.getAnnotation(OslcQueryCapability.class);
 
@@ -204,17 +207,14 @@ public final class ServiceProviderFactory {
 
 		final String basePath = baseURI + "/";
 
-		final Path classPathAnnotation	= method.getDeclaringClass().getAnnotation(Path.class);
-		
-		String creation = resolvePathParameters(basePath, classPathAnnotation.value(), pathParameterValues);
-		
+		final Path classPathAnnotation  = method.getDeclaringClass().getAnnotation(Path.class);
 		final Path methodPathAnnotation = method.getAnnotation(Path.class);
-		if (methodPathAnnotation != null) {
-			creation = creation + '/' + methodPathAnnotation.value();
-		}
 
-		QueryCapability queryCapability = null;
-		queryCapability = new QueryCapability(title, new URI(creation).normalize());
+		String creation = resolvePathParameters(basePath,
+				(pathAnnotationStringValue(classPathAnnotation)),
+				(pathAnnotationStringValue(methodPathAnnotation)), pathParameterValues);
+
+		QueryCapability queryCapability = new QueryCapability(title, new URI(creation).normalize());
 
 		if ((label != null) && (label.length() > 0)) {
 			queryCapability.setLabel(label);
@@ -260,13 +260,11 @@ public final class ServiceProviderFactory {
 
 		final Path classPathAnnotation = method.getDeclaringClass().getAnnotation(Path.class);
 
-		final String classPathAnnotationValue = classPathAnnotation.value();
-
 		if (dialogURI.length() > 0)
 		{
 			// TODO: Do we chop off everything after the port and then append the dialog URI?
 			//		 For now just assume that the dialog URI builds on top of the baseURI.
-			uri = resolvePathParameters(baseURI, dialogURI, pathParameterValues);
+			uri = resolvePathParameters(baseURI, null, dialogURI, pathParameterValues);
 		}
 		else
 		{
@@ -275,12 +273,10 @@ public final class ServiceProviderFactory {
 
 			final Path methodPathAnnotation = method.getAnnotation(Path.class);
 
-			String parameter = resolvePathParameters(baseURI, classPathAnnotationValue, pathParameterValues);
-
-			if (methodPathAnnotation != null)
-			{
-				parameter += '/' + methodPathAnnotation.value();
-			}
+			String parameter = resolvePathParameters(baseURI,
+					(pathAnnotationStringValue(classPathAnnotation)),
+					(pathAnnotationStringValue(methodPathAnnotation)),
+					pathParameterValues);
 
 			try
 			{
@@ -328,8 +324,7 @@ public final class ServiceProviderFactory {
 			uri += resourceShapeParameters;
 		}
 
-		Dialog dialog = null;
-		dialog = new Dialog(title, new URI(uri).normalize());
+		Dialog dialog = new Dialog(title, new URI(uri).normalize());
 
 		if ((label != null) && (label.length() > 0)) {
 			dialog.setLabel(label);
@@ -354,26 +349,24 @@ public final class ServiceProviderFactory {
 		return dialog;
 	}
 	
-	private static String resolvePathParameters(final String basePath, final String pathAnnotation, final Map<String, Object> pathParameterValues)
+	private static String resolvePathParameters(final String basePath, final String classPathAnnotation, final String methodPathAnnotation, final Map<String, Object> pathParameterValues)
 	{
+		final UriBuilder builder = UriBuilder.fromUri(basePath);
+		if (classPathAnnotation != null && !classPathAnnotation.equals("")) {
+			builder.path(classPathAnnotation);
+		}			
+		if (methodPathAnnotation != null && !methodPathAnnotation.equals("")) {
+			builder.path(methodPathAnnotation);
+		}			
+
 		String returnUri = null;
 		
 		//Build the path from the @Path template + map of parameter value replacements
-		if (pathParameterValues != null && pathParameterValues.size() > 0)
+		final URI resolvedUri = builder.buildFromMap(pathParameterValues);
+		if (resolvedUri != null)
 		{
-			final UriBuilder builder = UriBuilder.fromUri(basePath);
-			final URI resolvedUri = builder.path(pathAnnotation).buildFromMap(pathParameterValues);
-			if (resolvedUri != null)
-			{
-				returnUri = resolvedUri.toString();
-			}
-		} 
-		else
-		{
-			// no parameters supplied - assume @Path not templated
-			returnUri = basePath + "/" + pathAnnotation;
+			returnUri = resolvedUri.toString();
 		}
 		return returnUri;
-		
 	}
 }
