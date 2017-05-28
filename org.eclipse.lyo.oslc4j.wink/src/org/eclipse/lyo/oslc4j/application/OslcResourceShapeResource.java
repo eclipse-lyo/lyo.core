@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.application;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 import org.apache.wink.common.AbstractDynamicResource;
 import org.eclipse.lyo.oslc4j.core.OSLC4JUtils;
@@ -80,12 +82,14 @@ public class OslcResourceShapeResource
 				  URISyntaxException
 	{
 		final String baseURI = OSLC4JUtils.resolveURI(httpServletRequest,false);
+		final String servletURI = UriBuilder.fromUri(baseURI).path(httpServletRequest.getServletPath()).build().normalize().toString();
+
 
 		final Class<?> resourceClass = resourcePathToResourceClassMap.get(resourceShapePath);
 
 		if (resourceClass != null)
 		{
-			return ResourceShapeFactory.createResourceShape(baseURI,
+			return ResourceShapeFactory.createResourceShape(servletURI,
 															resourceShapesPath,
 															resourceShapePath,
 															resourceClass);
