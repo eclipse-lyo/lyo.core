@@ -13,17 +13,15 @@
  *
  *	   Fabio Negrello - initial implementation
  *******************************************************************************/
-package org.eclipse.lyo.oslc4j.provider.jena.test.resources;
+package org.eclipse.lyo.oslc4j.provider.jena.resources;
 
-import org.eclipse.lyo.oslc4j.core.annotation.OslcName;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcNamespace;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.model.AbstractResource;
 
-@OslcName("")
-@OslcNamespace(EmptyNameResource.TEST_NAMESPACE)
-@OslcResourceShape(title = "Test Resource", describes = EmptyNameResource.TEST_RESOURCE_TYPE)
-public class EmptyNameResource extends AbstractResource {
+@OslcNamespace(UnnamedResource.TEST_NAMESPACE)
+@OslcResourceShape(title = "Test Resource", describes = UnnamedResource.TEST_RESOURCE_TYPE)
+public class UnnamedResource extends AbstractResource {
 	public final static String TEST_NAMESPACE = "http://example.com/ns#";
 	public final static String TEST_RESOURCE_TYPE = TEST_NAMESPACE + "Test";
 }

@@ -13,10 +13,10 @@
  *
  *	   Samuel Padgett - initial implementation
  *******************************************************************************/
-package org.eclipse.lyo.oslc4j.provider.jena.test;
+package org.eclipse.lyo.oslc4j.provider.jena;
 
-import static org.junit.Assert.assertNotNull;
-
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,22 +34,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-
 import junit.framework.Assert;
-
 import org.eclipse.lyo.oslc4j.core.model.QueryCapability;
 import org.eclipse.lyo.oslc4j.core.model.ResponseInfo;
 import org.eclipse.lyo.oslc4j.core.model.ResponseInfoCollection;
 import org.eclipse.lyo.oslc4j.core.model.Service;
 import org.eclipse.lyo.oslc4j.core.model.ServiceProvider;
-import org.eclipse.lyo.oslc4j.provider.jena.AbstractOslcRdfXmlProvider;
-import org.eclipse.lyo.oslc4j.provider.jena.OslcRdfXmlCollectionProvider;
-import org.eclipse.lyo.oslc4j.provider.jena.OslcRdfXmlProvider;
-import org.eclipse.lyo.oslc4j.provider.jena.RdfXmlAbbreviatedWriter;
+import static org.junit.Assert.*;
 import org.junit.Test;
-
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class RdfXmlAbbreviatedWriterTest {
 	@Test
