@@ -33,7 +33,7 @@ import static org.eclipse.lyo.core.trs.TRSConstants.*;
  * of one of the child classes depending on the type of event taking place.	 The
  * child classes are: Creation, Modification, and Deletion.
  */
-public abstract class ChangeEvent extends AbstractResource {
+public class ChangeEvent extends AbstractResource {
 	private URI changed;
 	private int order;
 	
