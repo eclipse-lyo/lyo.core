@@ -49,6 +49,7 @@ resource's output.
 @OslcNamespace(TRS_NAMESPACE)
 @OslcResourceShape(title = "Change Log	Shape", describes = TRS_TYPE_CHANGE_LOG)
 @OslcName("ChangeLog")
+@Deprecated
 public class EmptyChangeLog extends AbstractChangeLog
 {
 	
