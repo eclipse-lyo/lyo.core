@@ -65,7 +65,7 @@ Resource Set resources and relegate the Base to separate resources.
 @OslcResourceShape(title = "Tracked Resource Set Shape", describes = TRS_TYPE_TRACKED_RESOURCE_SET)
 public class TrackedResourceSet extends AbstractResource
 {
-	private AbstractChangeLog changeLog;
+	private ChangeLog changeLog;
 	private URI base;
 	
 	/**
@@ -75,7 +75,7 @@ public class TrackedResourceSet extends AbstractResource
 	@OslcDescription("A Change Log providing a time series of incremental adjustments to the Resource Set.")
 	@OslcPropertyDefinition(TRS_CHANGE_LOG)
 	@OslcTitle("Change Log")
-	public AbstractChangeLog getChangeLog() {
+	public ChangeLog getChangeLog() {
 		return changeLog;
 	}
 	
@@ -83,7 +83,7 @@ public class TrackedResourceSet extends AbstractResource
 	 * @param changeLog the changeLog to set
 	 * @throws URISyntaxException 
 	 */
-	public void setChangeLog(AbstractChangeLog changeLog) throws URISyntaxException {
+	public void setChangeLog(ChangeLog changeLog) throws URISyntaxException {
 		// Make sure the About URI of the change log is null since it will 
 		// become a blank node in the turtle output
 		changeLog.setAbout(null);
