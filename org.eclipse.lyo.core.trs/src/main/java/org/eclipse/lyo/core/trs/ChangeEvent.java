@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 IBM Corporation.
+ * Copyright (c) 2013 IBM Corporation, 2017 KTH Royal Institute of Technology
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,7 +11,8 @@
  * 
  * Contributors:
  * 
- *	  Kevin Bauer - Initial implementation 
+ *	  Kevin Bauer           -  Initial implementation
+ *	  Andrew Berezovskyi    -  Dropped abstract modifier (487952)
  *******************************************************************************/
 package org.eclipse.lyo.core.trs;
 
@@ -33,7 +34,7 @@ import static org.eclipse.lyo.core.trs.TRSConstants.*;
  * of one of the child classes depending on the type of event taking place.	 The
  * child classes are: Creation, Modification, and Deletion.
  */
-public abstract class ChangeEvent extends AbstractResource {
+public class ChangeEvent extends AbstractResource {
 	private URI changed;
 	private int order;
 	

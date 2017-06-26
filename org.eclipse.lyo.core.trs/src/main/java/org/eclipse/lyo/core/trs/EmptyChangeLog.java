@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 IBM Corporation.
+ * Copyright (c) 2013 IBM Corporation, 2017 KTH Royal Institute of Technology
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,8 +11,9 @@
  * 
  * Contributors:
  * 
- *	  Kevin Bauer - Initial implementation
- *	  David Terry - 2.0 implementation
+ *	  Kevin Bauer         -  Initial implementation
+ *	  David Terry         -  2.0 implementation
+ *	  Andrew Berezovskyi  -  marked as deprecated (see 487952)
  *******************************************************************************/
 package org.eclipse.lyo.core.trs;
 
@@ -49,6 +50,7 @@ resource's output.
 @OslcNamespace(TRS_NAMESPACE)
 @OslcResourceShape(title = "Change Log	Shape", describes = TRS_TYPE_CHANGE_LOG)
 @OslcName("ChangeLog")
+@Deprecated
 public class EmptyChangeLog extends AbstractChangeLog
 {
 	

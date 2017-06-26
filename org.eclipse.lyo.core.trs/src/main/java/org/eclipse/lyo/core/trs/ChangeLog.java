@@ -12,7 +12,7 @@
  * Contributors:
  * 
  *	  Kevin Bauer - Initial implementation
- *	  David Terry - TRS 2.0 compliant implementation 
+ *	  David Terry - TRS 2.0 compliant implementation
  *******************************************************************************/
 package org.eclipse.lyo.core.trs;
 
