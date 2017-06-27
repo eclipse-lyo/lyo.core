@@ -35,10 +35,13 @@ import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcTitle;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @OslcNamespace(OslcConstants.OSLC_CORE_NAMESPACE)
 @OslcResourceShape(title = "OSLC Resource Shape Resource Shape", describes = OslcConstants.TYPE_RESOURCE_SHAPE)
 public final class ResourceShape extends AbstractResource {
+	private final static Logger log = LoggerFactory.getLogger(ResourceShape.class);
 	private final SortedSet<URI> describes= new TreeSet<URI>();
 	private final TreeMap<URI, Property> properties = new TreeMap<URI, Property>();
 
@@ -105,14 +108,22 @@ public final class ResourceShape extends AbstractResource {
 	}
 
 
-	public void setProperties(final Property[] properties) {
+	public void setProperties(final Property[] _properties) {
 		this.properties.clear();
-		if (properties != null) {
-			for(Property prop :properties) {
-				this.properties.put(prop.getPropertyDefinition(), prop);
+		if (_properties != null) {
+			for (Property property : _properties) {
+				URI propertyDefinition = property.getPropertyDefinition();
+				if (propertyDefinition != null) {
+					this.properties.put(propertyDefinition, property);
+				} else {
+					log.warn("Property {} has no property definition", property);
+				}
 			}
+		} else {
+			throw new IllegalArgumentException("Null properties array is passed");
 		}
 	}
+
 
 	public void setTitle(final String title) {
 		this.title = title;
