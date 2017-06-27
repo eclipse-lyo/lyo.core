@@ -15,17 +15,17 @@
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.core.test;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
-
-import junit.framework.Assert;
-
+import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import org.eclipse.lyo.oslc4j.core.OslcGlobalNamespaceProvider;
 import org.junit.Test;
 
 /**
  * Tests the behavior of {@link OslcGlobalNamespaceProvider}.
- * 
+ *
  * @author Daniel Figueiredo Caetano
  *
  */
@@ -36,46 +36,44 @@ public class OslcGlobalNamespaceProviderTest {
 	 */
 	@Test
 	public void testSingletonInstance() {
-		OslcGlobalNamespaceProvider globalNamespaceProvider = OslcGlobalNamespaceProvider.getInstance();
-		Assert.assertNotNull(
-				"Global Namespace instance should not be null.",
-				globalNamespaceProvider
-		);
-		OslcGlobalNamespaceProvider secondGlobalNamespaceProvider = OslcGlobalNamespaceProvider.getInstance();
-		Assert.assertSame(
-				"There should be only one instance of the OslcGlobalNamespaceProvider class", 
-				globalNamespaceProvider, 
-				secondGlobalNamespaceProvider
-		);
-	}
-	
+        OslcGlobalNamespaceProvider provider = OslcGlobalNamespaceProvider.getInstance();
+        OslcGlobalNamespaceProvider secondProvider = OslcGlobalNamespaceProvider.getInstance();
+
+        assertSame("There should be only one instance of the OslcGlobalNamespaceProvider class",
+                provider, secondProvider);
+    }
+
 	/**
-	 * Tests if the map can be set to another new map or to null. 
-	 */
-	@Test
-	public void testSetNullMap() {
-		OslcGlobalNamespaceProvider globalNamespaceProvider = OslcGlobalNamespaceProvider.getInstance();
-		Assert.assertNotNull(
-				"Global Namespace Map should not be null when created.",
-				globalNamespaceProvider.getPrefixDefinitionMap()
-		);
-		globalNamespaceProvider.getPrefixDefinitionMap().put("test", "http://anything.com");
-		globalNamespaceProvider.setPrefixDefinitionMap(null);
-		Assert.assertNotNull(
-				"Global Namespace Map should not be null.",
-				globalNamespaceProvider.getPrefixDefinitionMap()
-		);
-		Assert.assertTrue(
-				"Map should be cleared and never set to null.",
-				globalNamespaceProvider.getPrefixDefinitionMap().isEmpty()
-		);
-		Map<String, String> namespaceMappings = new HashMap<String, String>(1);
-		namespaceMappings.put("any", "http://any.test.com#");
-		globalNamespaceProvider.setPrefixDefinitionMap(namespaceMappings);
-		Assert.assertFalse(
-				"Global Namespace Map could not be set.", 
-				globalNamespaceProvider.getPrefixDefinitionMap().isEmpty()
-		);
-	}
-	
+     * Tests if the map can be set to another new map or to null.
+     */
+    @Test
+    public void testSetNullMap() {
+        OslcGlobalNamespaceProvider provider = OslcGlobalNamespaceProvider.getInstance();
+        Map<String, String> namespaceMappings = new HashMap<>(1);
+
+        namespaceMappings.put("any", "http://any.test.com#");
+        provider.setPrefixDefinitionMap(namespaceMappings);
+
+        assertThat(provider.getPrefixDefinitionMap()).containsExactly(
+                new AbstractMap.SimpleImmutableEntry<>("any", "http://any.test.com#"));
+    }
+
+    @Test
+    public void globalNamespaceMapIsNotNull() throws Exception {
+        OslcGlobalNamespaceProvider provider = OslcGlobalNamespaceProvider.getInstance();
+
+        assertNotNull("Global Namespace Map should not be null when created.",
+                provider.getPrefixDefinitionMap());
+    }
+
+    @Test
+    public void globalNamespaceMapIsClearedWhenSetNullAttempted() throws Exception {
+        OslcGlobalNamespaceProvider provider = OslcGlobalNamespaceProvider.getInstance();
+
+        provider.getPrefixDefinitionMap().put("test", "http://anything.com");
+        provider.setPrefixDefinitionMap(null);
+
+        assertTrue("Map should be cleared and never set to null.",
+                provider.getPrefixDefinitionMap().isEmpty());
+    }
 }
