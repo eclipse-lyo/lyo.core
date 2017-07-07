@@ -39,6 +39,7 @@
     <module>../org.eclipse.lyo.core.utils</module>
     <module>../org.eclipse.lyo.oslc4j.wink</module>
     <module>../org.eclipse.lyo.oslc4j.registry</module>
+    <module>../trs-provider</module>
   </modules>
 
   <dependencyManagement>
