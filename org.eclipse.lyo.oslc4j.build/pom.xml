@@ -37,6 +37,7 @@
 		<module>../org.eclipse.lyo.core.query</module>
 		<module>../org.eclipse.lyo.core.trs</module>
 		<module>../org.eclipse.lyo.core.utils</module>
+		<module>../org.eclipse.lyo.validate</module>
 	</modules>
     <distributionManagement>
         <repository>
