@@ -1,0 +1,7 @@
+Verified+1: Hudson CI
+Code-Review+2: Andrii Berezovskyi <andriib@kth.se>
+Submitted-by: Andrii Berezovskyi <andriib@kth.se>
+Submitted-at: Thu, 03 Aug 2017 09:07:22 -0400
+Reviewed-on: https://git.eclipse.org/r/101651
+Project: lyo/org.eclipse.lyo.core
+Branch: refs/heads/master
