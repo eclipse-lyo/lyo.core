@@ -2041,6 +2041,7 @@ public final class JenaModelHelper
 		//then there are no additional statements on the statement. Hence, remove the newly created reifiedStatement.
 		if (reifiedStatement.listProperties().toList().size() == 4) {
 			reifiedStatement.removeProperties();
+			logger.log(Level.FINE, "An empty reified statement was deleted");
 		}
 	}
 
