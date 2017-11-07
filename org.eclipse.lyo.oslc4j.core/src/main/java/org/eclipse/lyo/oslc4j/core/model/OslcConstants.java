@@ -27,12 +27,14 @@ public interface OslcConstants {
 	public static final String RDF_NAMESPACE			= "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 	public static final String RDFS_NAMESPACE			= "http://www.w3.org/2000/01/rdf-schema#";
 	public static final String XML_NAMESPACE			= "http://www.w3.org/2001/XMLSchema#";
-
+	public static final String SHACL_CORE_NAMESPACE		= "http://www.w3.org/ns/shacl#";
+	
 	public static final String DCTERMS_NAMESPACE_PREFIX	  = "dcterms";
 	public static final String OSLC_CORE_NAMESPACE_PREFIX = "oslc";
 	public static final String OSLC_DATA_NAMESPACE_PREFIX = "oslc_data";
 	public static final String RDF_NAMESPACE_PREFIX		  = "rdf";
 	public static final String RDFS_NAMESPACE_PREFIX	  = "rdfs";
+	public static final String SHACL_CORE_NAMESPACE_PREFIX = "sh";
 
 	public static final String OSLC_USAGE_DEFAULT = "http://open-services.net/ns/core#default";
 
@@ -55,7 +57,8 @@ public interface OslcConstants {
 	public static final String TYPE_SERVICE_PROVIDER_CATALOG = OSLC_CORE_NAMESPACE + "ServiceProviderCatalog";
 	
 	public static final String TYPE_CONTAINER				 = RDFS_NAMESPACE + "Container";
-
+	public static final String TYPE_SHACL_PROPERTY				 = SHACL_CORE_NAMESPACE + "Property";
+	public static final String TYPE_SHACL_SHAPE			     = SHACL_CORE_NAMESPACE + "Shape";
 	public static final String PATH_RESOURCE_SHAPES = "resourceShapes";
 
 	public static final String PATH_ALLOWED_VALUES			 = "allowedValues";
