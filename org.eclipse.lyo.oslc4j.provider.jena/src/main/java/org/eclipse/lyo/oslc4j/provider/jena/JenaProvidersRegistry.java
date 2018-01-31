@@ -15,6 +15,7 @@
  *	   Alberto Giammaria	- initial API and implementation
  *	   Chris Peters			- initial API and implementation
  *	   Gianluca Bernardini	- initial API and implementation
+ *	   Ricardo J. Herrera	- jsonld support
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.provider.jena;
 
@@ -37,6 +38,9 @@ public final class JenaProvidersRegistry
 		PROVIDERS.add(OslcTurtleArrayProvider.class);
 		PROVIDERS.add(OslcTurtleCollectionProvider.class);
 		PROVIDERS.add(OslcTurtleProvider.class);
+		PROVIDERS.add(OslcRdfJsonLDArrayProvider.class);
+		PROVIDERS.add(OslcRdfJsonLDCollectionProvider.class);
+		PROVIDERS.add(OslcRdfJsonLDProvider.class);
 	}
 
 	private JenaProvidersRegistry()

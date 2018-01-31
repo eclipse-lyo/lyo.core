@@ -29,7 +29,6 @@ import org.eclipse.lyo.oslc4j.provider.jena.JenaModelHelper;
 import org.eclipse.lyo.oslc4j.provider.jena.test.resources.TestResource;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import org.apache.jena.rdf.model.Model;
@@ -70,7 +69,6 @@ public class UnparseableLiteralTest {
 	}
 
 	@Test
-	@Ignore("Jena 3 migration")
 	public void serializeUnparseable() throws Exception {
 		final TestResource resource = new TestResource();
 		resource.setAbout(new URI("http://example.com/bugs/8234"));
@@ -88,11 +86,11 @@ public class UnparseableLiteralTest {
 
 		final Statement ageStatement = serialized.getProperty(m.createProperty(TestResource.TEST_NAMESPACE + "age"));
 		assertEquals("Unexpected value for ex:age", "", ageStatement.getString());
-		assertNull(ageStatement.getLiteral().getDatatypeURI());  // TODO: 19.01.17 check why it fails with Jena 3
+		assertEquals("http://www.w3.org/2001/XMLSchema#string", ageStatement.getLiteral().getDatatypeURI());
 
 		final Statement modifiedStatement = serialized.getProperty(DCTerms.modified);
 		assertEquals("Unexpected value for dcterms:modified", "today", modifiedStatement.getString());
-		assertNull(modifiedStatement.getLiteral().getDatatypeURI());
+        assertEquals("http://www.w3.org/2001/XMLSchema#string", modifiedStatement.getLiteral().getDatatypeURI());
 	}
 
 	private void verifyUnparseable(
