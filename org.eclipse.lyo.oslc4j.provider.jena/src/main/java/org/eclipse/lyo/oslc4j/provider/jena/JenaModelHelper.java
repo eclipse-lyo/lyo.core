@@ -1083,7 +1083,7 @@ public final class JenaModelHelper
 				String rawValue = literal.getString();
 				String datatype = literal.getDatatypeURI();
 
-				if ("false".equals(System.getProperty(AbstractOslcRdfXmlProvider.OSLC4J_STRICT_DATATYPES)))
+				if (!OSLC4JUtils.useStrictDatatypes())
 			   	{
 					if (logger.isWarnEnabled())
 					{
@@ -1153,6 +1153,7 @@ public final class JenaModelHelper
 			return nestedResourceURI;
 		}
 	}
+
 
 	private static Map<String, Method> createPropertyDefinitionToSetMethods(final Class<?> beanClass)
 			throws OslcCoreApplicationException
@@ -2031,9 +2032,9 @@ public final class JenaModelHelper
 					  model,
 					  reifiedStatement,
 					  nestedProperties);
-	
+
 		//https://bugs.eclipse.org/bugs/show_bug.cgi?id=526188
-		//If the resulting reifiedStatement only contain the 4 statements about its subject, predicate object, & type, 
+		//If the resulting reifiedStatement only contain the 4 statements about its subject, predicate object, & type,
 		//then there are no additional statements on the statement. Hence, remove the newly created reifiedStatement.
 		if (reifiedStatement.listProperties().toList().size() == 4) {
 			reifiedStatement.removeProperties();

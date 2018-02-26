@@ -29,8 +29,7 @@ public class TestInvalidTypesJson
 {
 	@Test(expected = WebApplicationException.class)
 	public void testInvalidJavaAboutRelativeURI()
-		   throws IOException,
-				  URISyntaxException
+		   throws URISyntaxException
 	{
 		final TestResource relativeUri = new TestResource();
 

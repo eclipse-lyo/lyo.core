@@ -3,10 +3,10 @@
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v. 1.0 which accompanies this distribution. 
+ * and Eclipse Distribution License v. 1.0 which accompanies this distribution.
  *
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
+ * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
  *
  * Contributors:
@@ -47,7 +47,7 @@ public class PropertiesInvocationHandler implements InvocationHandler
 		this.tree = tree;
 		this.prefixMap = prefixMap;
 	}
-	
+
 	/**
 	 * Construct a {@link Properties} proxy that has a single
 	 * {@link Wildcard} child
@@ -57,15 +57,15 @@ public class PropertiesInvocationHandler implements InvocationHandler
 	{
 		this.tree = null;
 		this.prefixMap = null;
-		
+
 		children = new ArrayList<Property>(1);
-		
+
 		children.add((Property)Proxy.newProxyInstance(
-						Wildcard.class.getClassLoader(), 
+						Wildcard.class.getClassLoader(),
 						new Class<?>[] { Wildcard.class },
 						new WildcardInvocationHandler()));
    }
-	
+
 	/**
 	 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
 	 */
@@ -74,31 +74,30 @@ public class PropertiesInvocationHandler implements InvocationHandler
 		Object proxy,
 		Method method,
 		Object[] args
-	) throws Throwable
-	{
+	) {
 		boolean isChildren = method.getName().equals("children");
-		
+
 		if (isChildren && children != null) {
 			return children;
 		}
-		
+
 		children = createChildren(tree, prefixMap);
-		
+
 		if (isChildren) {
 			return children;
 		}
-		
+
 		StringBuffer buffer = childrenToString(new StringBuffer(), children);
-		
+
 		return buffer.toString();
 	}
-	
+
 	/**
 	 * Generate a list of property children from a parse tree node
-	 * 
+	 *
 	 * @param tree
 	 * @param prefixMap
-	 * 
+	 *
 	 * @return the resulting property list
 	 */
 	static List<Property>
@@ -108,24 +107,24 @@ public class PropertiesInvocationHandler implements InvocationHandler
 	)
 	{
 		List<Property> children = new ArrayList<Property>(tree.getChildCount());
-		
+
 		for (int index = 0; index < tree.getChildCount(); index++) {
 
 			Tree treeChild = tree.getChild(index);
-			
+
 			Property property;
-			
+
 			switch (treeChild.getType())
 			{
 			case OslcSelectParser.WILDCARD:
 				property = (Property)
-					Proxy.newProxyInstance(Wildcard.class.getClassLoader(), 
+					Proxy.newProxyInstance(Wildcard.class.getClassLoader(),
 							new Class<?>[] { Wildcard.class },
 							new WildcardInvocationHandler());
 				break;
 			case OslcSelectParser.PREFIXED_NAME:
 				property = (Property)
-					Proxy.newProxyInstance(Identifier.class.getClassLoader(), 
+					Proxy.newProxyInstance(Identifier.class.getClassLoader(),
 							new Class<?>[] { Identifier.class },
 							new PropertyInvocationHandler(
 									(CommonTree)treeChild.getChild(0),
@@ -134,27 +133,27 @@ public class PropertiesInvocationHandler implements InvocationHandler
 			default:
 			case OslcSelectParser.NESTED_PROPERTIES:
 				property = (Property)
-					Proxy.newProxyInstance(NestedProperty.class.getClassLoader(), 
+					Proxy.newProxyInstance(NestedProperty.class.getClassLoader(),
 							new Class<?>[] { NestedProperty.class },
 							new NestedPropertyInvocationHandler(treeChild,
 																prefixMap));
 				break;
 			}
-			
+
 			children.add(property);
 		}
-		
+
 		children = Collections.unmodifiableList(children);
-		
+
 		return children;
 	}
-	
+
 	/**
 	 * Generate string representation of a children property list
-	 * 
+	 *
 	 * @param buffer
 	 * @param children
-	 * 
+	 *
 	 * @return the buffer representation of the property list
 	 */
 	static StringBuffer
@@ -164,21 +163,21 @@ public class PropertiesInvocationHandler implements InvocationHandler
 	)
 	{
 		boolean first = true;
-		 
+
 		 for (Property property : children) {
-			 
+
 			 if (first) {
 				 first = false;
 			 } else {
 				 buffer.append(',');
 			 }
-			 
+
 			 buffer.append(property.toString());
 		 }
-		
+
 		 return buffer;
 	}
-	
+
 	private final CommonTree tree;
 	protected final Map<String, String> prefixMap;
 	private List<Property> children = null;

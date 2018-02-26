@@ -67,8 +67,7 @@ public class TrackedResourceSetTest {
                 trsExpected.getChangeLog().getChange().size());
     }
 
-    private TrackedResourceSet aTrsWithChangelog(final ChangeLog changeLog)
-            throws URISyntaxException {
+    private TrackedResourceSet aTrsWithChangelog(final ChangeLog changeLog) {
         final TrackedResourceSet trsExpected = new TrackedResourceSet();
         trsExpected.setBase(URI.create("http://example.com/dummy"));
         trsExpected.setChangeLog(changeLog);

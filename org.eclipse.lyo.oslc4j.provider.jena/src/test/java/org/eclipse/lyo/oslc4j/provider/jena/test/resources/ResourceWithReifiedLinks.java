@@ -22,17 +22,15 @@ public class ResourceWithReifiedLinks extends AbstractResource
     private String title;
     private Link linkWithNoLabel = new Link();
     private Link linkWithLabel = new Link();
-    
-    public ResourceWithReifiedLinks() throws URISyntaxException
-    {
+
+    public ResourceWithReifiedLinks() {
         super();
     }
-    
-    public ResourceWithReifiedLinks(final URI about) throws URISyntaxException
-    {
+
+    public ResourceWithReifiedLinks(final URI about) {
         super(about);
     }
-    
+
     @OslcName("linkWithNoLabel")
     @OslcPropertyDefinition(TEST_NAMESPACE + "linkWithNoLabel")
     @OslcValueType(ValueType.Resource)

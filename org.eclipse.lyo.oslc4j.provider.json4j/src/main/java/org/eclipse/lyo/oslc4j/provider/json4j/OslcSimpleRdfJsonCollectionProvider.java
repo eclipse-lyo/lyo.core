@@ -52,8 +52,7 @@ public final class OslcSimpleRdfJsonCollectionProvider
 						final MediaType						 mediaType,
 						final MultivaluedMap<String, Object> map,
 						final OutputStream					 outputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		writeTo(collection.toArray(new Object[collection.size()]),
 				mediaType,

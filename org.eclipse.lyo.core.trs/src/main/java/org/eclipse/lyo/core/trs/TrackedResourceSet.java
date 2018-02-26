@@ -82,7 +82,7 @@ public class TrackedResourceSet extends AbstractResource {
     /**
      * @param changeLog the changeLog to set
      */
-    public void setChangeLog(ChangeLog changeLog) throws URISyntaxException {
+    public void setChangeLog(ChangeLog changeLog) {
         // Make sure the About URI of the change log is null since it will
         // become a blank node in the turtle output
         changeLog.setAbout(null);
