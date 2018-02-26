@@ -41,9 +41,9 @@ import org.junit.Test;
 
 /**
  * Tests Json working with different combinations of OslcName annotation.
- * 
+ *
  * @author Fabio Negrello
- * 
+ *
  */
 public class JsonOslcNameTest {
 
@@ -55,7 +55,7 @@ public class JsonOslcNameTest {
 	/**
 	 * Checks that OslcName annotation with empty string does not add RDF type
 	 * to the resource.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -68,7 +68,7 @@ public class JsonOslcNameTest {
 	}
 
 	private JSONObject getJSONObject(Object resource, final OslcRdfJsonProvider oslcRdfJsonProvider)
-			throws IOException, WebApplicationException, JSONException {
+			throws WebApplicationException, JSONException {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		oslcRdfJsonProvider.writeTo(resource, resource.getClass(), resource.getClass(), new Annotation[0],
 				MediaType.APPLICATION_JSON_TYPE, null, outputStream);
@@ -80,7 +80,7 @@ public class JsonOslcNameTest {
 	/**
 	 * Checks that OslcName annotation with empty string does not add default
 	 * RDF type to the resource but adds the ones specified by addTypes method.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -97,7 +97,7 @@ public class JsonOslcNameTest {
 
 	/**
 	 * Checks that OslcName annotation adds RDF type to the resource.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -113,7 +113,7 @@ public class JsonOslcNameTest {
 	/**
 	 * Checks that the absence of OslcName annotation adds default RDF type to
 	 * the resource.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -128,7 +128,7 @@ public class JsonOslcNameTest {
 		verifyRDFTypes(new String[] { typeToAdd, TestResource.TEST_NAMESPACE + "UnnamedResource" }, rdfTypes);
 	}
 
-	private void verifyRDFTypes(String[] expectedRDFTypes, JSONArray rdfTypes) throws JSONException {
+	private void verifyRDFTypes(String[] expectedRDFTypes, JSONArray rdfTypes) {
 		List<String> actualRdfTypesList = new ArrayList<String>();
 		for (Object node : rdfTypes) {
 			OrderedJSONObject obj = (OrderedJSONObject) node;
@@ -143,7 +143,7 @@ public class JsonOslcNameTest {
 
 	/**
 	 * Creates a new instance adding some test values.
-	 * 
+	 *
 	 * @param resource
 	 *			  class.
 	 * @return new instance

@@ -32,7 +32,7 @@ public class LinkTest {
     private static final String LABEL_B = "Example label B";
 
     @Test
-    public void testEqualsWorksOnIdenticalValues() throws Exception {
+    public void testEqualsWorksOnIdenticalValues() {
         String label = "Example label";
 
         // use new String to force unequal references
@@ -43,7 +43,7 @@ public class LinkTest {
     }
 
     @Test
-    public void testEqualsWorksOnDifferentLabels() throws Exception {
+    public void testEqualsWorksOnDifferentLabels() {
         // use new String to force unequal references
         Link linkA = new Link(URI.create(URI_A), new String(LABEL_A));
         Link linkB = new Link(URI.create(URI_A), new String(LABEL_B));
@@ -52,7 +52,7 @@ public class LinkTest {
     }
 
     @Test
-    public void testEqualsWorksInHashSet() throws Exception {
+    public void testEqualsWorksInHashSet() {
 
         Set<Link> setA = new HashSet<Link>() {{
             this.add(new Link(URI.create(URI_A), LABEL_A));
@@ -68,7 +68,7 @@ public class LinkTest {
     }
 
     @Test
-    public void testEqualsWorksInHashSetWhenDifferent() throws Exception {
+    public void testEqualsWorksInHashSetWhenDifferent() {
 
         Set<Link> setA = new HashSet<Link>() {{
             this.add(new Link(URI.create(URI_A), LABEL_A));
@@ -83,7 +83,7 @@ public class LinkTest {
     }
 
     @Test
-    public void testHashCodeSameEquals() throws Exception {
+    public void testHashCodeSameEquals() {
         Link linkA = new Link(URI.create(URI_A), new String(LABEL_A));
         Link linkB = new Link(URI.create(URI_A), new String(LABEL_A));
 
@@ -91,7 +91,7 @@ public class LinkTest {
     }
 
     @Test
-    public void testHashCodeDiffers() throws Exception {
+    public void testHashCodeDiffers() {
         Link linkA = new Link(URI.create(URI_A), new String(LABEL_A));
         Link linkB = new Link(URI.create(URI_B), new String(LABEL_A));
 
@@ -99,7 +99,7 @@ public class LinkTest {
     }
 
     @Test
-    public void testHashCodeIsTheSameForDifferentLabels() throws Exception {
+    public void testHashCodeIsTheSameForDifferentLabels() {
         Link linkA = new Link(URI.create(URI_A), new String(LABEL_A));
         Link linkB = new Link(URI.create(URI_A), new String(LABEL_B));
 

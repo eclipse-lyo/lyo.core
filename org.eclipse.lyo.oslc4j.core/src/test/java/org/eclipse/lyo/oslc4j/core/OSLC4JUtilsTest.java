@@ -79,7 +79,7 @@ public class OSLC4JUtilsTest {
     }
 
     @Test
-    public void resolveFullPathUriWithoutPublicUri() throws Exception {
+    public void resolveFullPathUriWithoutPublicUri() {
         final HttpServletRequest request = mockRequest();
 
         final String fullUri = OSLC4JUtils.resolveFullUri(request);
@@ -100,7 +100,7 @@ public class OSLC4JUtilsTest {
     }
 
     @Test
-    public void resolveServletUriWithoutPublicUri() throws Exception {
+    public void resolveServletUriWithoutPublicUri() {
         final HttpServletRequest request = mockRequest();
 
         final String fullUri = OSLC4JUtils.resolveServletUri(request);

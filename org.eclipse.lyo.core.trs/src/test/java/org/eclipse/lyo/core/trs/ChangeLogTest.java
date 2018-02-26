@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class ChangeLogTest {
     private final static Logger log = LoggerFactory.getLogger(ChangeLogTest.class);
     @Test
-    public void changeEventListNotNullByDefault() throws Exception {
+    public void changeEventListNotNullByDefault() {
         ChangeLog changeLog = new ChangeLog();
 
         final List<ChangeEvent> changeEventList = changeLog.getChange();
@@ -24,7 +24,7 @@ public class ChangeLogTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void changeEventListCantBeSetToNull() throws Exception {
+    public void changeEventListCantBeSetToNull() {
         ChangeLog changeLog = new ChangeLog();
         log.info("Setting changeLog Change Event list to null");
         changeLog.setChange(null);

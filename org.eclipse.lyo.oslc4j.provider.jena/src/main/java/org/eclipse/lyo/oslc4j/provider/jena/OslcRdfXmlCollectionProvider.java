@@ -100,7 +100,7 @@ public class OslcRdfXmlCollectionProvider
 									   mediaType,
 									   OslcMediaType.APPLICATION_RDF_XML_TYPE,
 									   OslcMediaType.APPLICATION_XML_TYPE,
-									   OslcMediaType.TEXT_XML_TYPE, 
+									   OslcMediaType.TEXT_XML_TYPE,
 									   OslcMediaType.TEXT_TURTLE_TYPE);
 				}
 			}
@@ -117,13 +117,12 @@ public class OslcRdfXmlCollectionProvider
 						final MediaType						 mediaType,
 						final MultivaluedMap<String, Object> map,
 						final OutputStream outputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		final ParameterizedType parameterizedType = (ParameterizedType) genericType;
 		final Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
 		OslcNotQueryResult notQueryResult = ((Class<?>)actualTypeArguments[0]).getAnnotation(OslcNotQueryResult.class);
-		
+
 		writeTo(notQueryResult != null && notQueryResult.value() ? false : true,
 				collection.toArray(new Object[collection.size()]),
 				mediaType,
@@ -148,7 +147,7 @@ public class OslcRdfXmlCollectionProvider
 			{
 				final Type actualTypeArgument = actualTypeArguments[0];
 
-				if (URI.class.equals((Class<?>) actualTypeArgument)) 
+				if (URI.class.equals((Class<?>) actualTypeArgument))
 				{
 					if (isCompatible(mediaType,
 							OslcMediaType.APPLICATION_RDF_XML_TYPE,
@@ -157,8 +156,8 @@ public class OslcRdfXmlCollectionProvider
 							OslcMediaType.TEXT_TURTLE_TYPE))
 					{
 						return true;
-					}					 
-				} 
+					}
+				}
 				else if (actualTypeArgument instanceof Class)
 				{
 					return isReadable((Class<?>) actualTypeArgument,
@@ -181,8 +180,7 @@ public class OslcRdfXmlCollectionProvider
 									   final MediaType						mediaType,
 									   final MultivaluedMap<String, String> map,
 									   final InputStream					inputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		if (genericType instanceof ParameterizedType)
 		{

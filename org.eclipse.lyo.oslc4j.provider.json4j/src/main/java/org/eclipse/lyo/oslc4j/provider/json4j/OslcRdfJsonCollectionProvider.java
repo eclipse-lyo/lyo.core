@@ -113,8 +113,7 @@ public class OslcRdfJsonCollectionProvider
 						final MediaType						 mediaType,
 						final MultivaluedMap<String, Object> map,
 						final OutputStream					 outputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		writeTo(true,
 				collection.toArray(new Object[collection.size()]),
@@ -141,11 +140,11 @@ public class OslcRdfJsonCollectionProvider
 				final Type actualTypeArgument = actualTypeArguments[0];
 
 				if (URI.class.equals((Class<?>) actualTypeArgument)
-						&& (OslcMediaType.APPLICATION_JSON_TYPE.isCompatible(mediaType))) 
+						&& (OslcMediaType.APPLICATION_JSON_TYPE.isCompatible(mediaType)))
 				{
 					return true;
 				}
-				else 
+				else
 				{
 					return isReadable((Class<?>) actualTypeArgument,
 									  OslcMediaType.APPLICATION_JSON_TYPE,
@@ -164,8 +163,7 @@ public class OslcRdfJsonCollectionProvider
 									   final MediaType						mediaType,
 									   final MultivaluedMap<String, String> map,
 									   final InputStream					inputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		if (genericType instanceof ParameterizedType)
 		{
