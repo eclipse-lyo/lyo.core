@@ -4,12 +4,12 @@
   <parent>
     <groupId>org.eclipse.lyo.oslc4j.core</groupId>
     <artifactId>oslc4j-core-build</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1-SNAPSHOT</version>
     <relativePath>../org.eclipse.lyo.oslc4j.build/pom.xml</relativePath>
   </parent>
   <groupId>org.eclipse.lyo.core.query</groupId>
   <artifactId>oslc-query</artifactId>
-  <version>2.2.0</version>
+  <version>2.2.1-SNAPSHOT</version>
   <name>OSLC4J Query</name>
   <description>OSLC query support for the Eclipse Lyo OSLC4J SDK.</description>
   <scm>
@@ -18,14 +18,14 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <antlr.version>3.5.2</antlr.version>
+    <!--<antlr.version>3.4</antlr.version>-->
   </properties>
   <dependencies>
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>antlr-runtime</artifactId>
-      <version>3.5.2</version>
+      <version>${antlr.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -35,7 +35,7 @@
     <dependency>
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
       <artifactId>oslc4j-core</artifactId>
-      <version>2.2.0</version>
+      <version>2.2.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -48,7 +48,7 @@
       <plugin>
         <groupId>org.antlr</groupId>
         <artifactId>antlr3-maven-plugin</artifactId>
-        <version>3.5.2</version>
+        <version>${antlr.version}</version>
         <configuration>
           <verbose>true</verbose>
         </configuration>
