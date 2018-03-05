@@ -1,0 +1,8 @@
+Verified+1: Hudson CI
+Code-Review+1: Jim Amsden <jamsden@us.ibm.com>
+Code-Review+2: Andrii Berezovskyi <andriib@kth.se>
+Submitted-by: Andrii Berezovskyi <andriib@kth.se>
+Submitted-at: Mon, 05 Mar 2018 10:22:36 -0500
+Reviewed-on: https://git.eclipse.org/r/118583
+Project: lyo/org.eclipse.lyo.core
+Branch: refs/heads/master
