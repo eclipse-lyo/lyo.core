@@ -1,0 +1,9 @@
+Verified+1: CI Bot
+Code-Review+1: Jad El-khoury <jad@kth.se>
+Code-Review+1: Ricardo Javier Herrera <neormx@gmail.com>
+Code-Review+2: Andrii Berezovskyi <andriib@kth.se>
+Submitted-by: Andrii Berezovskyi <andriib@kth.se>
+Submitted-at: Fri, 04 May 2018 14:44:24 -0400
+Reviewed-on: https://git.eclipse.org/r/120656
+Project: lyo/org.eclipse.lyo.core
+Branch: refs/heads/master
