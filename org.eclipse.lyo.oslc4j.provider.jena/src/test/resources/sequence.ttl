@@ -1,0 +1,35 @@
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foo:  <http://my.project.com/foo/> .
+
+<http://com.project.foo.Container/myModule/1526309965491>
+       a                    foo:Container ;
+       foo:children        <http://com.project.foo.Container/myModule/1526309965491/children> ;
+       foo:name            "myModule" .
+
+<http://com.project.foo.Element/myInnerHeading2/1526309968361>
+       a                    foo:Element ;
+       foo:container       "http://com.project.foo.Container/myModule/1526309965491" ;
+       foo:name            "myInnerHeading2" .
+
+<http://com.project.foo.Element/myInnerHeading3/1526309968364>
+       a                    foo:Element ;
+       foo:container       "http://com.project.foo.Container/myModule/1526309965491" ;
+       foo:name            "myInnerHeading3" .
+
+<http://com.project.foo.Container/myModule/1526309965491/children>
+       a       rdf:Seq ;
+       rdf:_1 <http://com.project.foo.Element/myInnerHeading1/1526309968360> ;
+       rdf:_2 <http://com.project.foo.Element/myInnerHeading2/1526309968361> ;
+       rdf:_3 <http://com.project.foo.Element/myInnerHeading3/1526309968364> ;
+       rdf:_4 <http://com.project.foo.Element/myInnerHeading4/1526309968364> .
+
+<http://com.project.foo.Element/myInnerHeading4/1526309968364>
+       a                    foo:Element ;
+       foo:container       "http://com.project.foo.Container/myModule/1526309965491" ;
+       foo:name            "myInnerHeading4" .
+
+<http://com.project.foo.Element/myInnerHeading1/1526309968360>
+       a                    foo:Element ;
+       foo:container       "http://com.project.foo.Container/myModule/1526309965491" ;
+       foo:name            "myInnerHeading1" .
