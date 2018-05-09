@@ -67,10 +67,13 @@ import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.datatypes.xsd.XSDDateTime;
 import org.apache.jena.datatypes.xsd.impl.XMLLiteralType;
 import org.apache.jena.datatypes.xsd.impl.XSDDateType;
+import org.apache.jena.rdf.model.Alt;
+import org.apache.jena.rdf.model.Bag;
 import org.apache.jena.rdf.model.Container;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.NodeIterator;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFList;
 import org.apache.jena.rdf.model.RDFNode;
@@ -78,10 +81,10 @@ import org.apache.jena.rdf.model.RSIterator;
 import org.apache.jena.rdf.model.ReifiedStatement;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Seq;
 import org.apache.jena.rdf.model.SimpleSelector;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.eclipse.lyo.oslc4j.core.NestedWildcardProperties;
@@ -642,6 +645,7 @@ public final class JenaModelHelper
 				}
 
 				final List<RDFNode> objects;
+                                Class<? extends Container> containerImpl;
 				if (multiple && object.isResource() && (
 					   (object.asResource().hasProperty(RDF.first)
 						   && object.asResource().hasProperty(RDF.rest))
@@ -662,14 +666,11 @@ public final class JenaModelHelper
 
 					visitedResources.put(getVisitedResourceName(object.asResource()), objects);
 				}
-				else if (multiple && isRdfCollectionResource(object.getModel(), object))
+				else if (multiple && (containerImpl = getRdfCollectionResourceClass(object.getModel(), object)) != null)
 				{
 					objects = new ArrayList<>();
-
-					ExtendedIterator<RDFNode> iterator =
-							object.asResource().listProperties(RDFS.member).
-									mapWith(s -> s.getObject());
-
+					Container container = object.as(containerImpl);
+                                        NodeIterator iterator = container.iterator();
 					while (iterator.hasNext())
 					{
 						RDFNode o = iterator.next();
@@ -993,20 +994,19 @@ public final class JenaModelHelper
 		return types;
 	}
 
-	private static boolean isRdfCollectionResource(Model model, RDFNode object)
+	private static Class<? extends Container> getRdfCollectionResourceClass(Model model, RDFNode object)
 	{
 		if (object.isResource())
 		{
 			Resource resource = object.asResource();
-			if (resource.hasProperty(RDF.type, model.getResource(OslcConstants.RDF_NAMESPACE + RDF_ALT))
-				|| resource.hasProperty(RDF.type, model.getResource(OslcConstants.RDF_NAMESPACE + RDF_BAG))
-				|| resource.hasProperty(RDF.type, model.getResource(OslcConstants.RDF_NAMESPACE + RDF_SEQ)))
-			{
-				return true;
-			}
+			if (resource.hasProperty(RDF.type, model.getResource(OslcConstants.RDF_NAMESPACE + RDF_ALT)))
+				return Alt.class;
+			if (resource.hasProperty(RDF.type, model.getResource(OslcConstants.RDF_NAMESPACE + RDF_BAG)))
+				return Bag.class;
+			if (resource.hasProperty(RDF.type, model.getResource(OslcConstants.RDF_NAMESPACE + RDF_SEQ)))
+				return Seq.class;
 		}
-
-		return false;
+		return null;
 	}
 
 	/**
@@ -1714,7 +1714,7 @@ public final class JenaModelHelper
 			{
 				RDFNode container = createRdfContainer(collectionType,
 													  rdfNodeContainer,
-													  model);
+													  model, resource, name);
 				Statement s = model.createStatement(resource, attribute, container);
 
 				model.add(s);
@@ -1743,7 +1743,7 @@ public final class JenaModelHelper
 			{
 				RDFNode container = createRdfContainer(collectionType,
 													   rdfNodeContainer,
-													   model);
+													   model, resource, name);
 				Statement s = model.createStatement(resource, attribute, container);
 
 				model.add(s);
@@ -1766,7 +1766,7 @@ public final class JenaModelHelper
 
 	private static RDFNode createRdfContainer(final OslcRdfCollectionType collectionType,
 											  final List<RDFNode>		  rdfNodeContainer,
-											  final Model				  model)
+											  final Model				  model, final Resource owner, final String property)
 	{
 		if (RDF_LIST.equals(collectionType.collectionType()))
 		{
@@ -1774,18 +1774,24 @@ public final class JenaModelHelper
 		}
 
 		Container container;
-
+                String uri = owner.getURI();
+                if (uri == null) {
+                    uri = "urn:" + owner.getId().getLabelString() + ":";
+                } else {
+                    uri += "/";
+                }
+                uri += property;
 		if (RDF_ALT.equals(collectionType.collectionType()))
 		{
-			container = model.createAlt();
+			container = model.createAlt(uri);
 		}
 		else if (RDF_BAG.equals(collectionType.collectionType()))
 		{
-			container = model.createBag();
+			container = model.createBag(uri);
 		}
 		else
 		{
-			container = model.createSeq();
+			container = model.createSeq(uri);
 		}
 
 		for (RDFNode node : rdfNodeContainer)
