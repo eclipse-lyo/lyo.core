@@ -54,7 +54,7 @@ import org.eclipse.lyo.oslc4j.core.model.ServiceProviderCatalog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractOslcRdfXmlProvider
+public abstract class AbstractOslcRdfXmlProvider extends AbstractRdfProvider
 {
 	private static final Logger log = LoggerFactory.getLogger(AbstractOslcRdfXmlProvider.class.getName
 			());
@@ -78,9 +78,9 @@ public abstract class AbstractOslcRdfXmlProvider
 	@Deprecated
 	public static final String OSLC4J_STRICT_DATATYPES		 = "org.eclipse.lyo.oslc4j.strictDatatypes";
 
-	private static final Annotation[] ANNOTATIONS_EMPTY_ARRAY = new Annotation[0];
-	private static final Class<Error> CLASS_OSLC_ERROR		  = Error.class;
-	private static final ErrorHandler ERROR_HANDLER			  = new ErrorHandler();
+	protected static final Annotation[] ANNOTATIONS_EMPTY_ARRAY = new Annotation[0];
+	protected static final Class<Error> CLASS_OSLC_ERROR		  = Error.class;
+	protected static final ErrorHandler ERROR_HANDLER			  = new ErrorHandler();
 
 	private @Context HttpHeaders		  httpHeaders;		  // Available only on the server
 	protected @Context HttpServletRequest httpServletRequest; // Available only on the server
@@ -193,68 +193,6 @@ public abstract class AbstractOslcRdfXmlProvider
 		return writer;
 	}
 
-	protected void writeTo(final boolean						queryResult,
-						   final Object[]						objects,
-						   final MediaType						baseMediaType,
-						   final MultivaluedMap<String, Object> map,
-						   final OutputStream					outputStream)
-			  throws WebApplicationException
-	{
-		boolean isClientSide = false;
-
-		try {
-			httpServletRequest.getMethod();
-		} catch (RuntimeException e) {
-			isClientSide = true;
-		}
-
-		String descriptionURI  = null;
-		String responseInfoURI = null;
-
-		if (queryResult && ! isClientSide)
-		{
-
-			final String method = httpServletRequest.getMethod();
-			if ("GET".equals(method))
-			{
-				descriptionURI =  OSLC4JUtils.resolveURI(httpServletRequest,true);
-				responseInfoURI = descriptionURI;
-
-				final String queryString = httpServletRequest.getQueryString();
-				if ((queryString != null) &&
-					(isOslcQuery(queryString)))
-				{
-					responseInfoURI += "?" + queryString;
-				}
-			}
-
-		}
-
-		final String serializationLanguage = getSerializationLanguage(baseMediaType);
-
-		@SuppressWarnings("unchecked")
-		final Map<String, Object> properties = isClientSide ?
-			null :
-			(Map<String, Object>)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_SELECTED_PROPERTIES);
-		final String nextPageURI = isClientSide ?
-			null :
-			(String)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_NEXT_PAGE);
-		final Integer totalCount = isClientSide ?
-			null :
-			(Integer)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_TOTAL_COUNT);
-
-		ResponseInfo<?> responseInfo = new ResponseInfoArray<Object>(null, properties, totalCount, nextPageURI);
-
-		writeObjectsTo(
-				objects,
-				outputStream,
-				properties,
-				descriptionURI,
-				responseInfoURI,
-				responseInfo,
-				serializationLanguage
-		);
-	}
 
 	private String getSerializationLanguage(final MediaType baseMediaType) {
 		// Determine whether to serialize in xml or abreviated xml based upon mediatype.
