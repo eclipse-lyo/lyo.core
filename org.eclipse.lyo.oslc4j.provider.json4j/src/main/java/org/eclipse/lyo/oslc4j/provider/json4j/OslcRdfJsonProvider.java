@@ -77,18 +77,18 @@ public final class OslcRdfJsonProvider
 							   final MediaType	  mediaType)
 	{
 		Class<?> actualType;
-		
+
 		if (FilteredResource.class.isAssignableFrom(type) &&
 			(genericType instanceof ParameterizedType))
 		{
 			ParameterizedType parameterizedType = (ParameterizedType)genericType;
 			Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-			
+
 			if (actualTypeArguments.length != 1)
 			{
 				return false;
 			}
-			
+
 			if (actualTypeArguments[0] instanceof Class<?>)
 			{
 				actualType = (Class<?>)actualTypeArguments[0];
@@ -97,13 +97,13 @@ public final class OslcRdfJsonProvider
 			{
 				parameterizedType = (ParameterizedType)actualTypeArguments[0];
 				actualTypeArguments = parameterizedType.getActualTypeArguments();
-				
+
 				if (actualTypeArguments.length != 1 ||
 					! (actualTypeArguments[0] instanceof Class<?>))
 				{
 					return false;
 				}
-				
+
 				actualType = (Class<?>)actualTypeArguments[0];
 			}
 			else if (actualTypeArguments[0] instanceof GenericArrayType)
@@ -111,12 +111,12 @@ public final class OslcRdfJsonProvider
 				GenericArrayType genericArrayType =
 					(GenericArrayType)actualTypeArguments[0];
 				Type componentType = genericArrayType.getGenericComponentType();
-				
+
 				if (! (componentType instanceof Class<?>))
 				{
 					return false;
 				}
-				
+
 				actualType = (Class<?>)componentType;
 			}
 			else
@@ -129,13 +129,13 @@ public final class OslcRdfJsonProvider
 					&& (ResponseInfoCollection.class.equals(rawType) || ResponseInfoArray.class.equals(rawType)))
 			{
 				return true;
-			}			 
+			}
 		}
 		else
 		{
 			actualType = type;
 		}
-		
+
 		return isWriteable(actualType,
 						   annotations,
 						   OslcMediaType.APPLICATION_JSON_TYPE,
@@ -150,51 +150,50 @@ public final class OslcRdfJsonProvider
 						final MediaType						 mediaType,
 						final MultivaluedMap<String, Object> map,
 						final OutputStream					 outputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		Object[]						objects;
 		Map<String, Object>				properties = null;
 		String							descriptionURI = null;
 		String							responseInfoURI = null;
 		ResponseInfo<?>					responseInfo = null;
-		
+
 		if (object instanceof FilteredResource<?>)
 		{
 			final FilteredResource<?> filteredResource =
 				(FilteredResource<?>)object;
-			
+
 			properties = filteredResource.properties();
-			
+
 			if (filteredResource instanceof ResponseInfo<?>)
-			{				 
+			{
 				responseInfo = (ResponseInfo<?>)filteredResource;
-				
+
 				String requestURI = OSLC4JUtils.resolveURI(httpServletRequest, true);
 				responseInfoURI = requestURI;
-				
+
 				FilteredResource<?> container = responseInfo.getContainer();
 				if (container != null)
 				{
 					URI containerAboutURI = container.getAbout();
-					if (containerAboutURI != null) 
+					if (containerAboutURI != null)
 					{
 						descriptionURI = containerAboutURI.toString();
 					}
-				}				 
+				}
 				if (null == descriptionURI)
 				{
 					descriptionURI = requestURI;
 				}
-				
+
 				final String queryString = httpServletRequest.getQueryString();
-				
+
 				if ((queryString != null) &&
 					(isOslcQuery(queryString)))
 				{
 					responseInfoURI += "?" + queryString;
 				}
-				
+
 				if (filteredResource instanceof ResponseInfoArray<?>)
 				{
 					objects = ((ResponseInfoArray<?>)filteredResource).array();
@@ -203,14 +202,14 @@ public final class OslcRdfJsonProvider
 				{
 					Collection<?> collection =
 						((ResponseInfoCollection<?>)filteredResource).collection();
-					
+
 					objects = collection.toArray(new Object[collection.size()]);
 				}
 			}
 			else
 			{
 				Object nestedObject = filteredResource.resource();
-				
+
 				if (nestedObject instanceof Object[])
 				{
 					objects = (Object[])nestedObject;
@@ -229,7 +228,7 @@ public final class OslcRdfJsonProvider
 		{
 			objects = new Object[] { object };
 		}
-		
+
 		writeTo(objects,
 				mediaType,
 				map,
@@ -258,8 +257,7 @@ public final class OslcRdfJsonProvider
 						   final MediaType						mediaType,
 						   final MultivaluedMap<String, String> map,
 						   final InputStream					inputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		final Object[] objects = readFrom(type,
 										  mediaType,

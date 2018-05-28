@@ -71,7 +71,7 @@ public class OslcRdfXmlArrayProvider
 							mediaType,
 							OslcMediaType.APPLICATION_RDF_XML_TYPE,
 							OslcMediaType.APPLICATION_XML_TYPE,
-							OslcMediaType.TEXT_XML_TYPE, 
+							OslcMediaType.TEXT_XML_TYPE,
 							OslcMediaType.TEXT_TURTLE_TYPE));
 	}
 
@@ -83,12 +83,12 @@ public class OslcRdfXmlArrayProvider
 						final MediaType						 mediaType,
 						final MultivaluedMap<String, Object> map,
 						final OutputStream					 outputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		OslcNotQueryResult notQueryResult = type.getComponentType().getAnnotation(OslcNotQueryResult.class);
-		
-		writeTo(notQueryResult != null && notQueryResult.value() ? false : true,
+		final boolean queryResult = notQueryResult == null || !notQueryResult.value();
+		writeTo(
+				queryResult,
 				objects,
 				mediaType,
 				map,
@@ -106,7 +106,7 @@ public class OslcRdfXmlArrayProvider
 						   mediaType,
 						   OslcMediaType.APPLICATION_RDF_XML_TYPE,
 						   OslcMediaType.APPLICATION_XML_TYPE,
-						   OslcMediaType.TEXT_XML_TYPE, 
+						   OslcMediaType.TEXT_XML_TYPE,
 						   OslcMediaType.TEXT_TURTLE_TYPE));
 	}
 
@@ -117,8 +117,7 @@ public class OslcRdfXmlArrayProvider
 							 final MediaType					  mediaType,
 							 final MultivaluedMap<String, String> map,
 							 final InputStream					  inputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		return readFrom(type.getComponentType(),
 						mediaType,

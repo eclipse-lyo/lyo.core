@@ -4,7 +4,7 @@
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompanies this distribution.
- *	
+ *
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
@@ -60,12 +60,11 @@ public abstract class OslcWinkApplication
 
 		this.resourceClasses = resourceClasses;
 	}
-	
+
 	//Bugzilla 392780
 	// Called by OslcDynamicWinkApplication
 	public OslcWinkApplication(final Set<Class<?>> resourceClasses,
-			final String resourceShapesPath)
-			throws OslcCoreApplicationException, URISyntaxException {
+			final String resourceShapesPath) {
 		super();
 
 		this.resourceClasses = resourceClasses;

@@ -80,8 +80,7 @@ public final class OslcCompactJsonProvider
 						final MediaType						 mediaType,
 						final MultivaluedMap<String, Object> map,
 						final OutputStream					 outputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		writeTo(false,
 				new Compact[] {compact},
@@ -109,8 +108,7 @@ public final class OslcCompactJsonProvider
 							final MediaType						 mediaType,
 							final MultivaluedMap<String, String> map,
 							final InputStream					 inputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		final Object[] objects = readFrom(type,
 										  OslcMediaType.APPLICATION_JSON_TYPE,

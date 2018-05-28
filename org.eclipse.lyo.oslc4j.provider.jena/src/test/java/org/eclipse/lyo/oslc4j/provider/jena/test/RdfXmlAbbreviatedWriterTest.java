@@ -62,7 +62,7 @@ public class RdfXmlAbbreviatedWriterTest {
 		RdfXmlAbbreviatedWriter w = new RdfXmlAbbreviatedWriter();
 		w.write(m, System.out, null);
 	}
-	
+
 	/**
 	 * Scenario tested with cyclic reference http://server/oslc/pr/collection:
 	 * {@code
@@ -86,12 +86,12 @@ public class RdfXmlAbbreviatedWriterTest {
 	 * }
 	 */
 	@Test
-	public void testSelfCircularReference() throws WebApplicationException, IOException, SecurityException,
+	public void testSelfCircularReference() throws WebApplicationException, SecurityException,
 			NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		
+
 		// Cannot read a payload with this scenario because the reader will define
 		// the collection as an inline resource, preventing the bug we want to test.
-		
+
 		ServiceProvider sp = new ServiceProvider();
 		sp.setAbout(URI.create("http://test:9999/inlineResources/self-circular.xml"));
 		Service service = new Service();
@@ -107,21 +107,21 @@ public class RdfXmlAbbreviatedWriterTest {
 				(String) null);
 		info.setAbout(URI.create("http://server/pr/collection?oslc.select=*"));
 		info.getContainer().setAbout(URI.create("http://server/pr/collection"));
-		
+
 		// Since we do not have a Mock API, creating a proxy to mock the
 		// request.
 		HttpServletRequest proxy = (HttpServletRequest) Proxy.newProxyInstance(
 				HttpServletRequest.class.getClassLoader(), new Class<?>[] { HttpServletRequest.class },
 				new InvocationHandler() {
 					@Override
-					public Object invoke(Object arg0, Method arg1, Object[] arg2) throws Throwable {
+					public Object invoke(Object arg0, Method arg1, Object[] arg2) {
 						if (arg1.getReturnType().isPrimitive()) {
 							return 0;
 						}
 						return null;
 					}
 				});
-		
+
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		OslcRdfXmlProvider op = new OslcRdfXmlProvider();
 		Field requestURIField = AbstractOslcRdfXmlProvider.class.getDeclaredField("httpServletRequest");
@@ -151,7 +151,7 @@ public class RdfXmlAbbreviatedWriterTest {
 		System.out.println(baos.toString());
 
 		OslcRdfXmlCollectionProvider ocp = new OslcRdfXmlCollectionProvider();
-		
+
 		@SuppressWarnings({"rawtypes", "unchecked"}) // The warning for (Class)List.class can't be resolved in the code but will work at run time.
 		Collection col = ocp.readFrom((Class)List.class, paramType, null, MediaType.APPLICATION_XML_TYPE, null,
 				new ByteArrayInputStream(baos.toByteArray()));
@@ -159,5 +159,5 @@ public class RdfXmlAbbreviatedWriterTest {
 		Assert.assertEquals("Unable to read a collection with cyclic reference", 1, col.size());
 
 	}
-	
+
 }

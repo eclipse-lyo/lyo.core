@@ -79,8 +79,7 @@ public class OslcRdfJsonArrayProvider
 						final MediaType						 mediaType,
 						final MultivaluedMap<String, Object> map,
 						final OutputStream					 outputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		writeTo(true,
 				objects,
@@ -108,8 +107,7 @@ public class OslcRdfJsonArrayProvider
 							 final MediaType					  mediaType,
 							 final MultivaluedMap<String, String> map,
 							 final InputStream					  inputStream)
-		   throws IOException,
-				  WebApplicationException
+		   throws WebApplicationException
 	{
 		return readFrom(type.getComponentType(),
 						mediaType,

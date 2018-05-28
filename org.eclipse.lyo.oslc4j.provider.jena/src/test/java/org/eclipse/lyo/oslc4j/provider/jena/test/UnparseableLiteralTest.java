@@ -24,6 +24,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.lyo.oslc4j.core.OSLC4JConstants;
 import org.eclipse.lyo.oslc4j.core.UnparseableLiteral;
 import org.eclipse.lyo.oslc4j.provider.jena.AbstractOslcRdfXmlProvider;
 import org.eclipse.lyo.oslc4j.provider.jena.JenaModelHelper;
@@ -42,12 +43,12 @@ import org.apache.jena.vocabulary.DCTerms;
 public class UnparseableLiteralTest {
 	@Before
 	public void before() {
-		System.setProperty(AbstractOslcRdfXmlProvider.OSLC4J_STRICT_DATATYPES, "false");
+		System.setProperty(OSLC4JConstants.OSLC4J_STRICT_DATATYPES, "false");
 	}
 
 	@After
 	public void after() {
-		System.getProperties().remove(AbstractOslcRdfXmlProvider.OSLC4J_STRICT_DATATYPES);
+		System.getProperties().remove(OSLC4JConstants.OSLC4J_STRICT_DATATYPES);
 	}
 
 	@Test

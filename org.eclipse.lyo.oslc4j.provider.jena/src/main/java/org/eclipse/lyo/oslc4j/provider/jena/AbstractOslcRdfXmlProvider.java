@@ -23,11 +23,8 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -43,6 +40,7 @@ import org.eclipse.lyo.oslc4j.core.annotation.OslcNotQueryResult;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.exception.MessageExtractor;
 import org.eclipse.lyo.oslc4j.core.model.Error;
+import org.eclipse.lyo.oslc4j.core.model.IResource;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.eclipse.lyo.oslc4j.core.model.ResponseInfo;
 import org.eclipse.lyo.oslc4j.core.model.ResponseInfoArray;
@@ -54,35 +52,23 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFReader;
 import org.apache.jena.rdf.model.RDFWriter;
 import org.apache.jena.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractOslcRdfXmlProvider
 {
-	private static final Logger logger = Logger.getLogger(AbstractOslcRdfXmlProvider.class.getName());
- 
-	/**
-	 * System property {@value} : When "true", always abbreviate RDF/XML, even
-	 * when asked for application/rdf+xml. Otherwise, abbreviated RDF/XML is
-	 * only returned when application/xml is requested. Does not affect
-	 * text/turtle responses.
-	 * 
-	 * @see RdfXmlAbbreviatedWriter
-	 */
-	public static final String OSLC4J_ALWAYS_XML_ABBREV		  = "org.eclipse.lyo.oslc4j.alwaysXMLAbbrev";
-	
-	/**
-	 * System property {@value} : When "true" (default), fail on when reading a
-	 * property value that is not a legal instance of a datatype. When "false",
-	 * skip over invalid values in extended properties.
-	 */
-	public static final String OSLC4J_STRICT_DATATYPES		 = "org.eclipse.lyo.oslc4j.strictDatatypes";
+	private final static Logger log                      = LoggerFactory.getLogger(
+			AbstractOslcRdfXmlProvider.class);
 
 	private static final Annotation[] ANNOTATIONS_EMPTY_ARRAY = new Annotation[0];
 	private static final Class<Error> CLASS_OSLC_ERROR		  = Error.class;
 	private static final ErrorHandler ERROR_HANDLER			  = new ErrorHandler();
 
-	private @Context HttpHeaders		  httpHeaders;		  // Available only on the server
+	// FIXME Andrew@2018-03-03: this project shall not treat clients differently
+	// we should instead create special query result providers
+	private @Context   HttpHeaders        httpHeaders;          // Available only on the server
 	protected @Context HttpServletRequest httpServletRequest; // Available only on the server
-	private @Context Providers			  providers;		  // Available on both client and server
+	private @Context   Providers          providers;          // Available on both client and server
 
 	protected AbstractOslcRdfXmlProvider()
 	{
@@ -94,14 +80,13 @@ public abstract class AbstractOslcRdfXmlProvider
 										 final MediaType	 actualMediaType,
 										 final MediaType ... requiredMediaTypes)
 	{
-		if (type.getAnnotation(OslcResourceShape.class) != null ||
-			type.getAnnotation(OslcNotQueryResult.class) != null)
+		if (type.getAnnotation(OslcResourceShape.class) != null
+				|| type.getAnnotation(OslcNotQueryResult.class) != null
+				|| IResource.class.isAssignableFrom(type)
+				)
 		{
 			// We do not have annotations when running from the non-web client.
-			if (isCompatible(actualMediaType, requiredMediaTypes)) 
-			{
-				return true;
-			}
+			return isCompatible(actualMediaType, requiredMediaTypes);
 		}
 
 		return false;
@@ -123,138 +108,133 @@ public abstract class AbstractOslcRdfXmlProvider
 		// RDNG can only consume RDF/XML-ABBREV although its sometimes sends Accept=application/rdf+xml.
 		// The org.eclipse.lyo.oslc4j.alwaysXMLAbbrevOnlyProviders system property is used
 		// to turn off this special case
-		if ((objects != null && objects[0] != null) &&
-			( objects[0] instanceof ServiceProviderCatalog || objects[0] instanceof ServiceProvider ) &&
-			serializationLanguage.equals(FileUtils.langXML) &&
-			"true".equals(System.getProperty("org.eclipse.lyo.oslc4j.alwaysXMLAbbrevOnlyProviders"))) {
+		if ((objects != null && objects[0] != null) && (objects[0] instanceof
+				ServiceProviderCatalog || objects[0] instanceof ServiceProvider) &&
+				serializationLanguage
+				.equals(FileUtils.langXML) && "true".equals(System.getProperty(
+				"org.eclipse.lyo.oslc4j.alwaysXMLAbbrevOnlyProviders"))) {
 			serializationLanguage = FileUtils.langXMLAbbrev;
-			logger.log(Level.INFO, "Using RDF/XML-ABBREV for ServiceProvider resources");
+			log.debug("Using RDF/XML-ABBREV for ServiceProvider resources");
 		}
 
-		try
-		{
+		writeQueryResultsLegacy(objects,
+								outputStream,
+								serializationLanguage,
+								descriptionURI,
+								responseInfoURI,
+								responseInfo,
+								properties
+		);
+	}
+
+	/**
+	 * @param objects               OSLC Resources to write
+	 * @param outputStream          Stream to write to
+	 * @param serializationLanguage See
+	 * {@link AbstractOslcRdfXmlProvider#getSerializationLanguage(MediaType)}
+	 * @param descriptionURI        Used for writing query results only
+	 * @param responseInfoURI       Used for writing query results only
+	 * @param responseInfo          Used for writing query results only
+	 * @param properties            Selected properties (see {@code OSLC4JConstants
+	 * .OSLC4J_SELECTED_PROPERTIES})
+	 */
+	private void writeQueryResultsLegacy(final Object[] objects, final OutputStream outputStream,
+			final String serializationLanguage, final String descriptionURI,
+			final String responseInfoURI, final ResponseInfo<?> responseInfo,
+			final Map<String, Object> properties) {
+		try {
 			final Model model = JenaModelHelper.createJenaModel(descriptionURI,
 																responseInfoURI,
 																responseInfo,
 																objects,
 																properties);
-			RDFWriter writer = null;
-			if	(serializationLanguage.equals(FileUtils.langXMLAbbrev))
-			{
+			RDFWriter writer;
+			if	(serializationLanguage.equals(FileUtils.langXMLAbbrev)) {
 				writer = new RdfXmlAbbreviatedWriter();
-			}
-			else
-			{
+			} else {
 				writer = model.getWriter(serializationLanguage);
 			}
-			writer.setProperty("showXmlDeclaration",
-							   "false");
-			writer.setErrorHandler(ERROR_HANDLER);	  
-			
-			if (! serializationLanguage.equals(FileUtils.langTurtle)) 
-			{
+			writer.setProperty("showXmlDeclaration", "false");
+			writer.setErrorHandler(ERROR_HANDLER);
+
+			if (! serializationLanguage.equals(FileUtils.langTurtle)) {
 				String xmlDeclaration = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 				outputStream.write(xmlDeclaration.getBytes());
 			}
-			
-			writer.write(model,
-						 outputStream,
-						 null);
-		}
-		catch (final Exception exception)
-		{
-			logger.log(Level.FINE, MessageExtractor.getMessage("ErrorSerializingResource"), exception);
+
+			writer.write(model, outputStream, null);
+		} catch (final Exception exception) {
+			log.warn(MessageExtractor.getMessage("ErrorSerializingResource"), exception);
 			throw new WebApplicationException(exception);
 		}
 	}
 
-	protected void writeTo(final boolean						queryResult,
-						   final Object[]						objects,
-						   final MediaType						baseMediaType,
-						   final MultivaluedMap<String, Object> map,
-						   final OutputStream					outputStream)
-			  throws WebApplicationException
-	{
+	protected void writeTo(final boolean queryResult, final Object[] objects,
+			final MediaType baseMediaType, final MultivaluedMap<String, Object> map,
+			final OutputStream outputStream) throws WebApplicationException {
+		final String serializationLanguage = getSerializationLanguage(baseMediaType);
+		final boolean clientSide = isClientSide();
+
+		if (clientSide) {
+			serialiseObjectsToStream(objects, outputStream, serializationLanguage);
+		} else {
+			String descriptionURI = null;
+			String responseInfoURI = null;
+			if (queryResult && "GET".equals(httpServletRequest.getMethod())) {
+				descriptionURI = OSLC4JUtils.resolveURI(httpServletRequest, true);
+				responseInfoURI = descriptionURI;
+
+				final String queryString = httpServletRequest.getQueryString();
+				if ((queryString != null) && (isOslcQuery(queryString))) {
+					responseInfoURI += "?" + queryString;
+				}
+			}
+			@SuppressWarnings(
+					"unchecked") final Map<String, Object> properties = (Map<String, Object>)
+					httpServletRequest
+					.getAttribute(OSLC4JConstants.OSLC4J_SELECTED_PROPERTIES);
+			final String nextPageURI = (String) httpServletRequest.getAttribute(OSLC4JConstants
+																						.OSLC4J_NEXT_PAGE);
+			final Integer totalCount = (Integer) httpServletRequest.getAttribute(OSLC4JConstants
+																						 .OSLC4J_TOTAL_COUNT);
+
+			ResponseInfo<?> responseInfo = new ResponseInfoArray<Object>(null,
+																		 properties,
+																		 totalCount,
+																		 nextPageURI
+			);
+
+			writeQueryResultsLegacy(objects,
+									outputStream,
+									serializationLanguage,
+									descriptionURI,
+									responseInfoURI,
+									responseInfo,
+									properties
+			);
+		}
+	}
+
+	private void serialiseObjectsToStream(final Object[] objects, final OutputStream outputStream,
+			final String serializationLanguage) {
+		writeQueryResultsLegacy(objects,
+								outputStream,
+								serializationLanguage,
+								null,
+								null,
+								null,
+								null
+		);
+	}
+
+	private boolean isClientSide() {
 		boolean isClientSide = false;
-		
 		try {
 			httpServletRequest.getMethod();
 		} catch (RuntimeException e) {
 			isClientSide = true;
 		}
-		
-		String descriptionURI  = null;
-		String responseInfoURI = null;
-		
-		if (queryResult && ! isClientSide)
-		{
-
-			final String method = httpServletRequest.getMethod();
-			if ("GET".equals(method))
-			{
-				descriptionURI =  OSLC4JUtils.resolveURI(httpServletRequest,true);
-				responseInfoURI = descriptionURI;
-				
-				final String queryString = httpServletRequest.getQueryString();
-				if ((queryString != null) &&
-					(isOslcQuery(queryString)))
-				{
-					responseInfoURI += "?" + queryString;
-				} 
-			}
-
-		}
-
-		final String serializationLanguage = getSerializationLanguage(baseMediaType);
-
-		@SuppressWarnings("unchecked")
-		final Map<String, Object> properties = isClientSide ?
-			null :
-			(Map<String, Object>)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_SELECTED_PROPERTIES);
-		final String nextPageURI = isClientSide ?
-			null :
-			(String)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_NEXT_PAGE);
-		final Integer totalCount = isClientSide ?
-			null :
-			(Integer)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_TOTAL_COUNT);
-		
-		ResponseInfo<?> responseInfo = new ResponseInfoArray<Object>(null, properties, totalCount, nextPageURI);
-		
-		try
-		{
-			final Model model = JenaModelHelper.createJenaModel(descriptionURI,
-																responseInfoURI,
-																responseInfo,
-																objects,
-																properties);
-			RDFWriter writer = null;
-			if	(serializationLanguage.equals(FileUtils.langXMLAbbrev))
-			{
-				writer = new RdfXmlAbbreviatedWriter();
-			}
-			else
-			{
-				writer = model.getWriter(serializationLanguage);
-			}
-			writer.setProperty("showXmlDeclaration",
-					"false");
-			writer.setErrorHandler(ERROR_HANDLER);	  
-			
-			if (! serializationLanguage.equals(FileUtils.langTurtle)) 
-			{
-				String xmlDeclaration = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-				outputStream.write(xmlDeclaration.getBytes());
-			}
-
-			writer.write(model,
-						 outputStream,
-						 null);
-		}
-		catch (final Exception exception)
-		{
-			logger.log(Level.FINE, MessageExtractor.getMessage("ErrorSerializingResource"), exception);
-			throw new WebApplicationException(exception);
-		}
+		return isClientSide;
 	}
 
 	private String getSerializationLanguage(final MediaType baseMediaType) {
@@ -267,11 +247,11 @@ public abstract class AbstractOslcRdfXmlProvider
 		}
 
 		if (OslcMediaType.APPLICATION_RDF_XML_TYPE.isCompatible(baseMediaType) &&
-			!"true".equals(System.getProperty(OSLC4J_ALWAYS_XML_ABBREV)))
+			!OSLC4JUtils.alwaysAbbrevXML())
 		{
 			return FileUtils.langXML;
 		}
-		
+
 		return FileUtils.langXMLAbbrev;
 	}
 
@@ -291,7 +271,7 @@ public abstract class AbstractOslcRdfXmlProvider
 	}
 
 	protected static boolean isCompatible(final MediaType actualMediaType,
-			final MediaType... requiredMediaTypes) 
+			final MediaType... requiredMediaTypes)
 	{
 			for (final MediaType requiredMediaType : requiredMediaTypes)
 			{
@@ -313,7 +293,7 @@ public abstract class AbstractOslcRdfXmlProvider
 		final Model model = ModelFactory.createDefaultModel();
 
 		RDFReader reader = null;
-		
+
 		if (mediaType != null && mediaType.isCompatible(OslcMediaType.TEXT_TURTLE_TYPE))
 		{
 			reader=model.getReader(FileUtils.langTurtle);
@@ -445,6 +425,8 @@ public abstract class AbstractOslcRdfXmlProvider
 	 */
 	private boolean isAcceptableMediaType(final MediaType mediaType)
 	{
+		// FIXME Andrew@2018-03-03: wildcards should be acceptable and JSON-LD or Turtle shall be
+		// served
 		return (!mediaType.isWildcardType()) &&
 			   (!mediaType.isWildcardSubtype()) &&
 			   (providers.getMessageBodyWriter(CLASS_OSLC_ERROR,
@@ -457,6 +439,8 @@ public abstract class AbstractOslcRdfXmlProvider
 	{
 		boolean containsOslcParm = false;
 
+		// FIXME Andrew@2018-03-03: what about 'search=oslc.*'
+		// should switch to URLEncodedUtils (https://stackoverflow.com/a/13592324/464590)
 		final String [] uriParts = parmString.toLowerCase().split("oslc\\.",2);
 		if (uriParts.length > 1)
 		{
