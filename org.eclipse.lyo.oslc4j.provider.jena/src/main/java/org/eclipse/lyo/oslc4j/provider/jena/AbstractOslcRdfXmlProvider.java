@@ -256,10 +256,14 @@ public abstract class AbstractOslcRdfXmlProvider
 		);
 	}
 
+	/**
+	 * Determine whether to serialize in xml or abreviated xml based upon mediatype.
+	 * <p>
+	 * application/rdf+xml yields xml
+	 * <p>
+	 * applicaton/xml yields abbreviated xml
+	 */
 	private String getSerializationLanguage(final MediaType baseMediaType) {
-		// Determine whether to serialize in xml or abreviated xml based upon mediatype.
-		// application/rdf+xml yields xml
-		// applicaton/xml yields abbreviated xml
 
 		if(baseMediaType == null) {
 			throw new IllegalArgumentException("Base media type can't be null");
@@ -267,36 +271,27 @@ public abstract class AbstractOslcRdfXmlProvider
 
 		List<Map.Entry<MediaType, String>> mediaPairs = new ArrayList<>();
 		mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.TEXT_TURTLE_TYPE,
-													 RDFLanguages.strLangTurtle
-		));
+													 RDFLanguages.strLangTurtle));
 		mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.APPLICATION_JSON_LD_TYPE,
-													 RDFLanguages.strLangJSONLD
-		));
-		// TODO Andrew@2018-03-03: switch to OSLC4JUtils once 118569 is merged
-		// TODO Andrew@2018-03-03: refactor this list to build once after switching to OSLC4JUtils
-		if ("true".equals(System.getProperty(OSLC4J_ALWAYS_XML_ABBREV))) {
-			// TODO Andrew@2018-03-03: handle ABBREV consistent with the rest
+													 RDFLanguages.strLangJSONLD));
+		if (OSLC4JUtils.alwaysAbbrevXML()) {
 			// application/rdf+xml will be forcefully abbreviated
 			mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.APPLICATION_RDF_XML_TYPE,
-														 FileUtils.langXMLAbbrev
-			));
+														 FileUtils.langXMLAbbrev));
 		} else {
 			mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.APPLICATION_RDF_XML_TYPE,
-														 RDFLanguages.strLangRDFXML
-			));
+														 RDFLanguages.strLangRDFXML));
 
 		}
 		// application/xml will be abbreviated for compat reasons
 		mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.APPLICATION_XML_TYPE,
-													 FileUtils.langXMLAbbrev
-		));
+													 FileUtils.langXMLAbbrev));
 
 		for (Map.Entry<MediaType, String> mediaPair : mediaPairs) {
 			if (baseMediaType.isCompatible(mediaPair.getKey())) {
 				log.trace("Using '{}' writer for '{}' Accept media type",
 						  mediaPair.getValue(),
-						  mediaPair.getKey()
-				);
+						  mediaPair.getKey());
 				return mediaPair.getValue();
 			}
 		}
@@ -310,10 +305,7 @@ public abstract class AbstractOslcRdfXmlProvider
 	{
 		if (type.getAnnotation(OslcResourceShape.class) != null)
 		{
-			if (isCompatible(actualMediaType, requiredMediaTypes))
-			{
-				return true;
-			}
+			return isCompatible(actualMediaType, requiredMediaTypes);
 		}
 
 		return false;

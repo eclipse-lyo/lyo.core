@@ -13,6 +13,6 @@ import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
  * @since 0.0.1
  */
 @Provider
-@Produces({OslcMediaType.JSON_LD})
-@Consumes({OslcMediaType.JSON_LD})
+@Produces({OslcMediaType.APPLICATION_JSON_LD})
+@Consumes({OslcMediaType.APPLICATION_JSON_LD})
 public class OslcJsonLdProvider extends OslcRdfXmlProvider{ }
