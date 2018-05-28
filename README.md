@@ -16,11 +16,10 @@ If you are interested in using the library, please use the [wiki](https://wiki.e
 
 We adopt the Eclipse guidlines for [contributing via Git](https://wiki.eclipse.org/Development_Resources/Contributing_via_Git), to accept contributions in this project.
 
+Please follow these guidelines to submit your contributions. **Before your contribution can be accepted to an Eclipse Foundation project, you need to electronically sign the [Eclipse Contributor Agreement (ECA)](https://eclipse.org/legal/ECA.php).**
 The preferred approach is to contribute a patch via GitHub using the standard GitHub pull request. 
 Alternatively, you can submit your contribution as a patch attachment on the corresponding Bugzilla record. 
 (This project no longer support Gerrit.)
-
-**If this is your first time contributing to an Eclipse Foundation project, please make sure you sign the [Eclipse Contributor Agreement (ECA)](https://eclipse.org/legal/ECA.php).**
 
 The Eclipse Lyo project page is located at https://projects.eclipse.org/projects/technology.lyo. It points to the information regarding source code management, builds, coding standards, and more.
 
