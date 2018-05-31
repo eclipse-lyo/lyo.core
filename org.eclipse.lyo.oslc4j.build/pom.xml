@@ -28,19 +28,18 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <!--<version.jena>3.0.1</version.jena>-->
     <version.jena>3.6.0</version.jena>
   </properties>
 
   <modules>
     <module>../org.eclipse.lyo.core.query</module>
+    <module>../org.eclipse.lyo.core.trs</module>
     <module>../org.eclipse.lyo.oslc4j.core</module>
     <module>../org.eclipse.lyo.oslc4j.provider.jena</module>
-    <module>../org.eclipse.lyo.core.trs</module>
+    <module>../org.eclipse.lyo.oslc4j.provider.json4j</module>
     <module>../org.eclipse.lyo.core.utils</module>
     <module>../org.eclipse.lyo.oslc4j.wink</module>
     <module>../org.eclipse.lyo.oslc4j.registry</module>
-    <module>../org.eclipse.lyo.oslc4j.provider.json4j</module>
   </modules>
 
   <dependencyManagement>
