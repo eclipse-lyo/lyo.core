@@ -28,7 +28,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <jena.version>3.6.0</jena.version>
+    <version.jena>3.6.0</version.jena>
   </properties>
 
   <modules>
@@ -40,6 +40,7 @@
     <module>../org.eclipse.lyo.core.utils</module>
     <module>../org.eclipse.lyo.oslc4j.wink</module>
     <module>../org.eclipse.lyo.oslc4j.registry</module>
+    <module>../org.eclipse.lyo.repackaging.jersey</module>
   </modules>
 
   <dependencyManagement>
@@ -126,7 +127,7 @@
       <dependency>
         <groupId>org.apache.jena</groupId>
         <artifactId>jena-core</artifactId>
-        <version>${jena.version}</version>
+        <version>${version.jena}</version>
         <exclusions>
           <exclusion>
             <groupId>org.slf4j</groupId>
@@ -140,25 +141,9 @@
       </dependency>
       <dependency>
         <groupId>org.apache.jena</groupId>
-        <artifactId>jena-iri</artifactId>
-        <version>${jena.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.jena</groupId>
-        <artifactId>jena-arq</artifactId>
-        <version>${jena.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-          </exclusion>
-        </exclusions>
+        <artifactId>apache-jena-libs</artifactId>
+        <version>${version.jena}</version>
+        <type>pom</type>
       </dependency>
       <dependency>
         <!--CQ 6779-->
