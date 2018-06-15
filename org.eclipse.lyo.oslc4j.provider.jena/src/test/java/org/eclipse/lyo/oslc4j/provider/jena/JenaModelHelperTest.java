@@ -1,4 +1,20 @@
-package org.eclipse.lyo.oslc4j.provider.jena;
+/*******************************************************************************
+ * Copyright (c) 2018 Andrew Berezovskyi and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * and Eclipse Distribution License v. 1.0 which accompanies this distribution.
+ *
+ * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
+ * and the Eclipse Distribution License is available at
+ * http://www.eclipse.org/org/documents/edl-v10.php.
+ *
+ * Contributors:
+ *
+ *     Ricardo Javier Herrera  -  snippets for the unit test
+ *     Andrew Berezovskyi      -  initial unit test implementation
+ *******************************************************************************/
+ package org.eclipse.lyo.oslc4j.provider.jena;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -19,9 +35,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.eclipse.lyo.oslc4j.provider.jena.helpers.JenaAssert.*;
 
 /**
- * Created on 2018-05-15
  *
- * @author Andrew Berezovskyi (andriib@kth.se)
  * @version $version-stub$
  * @since 2.4.0
  */
