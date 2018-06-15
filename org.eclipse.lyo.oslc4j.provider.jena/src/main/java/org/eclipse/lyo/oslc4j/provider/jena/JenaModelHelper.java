@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2014 IBM Corporation.
+ * Copyright (c) 2012-2018 IBM Corporation and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,12 +11,13 @@
  *
  * Contributors:
  *
- *	   Russell Boykin		- initial API and implementation
- *	   Alberto Giammaria	- initial API and implementation
- *	   Chris Peters			- initial API and implementation
- *	   Gianluca Bernardini	- initial API and implementation
- *	   Samuel Padgett		- oslc:totalCount should be a typed literal
- *	   Romain Barth			- unparseable literal
+ *	   Russell Boykin           -   initial API and implementation
+ *	   Alberto Giammaria        -   initial API and implementation
+ *	   Chris Peters             -   initial API and implementation
+ *	   Gianluca Bernardini      -   initial API and implementation
+ *	   Samuel Padgett		        -   oslc:totalCount should be a typed literal
+ *	   Romain Barth			        -   unparseable literal
+ *     Ricardo Javier Herrera   -   collection fixes
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.provider.jena;
 
