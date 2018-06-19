@@ -97,17 +97,7 @@ public abstract class AbstractOslcRdfXmlProvider
 										 final MediaType	 actualMediaType,
 										 final MediaType ... requiredMediaTypes)
 	{
-		if (type.getAnnotation(OslcResourceShape.class) != null ||
-			type.getAnnotation(OslcNotQueryResult.class) != null)
-		{
-			// We do not have annotations when running from the non-web client.
-			if (isCompatible(actualMediaType, requiredMediaTypes))
-			{
-				return true;
-			}
-		}
-
-		return false;
+		return true;
 	}
 
 	protected void writeTo(final Object[]						objects,
