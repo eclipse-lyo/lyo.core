@@ -13,10 +13,8 @@ import static org.junit.Assert.*;
 import static org.assertj.core.api.Assertions.*;
 
 /**
- * TBD
- *
  * @version $version-stub$
- * @since FIXME
+ * @since 2.4.0
  */
 public class ResourceShapeFactoryTest {
 
