@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.eclipse.lyo.oslc4j.feature_2.4.0.qualifier.jar" id="org.eclipse.lyo.oslc4j.feature" version="2.4.0.qualifier">
+      <category name="org.eclipse.lyo.oslc4j.category"/>
+   </feature>
+   <category-def name="org.eclipse.lyo.oslc4j.category" label="Lyo Plugins"/>
+</site>
