@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.lyo.oslc4j.feature"
+      id="core-osgi-feature"
       label="Lyo Plugins"
       version="2.4.0.qualifier"
       provider-name="Eclipse Lyo">
@@ -78,7 +78,7 @@ Java and all Java-based trademarks are trademarks of Oracle Corporation in the U
    </requires>
 
    <plugin
-         id="oslc4j-bundle"
+         id="core-osgi-bundle"
          download-size="0"
          install-size="0"
          version="0.0.0"
