@@ -38,6 +38,8 @@ import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcTitle;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @OslcNamespace(OslcConstants.OSLC_CORE_NAMESPACE)
 @OslcResourceShape(title = "OSLC Service Provider Catalog Resource Shape", describes = OslcConstants.TYPE_SERVICE_PROVIDER_CATALOG)
@@ -59,7 +61,7 @@ public class ServiceProviderCatalog extends AbstractResource {
 		this.domains.add(domain);
 	}
 
-	public void addDomains(final Collection<URI> domains) {
+	public void addDomains(@NotNull final Collection<URI> domains) {
 		for (final URI domain : domains) {
 			addDomain(domain);
 		}
@@ -78,7 +80,8 @@ public class ServiceProviderCatalog extends AbstractResource {
 		return description;
 	}
 
-	@OslcDescription("URIs of the OSLC domain specifications that may be implemented by referenced services")
+	@NotNull
+    @OslcDescription("URIs of the OSLC domain specifications that may be implemented by referenced services")
 	@OslcName("domain")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "domain")
 	@OslcReadOnly
@@ -111,7 +114,8 @@ public class ServiceProviderCatalog extends AbstractResource {
 		return publisher;
 	}
 
-	@OslcDescription("Additional service provider catalogs")
+	@NotNull
+    @OslcDescription("Additional service provider catalogs")
 	@OslcName("serviceProviderCatalog")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "serviceProviderCatalog")
 	@OslcRange(OslcConstants.TYPE_SERVICE_PROVIDER_CATALOG)
@@ -122,7 +126,8 @@ public class ServiceProviderCatalog extends AbstractResource {
 		return referencedServiceProviderCatalogs.toArray(new URI[referencedServiceProviderCatalogs.size()]);
 	}
 
-	@OslcDescription("Service providers")
+	@NotNull
+    @OslcDescription("Service providers")
 	@OslcName("serviceProvider")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "serviceProvider")
 	@OslcRange(OslcConstants.TYPE_SERVICE_PROVIDER)
@@ -148,7 +153,7 @@ public class ServiceProviderCatalog extends AbstractResource {
 		domains.remove(domain);
 	}
 
-	public void removeDomains(final Collection<URI> domains) {
+	public void removeDomains(@NotNull final Collection<URI> domains) {
 		for (final URI domain : domains) {
 			removeDomain(domain);
 		}
@@ -162,7 +167,7 @@ public class ServiceProviderCatalog extends AbstractResource {
 		this.description = description;
 	}
 
-	public void setDomains(final URI[] domains) {
+	public void setDomains(@Nullable final URI[] domains) {
 		this.domains.clear();
 		if (domains != null) {
 			this.domains.addAll(Arrays.asList(domains));
@@ -177,14 +182,14 @@ public class ServiceProviderCatalog extends AbstractResource {
 		this.publisher = publisher;
 	}
 
-	public void setReferencedServiceProviderCatalogs(final URI[] referencedServiceProviderCatalogs) {
+	public void setReferencedServiceProviderCatalogs(@Nullable final URI[] referencedServiceProviderCatalogs) {
 		this.referencedServiceProviderCatalogs.clear();
 		if (referencedServiceProviderCatalogs != null) {
 			this.referencedServiceProviderCatalogs.addAll(Arrays.asList(referencedServiceProviderCatalogs));
 		}
 	}
 
-	public void setServiceProviders(final ServiceProvider[] serviceProviders) {
+	public void setServiceProviders(@Nullable final ServiceProvider[] serviceProviders) {
 		this.serviceProviders.clear();
 		if (serviceProviders != null) {
 			this.serviceProviders.addAll(Arrays.asList(serviceProviders));

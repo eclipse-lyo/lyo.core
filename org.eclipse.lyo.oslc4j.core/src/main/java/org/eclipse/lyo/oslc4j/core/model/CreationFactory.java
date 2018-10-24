@@ -35,6 +35,8 @@ import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcTitle;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @OslcNamespace(OslcConstants.OSLC_CORE_NAMESPACE)
 @OslcResourceShape(title = "OSLC Creation Factory Resource Shape", describes = OslcConstants.TYPE_CREATION_FACTORY)
@@ -87,7 +89,8 @@ public class CreationFactory extends AbstractResource {
 		return label;
 	}
 
-	@OslcDescription("A creation factory may provide resource shapes that describe shapes of resources that may be created")
+	@NotNull
+    @OslcDescription("A creation factory may provide resource shapes that describe shapes of resources that may be created")
 	@OslcName("resourceShape")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "resourceShape")
 	@OslcRange(OslcConstants.TYPE_RESOURCE_SHAPE)
@@ -98,7 +101,8 @@ public class CreationFactory extends AbstractResource {
 		return resourceShapes.toArray(new URI[resourceShapes.size()]);
 	}
 
-	@OslcDescription("The expected resource type URI of the resource that will be created using this creation factory. These would be the URIs found in the result resource's rdf:type property")
+	@NotNull
+    @OslcDescription("The expected resource type URI of the resource that will be created using this creation factory. These would be the URIs found in the result resource's rdf:type property")
 	@OslcName("resourceType")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "resourceType")
 	@OslcReadOnly
@@ -117,7 +121,8 @@ public class CreationFactory extends AbstractResource {
 		return title;
 	}
 
-	@OslcDescription("An identifier URI for the domain specified usage of this creation factory. If a service provides multiple creation factories, it may designate the primary or default one that should be used with a property value of http://open-services.net/ns/core#default")
+	@NotNull
+    @OslcDescription("An identifier URI for the domain specified usage of this creation factory. If a service provides multiple creation factories, it may designate the primary or default one that should be used with a property value of http://open-services.net/ns/core#default")
 	@OslcName("usage")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "usage")
 	@OslcReadOnly
@@ -134,14 +139,14 @@ public class CreationFactory extends AbstractResource {
 		this.label = label;
 	}
 
-	public void setResourceShapes(final URI[] resourceShapes) {
+	public void setResourceShapes(@Nullable final URI[] resourceShapes) {
 		this.resourceShapes.clear();
 		if (resourceShapes != null) {
 			this.resourceShapes.addAll(Arrays.asList(resourceShapes));
 		}
 	}
 
-	public void setResourceTypes(final URI[] resourceTypes) {
+	public void setResourceTypes(@Nullable final URI[] resourceTypes) {
 		this.resourceTypes.clear();
 		if (resourceTypes != null) {
 			this.resourceTypes.addAll(Arrays.asList(resourceTypes));
@@ -152,7 +157,7 @@ public class CreationFactory extends AbstractResource {
 		this.title = title;
 	}
 
-	public void setUsages(final URI[] usages) {
+	public void setUsages(@Nullable final URI[] usages) {
 		this.usages.clear();
 		if (usages != null) {
 			this.usages.addAll(Arrays.asList(usages));

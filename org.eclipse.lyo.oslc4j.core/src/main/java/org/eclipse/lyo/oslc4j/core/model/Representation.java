@@ -19,6 +19,7 @@
 package org.eclipse.lyo.oslc4j.core.model;
 
 import java.net.URI;
+import org.jetbrains.annotations.Nullable;
 
 public enum Representation {
 	Reference(OslcConstants.OSLC_CORE_NAMESPACE + "Reference"),
@@ -46,7 +47,8 @@ public enum Representation {
 		return null;
 	}
 
-	public static Representation fromURI(final URI uri) {
+	@Nullable
+    public static Representation fromURI(final URI uri) {
 		return fromString(uri.toString());
 	}
 }

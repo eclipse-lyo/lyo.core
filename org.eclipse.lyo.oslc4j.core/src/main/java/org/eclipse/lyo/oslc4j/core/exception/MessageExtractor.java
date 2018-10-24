@@ -23,6 +23,8 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,26 +33,27 @@ public class MessageExtractor {
 	private final static Logger log = LoggerFactory.getLogger(MessageExtractor.class);
 	private static final String CLASS = MessageExtractor.class.getName();
 	private static final String BUNDLE_NAME = "messages/oslc4jcore";
-	private static ResourceBundle bundle = null;
+	@Nullable private static ResourceBundle bundle = null;
 
 	private MessageExtractor(){
 	}
 
-	private static synchronized ResourceBundle getMessageBundle(final Locale locale){
+	@Nullable
+    private static synchronized ResourceBundle getMessageBundle(@NotNull final Locale locale){
 		if(bundle == null) {
 			bundle = ResourceBundle.getBundle(BUNDLE_NAME, locale);
 		}
 		return bundle;
 	}
 
-	private static String getString(final Locale locale, final String key, final Object[] args ) {
+	private static String getString(@NotNull final Locale locale, @NotNull final String key, final Object[] args ) {
 		final ResourceBundle messages = getMessageBundle(locale);
 
 		if (messages != null) {
 			try {
 				final String message = messages.getString( key );
 				return formatMessage(locale, message, args);
-			} catch ( final MissingResourceException missingResourceException ) {
+			} catch ( @NotNull final MissingResourceException missingResourceException ) {
 				log.error("Resource {} is missing", key, missingResourceException);
 				return "???" + key + "???";
 			}
@@ -61,24 +64,24 @@ public class MessageExtractor {
 		return "???" + key + "???";
 	}
 
-	private static String formatMessage(final Locale locale, final String message, final Object[] args) {
+	private static String formatMessage(final Locale locale, @NotNull final String message, final Object[] args) {
 		final String fixedMessage = FixMessageFormat.fixPattern(message);
 		return new MessageFormat(fixedMessage, locale).format(args);
 	}
 
-	public static String getMessage(final Locale locale, final String key, final Object[] params){
+	public static String getMessage(@NotNull final Locale locale, @NotNull final String key, final Object[] params){
 		return getString(locale, key, params);
 	}
 
-	public static String getMessage(final Locale locale, final String key){
+	public static String getMessage(@NotNull final Locale locale, @NotNull final String key){
 		return getMessage(locale, key, null);
 	}
 
-	public static String getMessage(final String key){
+	public static String getMessage(@NotNull final String key){
 		return getMessage(key, null);
 	}
 
-	public static String getMessage(final String key, final Object[] params){
+	public static String getMessage(@NotNull final String key, final Object[] params){
 		return getMessage(Locale.getDefault(), key, params);
 	}
 }

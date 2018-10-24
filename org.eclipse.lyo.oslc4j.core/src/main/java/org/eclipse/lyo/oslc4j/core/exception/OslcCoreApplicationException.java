@@ -18,17 +18,19 @@
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.core.exception;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Base class for all application exceptions.
  */
 public abstract class OslcCoreApplicationException extends Exception {
 	private static final long serialVersionUID = -5933150329026674184L;
 
-	public OslcCoreApplicationException(final String messageKey, final Object[] args) {
+	public OslcCoreApplicationException(@NotNull final String messageKey, final Object[] args) {
 		super(MessageExtractor.getMessage(messageKey, args));
 	}
 
-	public OslcCoreApplicationException(final String messageKey, final Object[] args, final Throwable t) {
+	public OslcCoreApplicationException(@NotNull final String messageKey, final Object[] args, final Throwable t) {
 		super(MessageExtractor.getMessage(messageKey, args), t);
 	}
 }

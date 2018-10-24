@@ -24,6 +24,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.jetbrains.annotations.NotNull;
 
 @Documented
 @Target(ElementType.METHOD)
@@ -32,35 +33,35 @@ public @interface OslcDialog {
 	/**
 	 * Title string that could be used for display
 	 */
-	String title();
+    @NotNull String title();
 
 	/**
 	 * Very short label for use in menu items
 	 */
-	String label() default "";
+    @NotNull String label() default "";
 
 	/**
 	 * The URI of the dialog
 	 */
-	String uri();
+    @NotNull String uri();
 
 	/**
 	 * Values MUST be expressed in relative length units.  Em and ex units are interpreted relative to the default system font (at 100% size).
 	 */
-	String hintWidth() default "";
+    @NotNull String hintWidth() default "";
 
 	/**
 	 * Values MUST be expressed in relative length units.  Em and ex units are interpreted relative to the default system font (at 100% size).
 	 */
-	String hintHeight() default "";
+    @NotNull String hintHeight() default "";
 
 	/**
 	 * Resource types
 	 */
-	String[] resourceTypes() default {};
+    @NotNull String[] resourceTypes() default {};
 
 	/**
 	 * Usages
 	 */
-	String[] usages() default {};
+    @NotNull String[] usages() default {};
 }

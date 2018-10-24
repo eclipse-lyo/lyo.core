@@ -33,6 +33,8 @@ import org.eclipse.lyo.oslc4j.core.annotation.OslcReadOnly;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcTitle;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @OslcNamespace(OslcConstants.OSLC_CORE_NAMESPACE)
 @OslcResourceShape(title = "OSLC Dialog Resource Shape", describes = OslcConstants.TYPE_DIALOG)
@@ -98,7 +100,8 @@ public class Dialog extends AbstractResource {
 		return label;
 	}
 
-	@OslcDescription("The expected resource type URI for the resources that will be returned when using this dialog. These would be the URIs found in the result resource's rdf:type property")
+	@NotNull
+    @OslcDescription("The expected resource type URI for the resources that will be returned when using this dialog. These would be the URIs found in the result resource's rdf:type property")
 	@OslcName("resourceType")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "resourceType")
 	@OslcReadOnly
@@ -117,7 +120,8 @@ public class Dialog extends AbstractResource {
 		return title;
 	}
 
-	@OslcDescription("An identifier URI for the domain specified usage of this dialog. If a service provides multiple selection or creation dialogs, it may designate the primary or default one that should be used with a property value of http://open-services/ns/core#default")
+	@NotNull
+    @OslcDescription("An identifier URI for the domain specified usage of this dialog. If a service provides multiple selection or creation dialogs, it may designate the primary or default one that should be used with a property value of http://open-services/ns/core#default")
 	@OslcName("usage")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "usage")
 	@OslcReadOnly
@@ -142,7 +146,7 @@ public class Dialog extends AbstractResource {
 		this.label = label;
 	}
 
-	public void setResourceTypes(final URI[] resourceTypes) {
+	public void setResourceTypes(@Nullable final URI[] resourceTypes) {
 		this.resourceTypes.clear();
 		if (resourceTypes != null) {
 			this.resourceTypes.addAll(Arrays.asList(resourceTypes));
@@ -153,7 +157,7 @@ public class Dialog extends AbstractResource {
 		this.title = title;
 	}
 
-	public void setUsages(final URI[] usages) {
+	public void setUsages(@Nullable final URI[] usages) {
 		this.usages.clear();
 		if (usages != null) {
 			this.usages.addAll(Arrays.asList(usages));

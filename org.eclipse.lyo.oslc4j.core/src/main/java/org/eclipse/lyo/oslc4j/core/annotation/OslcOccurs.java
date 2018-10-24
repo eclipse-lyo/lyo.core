@@ -26,6 +26,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.eclipse.lyo.oslc4j.core.model.Occurs;
+import org.jetbrains.annotations.NotNull;
 
 @Documented
 @Target(ElementType.METHOD)
@@ -34,5 +35,5 @@ public @interface OslcOccurs {
 	/**
 	 * Occurs of property.
 	 */
-	Occurs value();
+    @NotNull Occurs value();
 }

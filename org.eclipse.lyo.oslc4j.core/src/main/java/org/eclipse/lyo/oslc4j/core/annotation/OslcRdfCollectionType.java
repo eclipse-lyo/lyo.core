@@ -23,6 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.eclipse.lyo.oslc4j.core.model.OslcConstants;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Indicate which RDF: collection type should be used for representing
@@ -41,10 +42,10 @@ public @interface OslcRdfCollectionType
 	/**
 	 * Namespace URI.
 	 */
-	String namespaceURI() default OslcConstants.RDF_NAMESPACE;
+    @NotNull String namespaceURI() default OslcConstants.RDF_NAMESPACE;
 
 	/**
 	 * Prefix for the namespace.
 	 */
-	String collectionType() default "List";
+    @NotNull String collectionType() default "List";
 }

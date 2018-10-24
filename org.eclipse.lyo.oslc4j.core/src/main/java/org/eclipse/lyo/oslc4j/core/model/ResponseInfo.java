@@ -18,6 +18,7 @@ package org.eclipse.lyo.oslc4j.core.model;
 
 import java.net.URI;
 import java.util.Map;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Wrapper for a collection or resources returned from an HTTP GET
@@ -46,7 +47,7 @@ public abstract class ResponseInfo<T extends Object>
 		T resource,
 		Map<String, Object> properties,
 		Integer totalCount,
-		URI nextPage
+		@Nullable URI nextPage
 	)
 	{
 		this(resource, properties, totalCount,

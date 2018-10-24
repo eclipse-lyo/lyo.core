@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.core.model;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * A special value type that can be added to an extended properties map of an
  * {@link IExtendedResource} to indicate the value is an XMLLiteral rather than
@@ -58,7 +60,7 @@ public class XMLLiteral
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(@Nullable Object obj) {
 		if (this == obj)
 		{
 			return true;

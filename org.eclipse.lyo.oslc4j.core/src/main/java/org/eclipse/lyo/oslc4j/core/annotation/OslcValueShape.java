@@ -24,6 +24,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.jetbrains.annotations.NotNull;
 
 @Documented
 @Target(ElementType.METHOD)
@@ -33,5 +34,5 @@ public @interface OslcValueShape {
 	 * If the value-type is a resource type, then Property MAY provide a shape value
 	 * to indicate the Resource Shape that applies to the resource.
 	 */
-	String value();
+    @NotNull String value();
 }

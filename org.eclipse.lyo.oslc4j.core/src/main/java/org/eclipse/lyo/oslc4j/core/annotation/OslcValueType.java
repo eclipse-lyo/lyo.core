@@ -26,6 +26,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.eclipse.lyo.oslc4j.core.model.ValueType;
+import org.jetbrains.annotations.NotNull;
 
 @Documented
 @Target(ElementType.METHOD)
@@ -34,5 +35,5 @@ public @interface OslcValueType {
 	/**
 	 * Value-type of the property.
 	 */
-	ValueType value();
+    @NotNull ValueType value();
 }

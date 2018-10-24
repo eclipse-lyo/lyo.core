@@ -28,6 +28,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.lyo.oslc4j.core.annotation.OslcNamespace;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
+import org.jetbrains.annotations.NotNull;
 
 @OslcNamespace(OslcConstants.OSLC_CORE_NAMESPACE)
 @OslcResourceShape(title = "OSLC Allowed Values Resource Shape",
@@ -40,6 +41,7 @@ public final class AllowedValues extends AbstractResource {
         super();
     }
 
+    @NotNull
     public Collection<?> getValues() {
         Object o = getExtendedProperties().get(PROPERTY_ALLOWED_VALUE);
         if (o == null) {

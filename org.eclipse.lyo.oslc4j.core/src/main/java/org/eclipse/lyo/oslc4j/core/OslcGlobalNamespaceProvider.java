@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.lyo.oslc4j.core.annotation.OslcSchema;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Defines the global namespace prefix mappings.
@@ -38,7 +39,7 @@ public class OslcGlobalNamespaceProvider {
 
 	private static OslcGlobalNamespaceProvider instance;
 	
-	private Map<String, String> prefixDefinitionMap;
+	@Nullable private Map<String, String> prefixDefinitionMap;
 	
 	/**
 	 * Private construct for singleton pattern.
@@ -75,7 +76,8 @@ public class OslcGlobalNamespaceProvider {
 	 * @return empty hash map instance if there are no global
 	 *	namespace mappings.
 	 */
-	public Map<String, String> getPrefixDefinitionMap() 
+	@Nullable
+    public Map<String, String> getPrefixDefinitionMap()
 	{
 		return prefixDefinitionMap;
 	}
@@ -86,7 +88,7 @@ public class OslcGlobalNamespaceProvider {
 	 * 
 	 * @param prefixDefinitionMap that will replace the current.
 	 */
-	public void setPrefixDefinitionMap(Map<String, String> prefixDefinitionMap) 
+	public void setPrefixDefinitionMap(@Nullable Map<String, String> prefixDefinitionMap)
 	{
 		if(null == prefixDefinitionMap) 
 		{

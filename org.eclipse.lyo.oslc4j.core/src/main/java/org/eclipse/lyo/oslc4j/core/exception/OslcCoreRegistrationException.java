@@ -19,6 +19,7 @@
 package org.eclipse.lyo.oslc4j.core.exception;
 
 import org.eclipse.lyo.oslc4j.core.model.ServiceProvider;
+import org.jetbrains.annotations.NotNull;
 
 public final class OslcCoreRegistrationException extends OslcCoreApplicationException {
 	private static final long serialVersionUID = 2094758752309893978L;
@@ -26,7 +27,7 @@ public final class OslcCoreRegistrationException extends OslcCoreApplicationExce
 	private static final String MESSAGE_KEY = "RegistrationException";
 
 	private final String		  responseMessage;
-	private final ServiceProvider serviceProvider;
+	@NotNull private final ServiceProvider serviceProvider;
 	private final int			  statusCode;
 
 	public OslcCoreRegistrationException(final ServiceProvider serviceProvider, final int statusCode, final String responseMessage) {
@@ -41,7 +42,8 @@ public final class OslcCoreRegistrationException extends OslcCoreApplicationExce
 		return responseMessage;
 	}
 
-	public ServiceProvider getServiceProvider() {
+	@NotNull
+    public ServiceProvider getServiceProvider() {
 		return serviceProvider;
 	}
 

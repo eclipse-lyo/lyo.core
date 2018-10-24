@@ -23,6 +23,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.jetbrains.annotations.NotNull;
 
 @Documented
 @Target({}) // Only used within OslcSchema
@@ -31,10 +32,10 @@ public @interface OslcNamespaceDefinition {
 	/**
 	 * Namespace URI.
 	 */
-	String namespaceURI();
+    @NotNull String namespaceURI();
 
 	/**
 	 * Prefix for the namespace.
 	 */
-	String prefix();
+    @NotNull String prefix();
 }

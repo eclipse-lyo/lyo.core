@@ -19,6 +19,7 @@
 package org.eclipse.lyo.oslc4j.core.exception;
 
 import java.net.URI;
+import org.jetbrains.annotations.NotNull;
 
 public final class OslcCoreDeregistrationException extends OslcCoreApplicationException {
 	private static final long serialVersionUID = 2969548886287595367L;
@@ -26,7 +27,7 @@ public final class OslcCoreDeregistrationException extends OslcCoreApplicationEx
 	private static final String MESSAGE_KEY = "DeregistrationException";
 
 	private final String responseMessage;
-	private final URI	 serviceProviderURI;
+	@NotNull private final URI	 serviceProviderURI;
 	private final int	 statusCode;
 
 	public OslcCoreDeregistrationException(final URI serviceProviderURI, final int statusCode, final String responseMessage) {
@@ -41,7 +42,8 @@ public final class OslcCoreDeregistrationException extends OslcCoreApplicationEx
 		return responseMessage;
 	}
 
-	public URI getServiceProviderURI() {
+	@NotNull
+    public URI getServiceProviderURI() {
 		return serviceProviderURI;
 	}
 

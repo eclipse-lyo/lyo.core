@@ -20,6 +20,7 @@ package org.eclipse.lyo.oslc4j.core.model;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import org.jetbrains.annotations.NotNull;
 
 public final class InheritedMethodAnnotationHelper
 {
@@ -29,7 +30,7 @@ public final class InheritedMethodAnnotationHelper
 	}
 	
 	public static <T extends Annotation> T getAnnotation(final Method	method,
-														 final Class<T> annotationClass)
+														 @NotNull final Class<T> annotationClass)
 	{
 		// First, try method for annotation
 
@@ -60,7 +61,7 @@ public final class InheritedMethodAnnotationHelper
 					return superClassMethodAnnotation;
 				}
 			}
-			catch (final Exception exception)
+			catch (@NotNull final Exception exception)
 			{
 				// Ignore and fall through to code below
 			}
@@ -95,9 +96,9 @@ public final class InheritedMethodAnnotationHelper
 		return null;
 	}
 
-	private static <T extends Annotation> T getRecursiveInterfaceMethodAnnotation(final Class<?> interfac,
-																				  final Method	 method,
-																				  final Class<T> annotationClass)
+	private static <T extends Annotation> T getRecursiveInterfaceMethodAnnotation(@NotNull final Class<?> interfac,
+																				  @NotNull final Method	 method,
+																				  @NotNull final Class<T> annotationClass)
 	{
 		try
 		{
@@ -111,7 +112,7 @@ public final class InheritedMethodAnnotationHelper
 				return interfaceMethodAnnotation;
 			}
 		}
-		catch (final Exception exception)
+		catch (@NotNull final Exception exception)
 		{
 			// Ignore and fall through to code below
 		}

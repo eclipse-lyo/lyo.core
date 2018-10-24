@@ -19,6 +19,7 @@
 package org.eclipse.lyo.oslc4j.core.model;
 
 import java.net.URI;
+import org.jetbrains.annotations.Nullable;
 
 public enum ValueType {
 	Boolean(OslcConstants.XML_NAMESPACE + "boolean"),
@@ -55,7 +56,8 @@ public enum ValueType {
 		return null;
 	}
 
-	public static ValueType fromURI(final URI uri) {
+	@Nullable
+    public static ValueType fromURI(final URI uri) {
 		return fromString(uri.toString());
 	}
 }

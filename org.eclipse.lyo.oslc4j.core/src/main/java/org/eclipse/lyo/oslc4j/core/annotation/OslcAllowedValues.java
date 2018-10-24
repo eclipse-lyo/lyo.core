@@ -24,6 +24,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.jetbrains.annotations.NotNull;
 
 @Documented
 @Target(ElementType.METHOD)
@@ -32,5 +33,5 @@ public @interface OslcAllowedValues {
 	/**
 	 * Specify how the resource will be represented (for properties with a resource value-type).
 	 */
-	String value();
+    @NotNull String value();
 }

@@ -18,13 +18,15 @@
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.core.exception;
 
+import org.jetbrains.annotations.NotNull;
+
 public final class OslcCoreMissingAnnotationException extends OslcCoreApplicationException {
 	private static final long serialVersionUID = 247462012895583998L;
 
 	private static final String MESSAGE_KEY = "MissingAnnotationException";
 
-	private final Class<?> annotationClass;
-	private final Class<?> resourceClass;
+	@NotNull private final Class<?> annotationClass;
+	@NotNull private final Class<?> resourceClass;
 
 	public OslcCoreMissingAnnotationException(final Class<?> resourceClass, final Class<?> annotationClass) {
 		super(MESSAGE_KEY, new Object[] {resourceClass.getName(), annotationClass.getName()});
@@ -33,11 +35,13 @@ public final class OslcCoreMissingAnnotationException extends OslcCoreApplicatio
 		this.resourceClass	 = resourceClass;
 	}
 
-	public Class<?> getAnnotationClass() {
+	@NotNull
+    public Class<?> getAnnotationClass() {
 		return annotationClass;
 	}
 
-	public Class<?> getResourceClass() {
+	@NotNull
+    public Class<?> getResourceClass() {
 		return resourceClass;
 	}
 }

@@ -38,6 +38,8 @@ import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcTitle;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @OslcNamespace(OslcConstants.OSLC_CORE_NAMESPACE)
 @OslcResourceShape(title = "OSLC Service Provider Resource Shape", describes = OslcConstants.TYPE_SERVICE_PROVIDER)
@@ -78,7 +80,8 @@ public class ServiceProvider extends AbstractResource{
 		return description;
 	}
 
-	@OslcDescription("URLs that may be used to retrieve web pages to determine additional details about the service provider")
+	@NotNull
+    @OslcDescription("URLs that may be used to retrieve web pages to determine additional details about the service provider")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "details")
 	@OslcReadOnly
 	@OslcTitle("Details")
@@ -106,7 +109,8 @@ public class ServiceProvider extends AbstractResource{
 		return oauthConfiguration;
 	}
 
-	@OslcDescription("Defines namespace prefixes for use in JSON representations and in forming OSLC Query Syntax strings")
+	@NotNull
+    @OslcDescription("Defines namespace prefixes for use in JSON representations and in forming OSLC Query Syntax strings")
 	@OslcName("prefixDefinition")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "prefixDefinition")
 	@OslcRange(OslcConstants.TYPE_PREFIX_DEFINITION)
@@ -131,7 +135,8 @@ public class ServiceProvider extends AbstractResource{
 		return publisher;
 	}
 
-	@OslcDescription("Describes services offered by the service provider")
+	@NotNull
+    @OslcDescription("Describes services offered by the service provider")
 	@OslcName("service")
 	@OslcOccurs(Occurs.OneOrMany)
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "service")
@@ -162,7 +167,7 @@ public class ServiceProvider extends AbstractResource{
 		this.description = description;
 	}
 
-	public void setDetails(final URI[] details) {
+	public void setDetails(@Nullable final URI[] details) {
 		this.details.clear();
 		if (details != null) {
 			this.details.addAll(Arrays.asList(details));
@@ -177,7 +182,7 @@ public class ServiceProvider extends AbstractResource{
 		this.oauthConfiguration = oauthConfiguration;
 	}
 
-	public void setPrefixDefinitions(final PrefixDefinition[] prefixDefinitions) {
+	public void setPrefixDefinitions(@Nullable final PrefixDefinition[] prefixDefinitions) {
 		this.prefixDefinitions.clear();
 		if (prefixDefinitions != null) {
 			this.prefixDefinitions.addAll(Arrays.asList(prefixDefinitions));
@@ -188,7 +193,7 @@ public class ServiceProvider extends AbstractResource{
 		this.publisher = publisher;
 	}
 
-	public void setServices(final Service[] services) {
+	public void setServices(@Nullable final Service[] services) {
 		this.services.clear();
 		if (services != null) {
 			this.services.addAll(Arrays.asList(services));

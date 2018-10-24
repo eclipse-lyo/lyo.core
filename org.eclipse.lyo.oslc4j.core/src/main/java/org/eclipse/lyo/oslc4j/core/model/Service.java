@@ -37,6 +37,8 @@ import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcTitle;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @OslcNamespace(OslcConstants.OSLC_CORE_NAMESPACE)
 @OslcResourceShape(title = "OSLC Service Resource Shape", describes = OslcConstants.TYPE_SERVICE)
@@ -75,7 +77,8 @@ public class Service extends AbstractResource {
 		this.selectionDialogs.add(dialog);
 	}
 
-	@OslcDescription("Enables clients to create a resource via UI")
+	@NotNull
+    @OslcDescription("Enables clients to create a resource via UI")
 	@OslcName("creationDialog")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "creationDialog")
 	@OslcRange(OslcConstants.TYPE_DIALOG)
@@ -88,7 +91,8 @@ public class Service extends AbstractResource {
 		return creationDialogs.toArray(new Dialog[creationDialogs.size()]);
 	}
 
-	@OslcDescription("Enables clients to create new resources")
+	@NotNull
+    @OslcDescription("Enables clients to create new resources")
 	@OslcName("creationFactory")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "creationFactory")
 	@OslcRange(OslcConstants.TYPE_CREATION_FACTORY)
@@ -110,7 +114,8 @@ public class Service extends AbstractResource {
 		return domain;
 	}
 
-	@OslcDescription("Enables clients query across a collection of resources")
+	@NotNull
+    @OslcDescription("Enables clients query across a collection of resources")
 	@OslcName("queryCapability")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "queryCapability")
 	@OslcRange(OslcConstants.TYPE_QUERY_CAPABILITY)
@@ -123,7 +128,8 @@ public class Service extends AbstractResource {
 		return queryCapabilities.toArray(new QueryCapability[queryCapabilities.size()]);
 	}
 
-	@OslcDescription("Enables clients to select a resource via UI")
+	@NotNull
+    @OslcDescription("Enables clients to select a resource via UI")
 	@OslcName("selectionDialog")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "selectionDialog")
 	@OslcRange(OslcConstants.TYPE_DIALOG)
@@ -136,7 +142,8 @@ public class Service extends AbstractResource {
 		return selectionDialogs.toArray(new Dialog[selectionDialogs.size()]);
 	}
 
-	@OslcDescription("An identifier URI for the domain specified usage of this service")
+	@NotNull
+    @OslcDescription("An identifier URI for the domain specified usage of this service")
 	@OslcName("usage")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "usage")
 	@OslcReadOnly
@@ -148,14 +155,14 @@ public class Service extends AbstractResource {
 		return usages.toArray(new URI[usages.size()]);
 	}
 
-	public void setCreationDialogs(final Dialog[] creationDialogs) {
+	public void setCreationDialogs(@Nullable final Dialog[] creationDialogs) {
 		this.creationDialogs.clear();
 		if (creationDialogs != null) {
 			this.creationDialogs.addAll(Arrays.asList(creationDialogs));
 		}
 	}
 
-	public void setCreationFactories(final CreationFactory[] creationFactories) {
+	public void setCreationFactories(@Nullable final CreationFactory[] creationFactories) {
 		this.creationFactories.clear();
 		if (creationFactories != null) {
 			this.creationFactories.addAll(Arrays.asList(creationFactories));
@@ -166,21 +173,21 @@ public class Service extends AbstractResource {
 		this.domain = domain;
 	}
 
-	public void setQueryCapabilities(final QueryCapability[] queryCapabilities) {
+	public void setQueryCapabilities(@Nullable final QueryCapability[] queryCapabilities) {
 		this.queryCapabilities.clear();
 		if (queryCapabilities != null) {
 			this.queryCapabilities.addAll(Arrays.asList(queryCapabilities));
 		}
 	}
 
-	public void setSelectionDialogs(final Dialog[] selectionDialogs) {
+	public void setSelectionDialogs(@Nullable final Dialog[] selectionDialogs) {
 		this.selectionDialogs.clear();
 		if (selectionDialogs != null) {
 			this.selectionDialogs.addAll(Arrays.asList(selectionDialogs));
 		}
 	}
 
-	public void setUsages(final URI[] usages) {
+	public void setUsages(@Nullable final URI[] usages) {
 		this.usages.clear();
 		if (usages != null) {
 			this.usages.addAll(Arrays.asList(usages));

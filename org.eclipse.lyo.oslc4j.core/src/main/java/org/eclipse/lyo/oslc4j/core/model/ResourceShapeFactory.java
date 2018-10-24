@@ -62,6 +62,7 @@ import org.eclipse.lyo.oslc4j.core.exception.OslcCoreInvalidRepresentationExcept
 import org.eclipse.lyo.oslc4j.core.exception.OslcCoreInvalidValueTypeException;
 import org.eclipse.lyo.oslc4j.core.exception.OslcCoreMissingAnnotationException;
 import org.eclipse.lyo.oslc4j.core.exception.OslcCoreMissingSetMethodException;
+import org.jetbrains.annotations.NotNull;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class ResourceShapeFactory {
@@ -102,10 +103,11 @@ public class ResourceShapeFactory {
 		super();
 	}
 
+	@NotNull
 	public static ResourceShape createResourceShape(final String baseURI,
 													final String resourceShapesPath,
 													final String resourceShapePath,
-													final Class<?> resourceClass)
+													@NotNull final Class<?> resourceClass)
 		   throws OslcCoreApplicationException, URISyntaxException {
 		final HashSet<Class<?>> verifiedClasses = new HashSet<Class<?>>();
 		verifiedClasses.add(resourceClass);
@@ -113,11 +115,12 @@ public class ResourceShapeFactory {
 		return createResourceShape(baseURI, resourceShapesPath, resourceShapePath, resourceClass, verifiedClasses);
 	}
 
+	@NotNull
 	private static ResourceShape createResourceShape(final String baseURI,
 													final String resourceShapesPath,
 													final String resourceShapePath,
 													final Class<?> resourceClass,
-													final Set<Class<?>> verifiedClasses)
+													@NotNull final Set<Class<?>> verifiedClasses)
 		   throws OslcCoreApplicationException, URISyntaxException {
 		final OslcResourceShape resourceShapeAnnotation = resourceClass.getAnnotation(OslcResourceShape.class);
 		if (resourceShapeAnnotation == null) {
@@ -165,8 +168,11 @@ public class ResourceShapeFactory {
 		return resourceShape;
 	}
 
+	@NotNull
 	@SuppressWarnings("rawtypes") // supress warning when casting Arrays.asList() to a Collection
-	private static Property createProperty(final String baseURI, final Class<?> resourceClass, final Method method, final OslcPropertyDefinition propertyDefinitionAnnotation, final Set<Class<?>> verifiedClasses) throws OslcCoreApplicationException, URISyntaxException {
+	private static Property createProperty(final String baseURI, @NotNull final Class<?> resourceClass, @NotNull
+	final Method method, @NotNull
+	final OslcPropertyDefinition propertyDefinitionAnnotation, @NotNull final Set<Class<?>> verifiedClasses) throws OslcCoreApplicationException, URISyntaxException {
 		final String name;
 		final OslcName nameAnnotation = InheritedMethodAnnotationHelper.getAnnotation(method, OslcName.class);
 		if (nameAnnotation != null) {
@@ -307,6 +313,7 @@ public class ResourceShapeFactory {
 		return property;
 	}
 
+	@NotNull
 	protected static String getDefaultPropertyName(final Method method) {
 		final String methodName	   = method.getName();
 		final int	 startingIndex = methodName.startsWith(METHOD_NAME_START_GET) ? METHOD_NAME_START_GET_LENGTH : METHOD_NAME_START_IS_LENGTH;
@@ -321,7 +328,8 @@ public class ResourceShapeFactory {
 		return lowercasedFirstCharacter + methodName.substring(endingIndex);
 	}
 
-	private static ValueType getDefaultValueType(final Class<?> resourceClass, final Method method, final Class<?> componentType) throws OslcCoreApplicationException {
+	private static ValueType getDefaultValueType(
+			@NotNull final Class<?> resourceClass, @NotNull final Method method, @NotNull final Class<?> componentType) throws OslcCoreApplicationException {
 		final ValueType valueType = CLASS_TO_VALUE_TYPE.get(componentType);
 		if (valueType == null) {
 			throw new OslcCoreInvalidPropertyTypeException(resourceClass, method, componentType);
@@ -336,6 +344,7 @@ public class ResourceShapeFactory {
 		return null;
 	}
 
+	@NotNull
 	private static Occurs getDefaultOccurs(final Class<?> type) {
 		if ((type.isArray()) ||
 			(Collection.class.isAssignableFrom(type))) {
@@ -344,7 +353,7 @@ public class ResourceShapeFactory {
 		return Occurs.ZeroOrOne;
 	}
 
-	protected static Class<?> getComponentType(final Class<?> resourceClass, final Method method, final Class<?> type) throws OslcCoreInvalidPropertyTypeException {
+	protected static Class<?> getComponentType(@NotNull final Class<?> resourceClass, @NotNull final Method method, final Class<?> type) throws OslcCoreInvalidPropertyTypeException {
 		if (type.isArray()) {
 			return type.getComponentType();
 		} else if (Collection.class.isAssignableFrom(type)) {
@@ -365,7 +374,7 @@ public class ResourceShapeFactory {
 		}
 	}
 
-	protected static void validateSetMethodExists(final Class<?> resourceClass, final Method getMethod) throws OslcCoreMissingSetMethodException {
+	protected static void validateSetMethodExists(@NotNull final Class<?> resourceClass, final Method getMethod) throws OslcCoreMissingSetMethodException {
 		final String getMethodName = getMethod.getName();
 
 		final String setMethodName;
@@ -379,7 +388,7 @@ public class ResourceShapeFactory {
         if(!isCollectionType(returnType)) {
             try {
                 resourceClass.getMethod(setMethodName, returnType);
-            } catch (final NoSuchMethodException exception) {
+            } catch (@NotNull final NoSuchMethodException exception) {
                 throw new OslcCoreMissingSetMethodException(resourceClass, getMethod, exception);
             }
         } else {
@@ -414,11 +423,11 @@ public class ResourceShapeFactory {
         }
 	}
 
-    static boolean isCollectionType(final Class<?> returnType) {
+    static boolean isCollectionType(@NotNull final Class<?> returnType) {
 	    return Collection.class.isAssignableFrom(returnType);
     }
 
-    private static void validateUserSpecifiedOccurs(final Class<?> resourceClass, final Method method, final OslcOccurs occursAnnotation) throws OslcCoreInvalidOccursException {
+    private static void validateUserSpecifiedOccurs(@NotNull final Class<?> resourceClass, final Method method, final OslcOccurs occursAnnotation) throws OslcCoreInvalidOccursException {
 		final Class<?> returnType = method.getReturnType();
 		final Occurs   occurs	  = occursAnnotation.value();
 
@@ -436,7 +445,8 @@ public class ResourceShapeFactory {
 		}
 	}
 
-	protected static void validateUserSpecifiedValueType(final Class<?> resourceClass, final Method method, final ValueType userSpecifiedValueType, final Class<?> componentType) throws OslcCoreInvalidValueTypeException {
+	protected static void validateUserSpecifiedValueType(
+			@NotNull final Class<?> resourceClass, @NotNull final Method method, final ValueType userSpecifiedValueType, final Class<?> componentType) throws OslcCoreInvalidValueTypeException {
 		final ValueType calculatedValueType = CLASS_TO_VALUE_TYPE.get(componentType);
 
 		// If user-specified value type matches calculated value type
@@ -472,7 +482,8 @@ public class ResourceShapeFactory {
 		throw new OslcCoreInvalidValueTypeException(resourceClass, method, userSpecifiedValueType);
 	}
 
-	private static void validateUserSpecifiedRepresentation(final Class<?> resourceClass, final Method method, final Representation userSpecifiedRepresentation, final Class<?> componentType) throws OslcCoreInvalidRepresentationException {
+	private static void validateUserSpecifiedRepresentation(
+			@NotNull final Class<?> resourceClass, @NotNull final Method method, @NotNull final Representation userSpecifiedRepresentation, final Class<?> componentType) throws OslcCoreInvalidRepresentationException {
 		// If user-specified representation is reference and component is not URI
 		// or
 		// user-specified representation is inline and component is a standard class

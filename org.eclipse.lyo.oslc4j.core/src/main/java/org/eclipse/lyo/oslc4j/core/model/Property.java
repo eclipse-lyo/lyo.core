@@ -41,6 +41,8 @@ import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcTitle;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @OslcNamespace(OslcConstants.OSLC_CORE_NAMESPACE)
 @OslcResourceShape(title = "OSLC Property Resource Shape", describes = OslcConstants.TYPE_PROPERTY)
@@ -49,19 +51,19 @@ public final class Property extends AbstractResource implements Comparable<Prope
 	private static final QName PROPERTY_DEFAULT_VALUE = new QName(OslcConstants.OSLC_CORE_NAMESPACE, "defaultValue");
 	private final List<URI> range = new ArrayList<URI>();
 
-	private URI allowedValuesRef;
+	@Nullable private URI allowedValuesRef;
 	private String description;
 	private Boolean hidden;
 	private Integer maxSize;
 	private Boolean memberProperty;
 	private String name;
-	private Occurs occurs;
+	@Nullable private Occurs occurs;
 	private URI propertyDefinition;
 	private Boolean readOnly;
-	private Representation representation;
+	@Nullable private Representation representation;
 	private String title;
 	private URI valueShape;
-	private ValueType valueType;
+	@Nullable private ValueType valueType;
 
 	public Property() {
 		super();
@@ -88,7 +90,8 @@ public final class Property extends AbstractResource implements Comparable<Prope
 		return name.compareTo(o.getName());
 	}
 
-	@OslcDescription("Resource with allowed values for the property being defined")
+	@Nullable
+    @OslcDescription("Resource with allowed values for the property being defined")
 	@OslcName("allowedValues")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "allowedValues")
 	@OslcRange(OslcConstants.TYPE_ALLOWED_VALUES)
@@ -153,7 +156,7 @@ public final class Property extends AbstractResource implements Comparable<Prope
 		if (occurs != null) {
 			try {
 				return new URI(occurs.toString());
-			} catch (final URISyntaxException exception) {
+			} catch (@NotNull final URISyntaxException exception) {
 				// This should never happen since we control the possible values of the Occurs enum.
 				throw new RuntimeException(exception);
 			}
@@ -190,7 +193,7 @@ public final class Property extends AbstractResource implements Comparable<Prope
 		if (representation != null) {
 			try {
 				return new URI(representation.toString());
-			} catch (final URISyntaxException exception) {
+			} catch (@NotNull final URISyntaxException exception) {
 				// This should never happen since we control the possible values of the Representation enum.
 				throw new RuntimeException(exception);
 			}
@@ -237,7 +240,7 @@ public final class Property extends AbstractResource implements Comparable<Prope
 		if (valueType != null) {
 			try {
 				return new URI(valueType.toString());
-			} catch (final URISyntaxException exception) {
+			} catch (@NotNull final URISyntaxException exception) {
 				// This should never happen since we control the possible values of the ValueType enum.
 				throw new RuntimeException(exception);
 			}
@@ -271,7 +274,7 @@ public final class Property extends AbstractResource implements Comparable<Prope
 		return readOnly;
 	}
 
-	public void setAllowedValuesRef(final URI allowedValuesRef) {
+	public void setAllowedValuesRef(@Nullable final URI allowedValuesRef) {
 		if (allowedValuesRef != null) {
 			this.allowedValuesRef = allowedValuesRef;
 		} else {
@@ -279,7 +282,7 @@ public final class Property extends AbstractResource implements Comparable<Prope
 		}
 	}
 
-	public void setDefaultValue(final Object defaultValue) {
+	public void setDefaultValue(@Nullable final Object defaultValue) {
 		if (defaultValue == null) {
 			getExtendedProperties().remove(PROPERTY_DEFAULT_VALUE);
 		} else {
@@ -311,7 +314,7 @@ public final class Property extends AbstractResource implements Comparable<Prope
 		this.occurs = occurs;
 	}
 
-	public void setOccurs(final URI occurs) {
+	public void setOccurs(@Nullable final URI occurs) {
 		if (occurs != null) {
 			this.occurs = Occurs.fromString(occurs.toString());
 		} else {
@@ -323,7 +326,7 @@ public final class Property extends AbstractResource implements Comparable<Prope
 		this.propertyDefinition = propertyDefinition;
 	}
 
-	public void setRange(final URI[] ranges) {
+	public void setRange(@Nullable final URI[] ranges) {
 		this.range.clear();
 		if (ranges != null) {
 			this.range.addAll(Arrays.asList(ranges));
@@ -338,7 +341,7 @@ public final class Property extends AbstractResource implements Comparable<Prope
 		this.representation = representation;
 	}
 
-	public void setRepresentation(final URI representation) {
+	public void setRepresentation(@Nullable final URI representation) {
 		if (representation != null) {
 			this.representation = Representation.fromString(representation.toString());
 		} else {
@@ -358,7 +361,7 @@ public final class Property extends AbstractResource implements Comparable<Prope
 		this.valueType = valueType;
 	}
 	
-	public void setValueType(final URI valueType) {
+	public void setValueType(@Nullable final URI valueType) {
 		if (valueType != null) {
 			this.valueType = ValueType.fromString(valueType.toString());
 		} else {
@@ -366,7 +369,8 @@ public final class Property extends AbstractResource implements Comparable<Prope
 		}
 	}
 	
-	public Collection<?> getAllowedValuesCollection() {
+	@NotNull
+    public Collection<?> getAllowedValuesCollection() {
 		Collection<?> allowedValues = (Collection<?>) getExtendedProperties().get(PROPERTY_ALLOWED_VALUE);
 		if (allowedValues == null) {
 			return Collections.emptyList();
@@ -375,7 +379,7 @@ public final class Property extends AbstractResource implements Comparable<Prope
 		return allowedValues;
 	}
 	
-	public void setAllowedValuesCollection(final Collection<?> values) {
+	public void setAllowedValuesCollection(@Nullable final Collection<?> values) {
 		if (values == null) {
 			getExtendedProperties().remove(PROPERTY_ALLOWED_VALUE);
 		} else {

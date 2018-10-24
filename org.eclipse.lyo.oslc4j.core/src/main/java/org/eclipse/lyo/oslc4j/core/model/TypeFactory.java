@@ -20,6 +20,8 @@ package org.eclipse.lyo.oslc4j.core.model;
 
 import org.eclipse.lyo.oslc4j.core.annotation.OslcName;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcNamespace;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class TypeFactory
 {
@@ -36,7 +38,7 @@ public final class TypeFactory
 	 *			  object class.
 	 * @return the qualified name.
 	 */
-	public static String getQualifiedName(final Class<?> objectClass)
+	public static String getQualifiedName(@NotNull final Class<?> objectClass)
 	{
 		String name = getName(objectClass);
 		return name != null ? getNamespace(objectClass) + name : null; 
@@ -58,7 +60,8 @@ public final class TypeFactory
 	 *			  object class.
 	 * @return the Oslc name.
 	 */
-	public static String getName(final Class<?> objectClass)
+	@Nullable
+    public static String getName(final Class<?> objectClass)
 	{
 		final OslcName oslcNameAnnotation = objectClass.getAnnotation(OslcName.class);
 		String name = null;

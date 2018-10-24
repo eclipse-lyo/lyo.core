@@ -19,14 +19,15 @@
 package org.eclipse.lyo.oslc4j.core.exception;
 
 import org.eclipse.lyo.oslc4j.core.annotation.OslcPropertyDefinition;
+import org.jetbrains.annotations.NotNull;
 
 public final class OslcCoreDuplicatePropertyDefinitionException extends OslcCoreApplicationException {
 	private static final long serialVersionUID = 7981216864868316487L;
 
 	private static final String MESSAGE_KEY = "DuplicatePropertyDefinitionException";
 
-	private final OslcPropertyDefinition oslcPropertyDefinition;
-	private final Class<?>				 resourceClass;
+	@NotNull private final OslcPropertyDefinition oslcPropertyDefinition;
+	@NotNull private final Class<?>				 resourceClass;
 
 	public OslcCoreDuplicatePropertyDefinitionException(final Class<?> resourceClass, final OslcPropertyDefinition oslcPropertyDefinition) {
 		super(MESSAGE_KEY, new Object[] {resourceClass.getName(), oslcPropertyDefinition.value()});
@@ -35,12 +36,14 @@ public final class OslcCoreDuplicatePropertyDefinitionException extends OslcCore
 		this.resourceClass			= resourceClass;
 	}
 
-	public OslcPropertyDefinition getOslcPropertyDefinition()
+	@NotNull
+    public OslcPropertyDefinition getOslcPropertyDefinition()
 	{
 		return oslcPropertyDefinition;
 	}
 
-	public Class<?> getResourceClass() {
+	@NotNull
+    public Class<?> getResourceClass() {
 		return resourceClass;
 	}
 }

@@ -19,6 +19,7 @@
 package org.eclipse.lyo.oslc4j.core.exception;
 
 import java.net.URI;
+import org.jetbrains.annotations.NotNull;
 
 public final class OslcCoreRelativeURIException extends OslcCoreApplicationException {
 	private static final long serialVersionUID = -1238625637837216499L;
@@ -26,8 +27,8 @@ public final class OslcCoreRelativeURIException extends OslcCoreApplicationExcep
 	private static final String MESSAGE_KEY = "RelativeURIException";
 
 	private final String   methodName;
-	private final URI	   relativeURI;
-	private final Class<?> resourceClass;
+	@NotNull private final URI	   relativeURI;
+	@NotNull private final Class<?> resourceClass;
 
 	public OslcCoreRelativeURIException(final Class<?> resourceClass, final String methodName, final URI relativeURI) {
 		super(MESSAGE_KEY, new Object[] {resourceClass.getName(), methodName, relativeURI.toString()});
@@ -41,11 +42,13 @@ public final class OslcCoreRelativeURIException extends OslcCoreApplicationExcep
 		return methodName;
 	}
 
-	public URI getRelativeURI() {
+	@NotNull
+    public URI getRelativeURI() {
 		return relativeURI;
 	}
 
-	public Class<?> getResourceClass() {
+	@NotNull
+    public Class<?> getResourceClass() {
 		return resourceClass;
 	}
 }

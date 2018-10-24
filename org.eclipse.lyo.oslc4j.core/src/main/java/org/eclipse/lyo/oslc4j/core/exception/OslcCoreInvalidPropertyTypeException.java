@@ -19,15 +19,16 @@
 package org.eclipse.lyo.oslc4j.core.exception;
 
 import java.lang.reflect.Method;
+import org.jetbrains.annotations.NotNull;
 
 public final class OslcCoreInvalidPropertyTypeException extends OslcCoreApplicationException {
 	private static final long serialVersionUID = -6885356099037103377L;
 
 	private static final String MESSAGE_KEY = "InvalidPropertyTypeException";
 
-	private final Method   method;
-	private final Class<?> resourceClass;
-	private final Class<?> returnType;
+	@NotNull private final Method   method;
+	@NotNull private final Class<?> resourceClass;
+	@NotNull private final Class<?> returnType;
 
 	public OslcCoreInvalidPropertyTypeException(final Class<?> resourceClass, final Method method, final Class<?> returnType) {
 		super(MESSAGE_KEY, new Object[] {resourceClass.getName(), method.getName(), returnType.getName()});
@@ -37,15 +38,18 @@ public final class OslcCoreInvalidPropertyTypeException extends OslcCoreApplicat
 		this.returnType	   = returnType;
 	}
 
-	public Method getMethod() {
+	@NotNull
+    public Method getMethod() {
 		return method;
 	}
 
-	public Class<?> getResourceClass() {
+	@NotNull
+    public Class<?> getResourceClass() {
 		return resourceClass;
 	}
 
-	public Class<?> getReturnType() {
+	@NotNull
+    public Class<?> getReturnType() {
 		return returnType;
 	}
 }

@@ -43,6 +43,8 @@ import org.apache.jena.ext.com.google.common.base.Strings;
 import org.apache.jena.rdf.model.Property;
 import org.eclipse.lyo.oslc4j.core.model.ResourceShape;
 import org.eclipse.lyo.oslc4j.core.model.XMLLiteral;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,9 +62,9 @@ public class OSLC4JUtils {
 	 * This would result in a servletURI which is a concatenation of the baseURI and its servletPath.
 	 * (localhost:8080/adaptor-webapp/services)
 	 */
-	private static String publicURI = System.getProperty(OSLC4JConstants.OSLC4J_PUBLIC_URI);
-	private static String servletPath = null;
-	private static String servletURI = null;
+	@Nullable private static String publicURI = System.getProperty(OSLC4JConstants.OSLC4J_PUBLIC_URI);
+	@Nullable private static String servletPath = null;
+	@Nullable private static String servletURI = null;
 
 	/**
 	 * This constant should be set to true for matching the resource rdf:type to
@@ -119,8 +121,9 @@ public class OSLC4JUtils {
 	 * @throws DatatypeConfigurationException , IllegalArgumentException, InstantiationException,
 	 *                                        InvocationTargetException on
 	 */
-	public static Object getValueBasedOnResourceShapeType(final HashSet<String> rdfTypesList,
-			final QName propertyQName, final Object originalValue)
+	@Nullable
+    public static Object getValueBasedOnResourceShapeType(@Nullable final HashSet<String> rdfTypesList,
+			@Nullable final QName propertyQName, @Nullable final Object originalValue)
 			throws DatatypeConfigurationException, IllegalArgumentException, InstantiationException {
 		if (null == rdfTypesList || rdfTypesList.isEmpty() || null == propertyQName || null == originalValue) {
 			return null;
@@ -196,12 +199,12 @@ public class OSLC4JUtils {
 						Constructor<?> cons = dataTypeFromShape.getJavaClass()
 															   .getConstructor(String.class);
 						return cons.newInstance(originalValue.toString());
-					} catch (IllegalArgumentException | InvocationTargetException | DatatypeFormatException e) {
+					} catch (@NotNull IllegalArgumentException | InvocationTargetException | DatatypeFormatException e) {
 						throw new IllegalArgumentException(e);
 					}
 				}
 			}
-		} catch (NoSuchMethodException | IllegalAccessException e) {
+		} catch (@NotNull NoSuchMethodException | IllegalAccessException e) {
 			// if there is any error while creating the new object, return null,
 			// i.e use the original value and not the new one.
 			// TODO Andrew@2017-07-18: Throw exception instead of returning null
@@ -218,7 +221,8 @@ public class OSLC4JUtils {
 	 *
 	 * @return Public URI, or null if not set
 	 */
-	public static String getPublicURI()
+	@Nullable
+    public static String getPublicURI()
 	{
 		return publicURI;
 	}
@@ -229,7 +233,7 @@ public class OSLC4JUtils {
 	 * 		The new public URI to use.
 	 */
 //	 @SuppressWarnings("unused")
-	public static void setPublicURI(final String newPublicURI) throws MalformedURLException
+	public static void setPublicURI(@Nullable final String newPublicURI) throws MalformedURLException
 	{
 
 		if (newPublicURI != null && !newPublicURI.isEmpty())
@@ -245,7 +249,8 @@ public class OSLC4JUtils {
 	 *
 	 * @return Servlet Path, or its default "services/" if not set.
 	 */
-	public static String getServletPath()
+	@Nullable
+    public static String getServletPath()
 	{
 		return servletPath;
 	}
@@ -308,7 +313,8 @@ public class OSLC4JUtils {
 	 * be something like "localhost:8080/adaptor-webapp/services",
 	 * whereas the publicURI would typically be the base "localhost:8080/adaptor-webapp"
 	 */
-	public static String getServletURI()
+	@Nullable
+    public static String getServletURI()
 	{
 		return servletURI;
 	}
@@ -406,7 +412,7 @@ public class OSLC4JUtils {
 	 * @param request - request to base resolved URI on
 	 * @return String containing the resolved URI
 	 */
-	public static String resolveFullUri(HttpServletRequest request) {
+	public static String resolveFullUri(@NotNull HttpServletRequest request) {
 		final UriBuilder servletUriBuilder = servletUriBuilderFrom(request);
 
 		final String pathInfo = request.getPathInfo();
@@ -434,7 +440,7 @@ public class OSLC4JUtils {
 	 * @param request - request to base resolved URI on
 	 * @return String containing the resolved URI
 	 */
-	public static String resolveServletUri(HttpServletRequest request) {
+	public static String resolveServletUri(@NotNull HttpServletRequest request) {
 		final UriBuilder servletUriBuilder = servletUriBuilderFrom(request);
 
 		URI resolvedURI = servletUriBuilder.build().normalize();
@@ -449,7 +455,7 @@ public class OSLC4JUtils {
 	 *
 	 * @param newServletPath New servlet path to set or NULL to reset it.
 	 */
-	public static void setServletPath(String newServletPath) {
+	public static void setServletPath(@Nullable String newServletPath) {
 		if (newServletPath != null && !newServletPath.isEmpty()) {
 			//test for valid URL - exception will be thrown if invalid
 			URI testServletURI = servletUriBuilderFrom(getPublicURI(), newServletPath).build();
@@ -461,7 +467,7 @@ public class OSLC4JUtils {
 		}
 	}
 
-	private static UriBuilder servletUriBuilderFrom(final HttpServletRequest request) {
+	private static UriBuilder servletUriBuilderFrom(@NotNull final HttpServletRequest request) {
 		final String publicUri = getOrConstructPublicUriBase(request);
 		final String servletPath;
 		if (getServletPath() != null) {
@@ -478,7 +484,8 @@ public class OSLC4JUtils {
 		return UriBuilder.fromUri(publicUri).path(servletPath);
 	}
 
-	private static String getOrConstructPublicUriBase(final HttpServletRequest request) {
+	@Nullable
+    private static String getOrConstructPublicUriBase(@NotNull final HttpServletRequest request) {
 		String publicUri = getPublicURI();
 		if (publicUri == null || publicUri.isEmpty()) {
 			final String scheme = request.getScheme();
@@ -503,7 +510,7 @@ public class OSLC4JUtils {
 
 	// TODO Andrew@2017-07-18: Avoid guessing anything and prefer configuration and/or convention
 	@Deprecated
-	private static String guessHostname(final HttpServletRequest request) {
+	private static String guessHostname(@NotNull final HttpServletRequest request) {
 		String hostName = "localhost";
 
 		//try host resolution first if property to disable it is false or not set
@@ -539,7 +546,8 @@ public class OSLC4JUtils {
 	 * @return boolean value of a property, the default value if it's missing or an
 	 *         IllegalArgumentException if the property value is malformed
 	 */
-	private static Boolean parseBooleanPropertyOrDefault(final String key,
+	@Nullable
+    private static Boolean parseBooleanPropertyOrDefault(@NotNull final String key,
 			final boolean defaultValue) {
 		Boolean value = null;
 		final String property = System.getProperty(key);
@@ -572,8 +580,8 @@ public class OSLC4JUtils {
 	 * @return True if the ResourceShape type is in the list of rdf:types,
 	 *		   otherwise returns false.
 	 */
-	private static boolean doesResourceShapeMatchRdfTypes(final ResourceShape shape,
-			final HashSet<String> rdfTypesList)
+	private static boolean doesResourceShapeMatchRdfTypes(@Nullable final ResourceShape shape,
+			@NotNull final HashSet<String> rdfTypesList)
 	{
 		if (null != shape)
 		{
@@ -692,9 +700,10 @@ public class OSLC4JUtils {
 	 *			   InvocationTargetException
 	 *
 	 */
-	public static RDFDatatype getDataTypeBasedOnResourceShapeType(final HashSet<String>
+	@Nullable
+    public static RDFDatatype getDataTypeBasedOnResourceShapeType(@Nullable final HashSet<String>
 			rdfTypesList,
-			final Property property )
+			@Nullable final Property property )
 	{
 		if (null != rdfTypesList && !rdfTypesList.isEmpty() && null != property )
 		{

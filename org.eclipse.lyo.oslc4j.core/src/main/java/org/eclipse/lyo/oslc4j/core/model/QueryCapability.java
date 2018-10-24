@@ -35,6 +35,8 @@ import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcTitle;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @OslcNamespace(OslcConstants.OSLC_CORE_NAMESPACE)
 @OslcResourceShape(title = "OSLC Query Capability Resource Shape", describes = OslcConstants.TYPE_QUERY_CAPABILITY)
@@ -94,7 +96,8 @@ public class QueryCapability extends AbstractResource {
 		return resourceShape;
 	}
 
-	@OslcDescription("The expected resource type URI that will be returned with this query capability. These would be the URIs found in the result resource's rdf:type property")
+	@NotNull
+    @OslcDescription("The expected resource type URI that will be returned with this query capability. These would be the URIs found in the result resource's rdf:type property")
 	@OslcName("resourceType")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "resourceType")
 	@OslcReadOnly
@@ -113,7 +116,8 @@ public class QueryCapability extends AbstractResource {
 		return title;
 	}
 
-	@OslcDescription("An identifier URI for the domain specified usage of this query capability. If a service provides multiple query capabilities, it may designate the primary or default one that should be used with a property value of http://open-services/ns/core#default")
+	@NotNull
+    @OslcDescription("An identifier URI for the domain specified usage of this query capability. If a service provides multiple query capabilities, it may designate the primary or default one that should be used with a property value of http://open-services/ns/core#default")
 	@OslcName("usage")
 	@OslcPropertyDefinition(OslcConstants.OSLC_CORE_NAMESPACE + "usage")
 	@OslcReadOnly
@@ -134,7 +138,7 @@ public class QueryCapability extends AbstractResource {
 		this.resourceShape = resourceShape;
 	}
 
-	public void setResourceTypes(final URI[] resourceTypes) {
+	public void setResourceTypes(@Nullable final URI[] resourceTypes) {
 		this.resourceTypes.clear();
 		if (resourceTypes != null) {
 			this.resourceTypes.addAll(Arrays.asList(resourceTypes));
@@ -145,7 +149,7 @@ public class QueryCapability extends AbstractResource {
 		this.title = title;
 	}
 
-	public void setUsages(final URI[] usages) {
+	public void setUsages(@Nullable final URI[] usages) {
 		this.usages.clear();
 		if (usages != null) {
 			this.usages.addAll(Arrays.asList(usages));

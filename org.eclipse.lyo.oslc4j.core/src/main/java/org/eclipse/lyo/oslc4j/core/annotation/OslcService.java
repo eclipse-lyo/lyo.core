@@ -24,6 +24,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.jetbrains.annotations.NotNull;
 
 @Documented
 @Target(ElementType.TYPE)
@@ -32,5 +33,5 @@ public @interface OslcService {
 	/**
 	 * Domain of the service.
 	 */
-	String value();
+    @NotNull String value();
 }

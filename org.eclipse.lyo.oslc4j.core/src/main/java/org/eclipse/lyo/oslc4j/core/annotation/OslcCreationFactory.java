@@ -24,6 +24,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.jetbrains.annotations.NotNull;
 
 @Documented
 @Target(ElementType.METHOD)
@@ -32,25 +33,25 @@ public @interface OslcCreationFactory {
 	/**
 	 * Title string that could be used for display
 	 */
-	String title();
+    @NotNull String title();
 
 	/**
 	 * Very short label for use in menu items
 	 */
-	String label() default "";
+    @NotNull String label() default "";
 
 	/**
 	 * Resource shapes
 	 */
-	String[] resourceShapes() default {};
+    @NotNull String[] resourceShapes() default {};
 
 	/**
 	 * Resource types
 	 */
-	String[] resourceTypes() default {};
+    @NotNull String[] resourceTypes() default {};
 
 	/**
 	 * Usages
 	 */
-	String[] usages() default {};
+    @NotNull String[] usages() default {};
 }

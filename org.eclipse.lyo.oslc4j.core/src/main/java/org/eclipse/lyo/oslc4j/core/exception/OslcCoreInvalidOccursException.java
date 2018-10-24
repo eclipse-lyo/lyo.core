@@ -21,15 +21,16 @@ package org.eclipse.lyo.oslc4j.core.exception;
 import java.lang.reflect.Method;
 
 import org.eclipse.lyo.oslc4j.core.annotation.OslcOccurs;
+import org.jetbrains.annotations.NotNull;
 
 public final class OslcCoreInvalidOccursException extends OslcCoreApplicationException {
 	private static final long serialVersionUID = 8373429675756819476L;
 
 	private static final String MESSAGE_KEY = "InvalidOccursException";
 
-	private final Method	 method;
-	private final OslcOccurs oslcOccurs;
-	private final Class<?>	 resourceClass;
+	@NotNull private final Method	 method;
+	@NotNull private final OslcOccurs oslcOccurs;
+	@NotNull private final Class<?>	 resourceClass;
 
 	public OslcCoreInvalidOccursException(final Class<?> resourceClass, final Method method, final OslcOccurs oslcOccurs) {
 		super(MESSAGE_KEY, new Object[] {resourceClass.getName(), method.getName(), oslcOccurs.value().toString()});
@@ -39,15 +40,18 @@ public final class OslcCoreInvalidOccursException extends OslcCoreApplicationExc
 		this.resourceClass = resourceClass;
 	}
 
-	public Method getMethod() {
+	@NotNull
+    public Method getMethod() {
 		return method;
 	}
 
-	public OslcOccurs getOslcOccurs() {
+	@NotNull
+    public OslcOccurs getOslcOccurs() {
 		return oslcOccurs;
 	}
 
-	public Class<?> getResourceClass() {
+	@NotNull
+    public Class<?> getResourceClass() {
 		return resourceClass;
 	}
 }

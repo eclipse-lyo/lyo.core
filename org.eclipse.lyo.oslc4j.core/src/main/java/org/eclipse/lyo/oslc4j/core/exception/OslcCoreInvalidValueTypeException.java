@@ -21,15 +21,16 @@ package org.eclipse.lyo.oslc4j.core.exception;
 import java.lang.reflect.Method;
 
 import org.eclipse.lyo.oslc4j.core.model.ValueType;
+import org.jetbrains.annotations.NotNull;
 
 public final class OslcCoreInvalidValueTypeException extends OslcCoreApplicationException {
 	private static final long serialVersionUID = -989384752764371312L;
 
 	private static final String MESSAGE_KEY = "InvalidValueTypeException";
 
-	private final Method	method;
-	private final Class<?>	resourceClass;
-	private final ValueType valueType;
+	@NotNull private final Method	method;
+	@NotNull private final Class<?>	resourceClass;
+	@NotNull private final ValueType valueType;
 
 	public OslcCoreInvalidValueTypeException(final Class<?> resourceClass, final Method method, final ValueType valueType) {
 		super(MESSAGE_KEY, new Object[] {resourceClass.getName(), method.getName(), valueType.toString()});
@@ -39,15 +40,18 @@ public final class OslcCoreInvalidValueTypeException extends OslcCoreApplication
 		this.valueType	   = valueType;
 	}
 
-	public Method getMethod() {
+	@NotNull
+    public Method getMethod() {
 		return method;
 	}
 
-	public Class<?> getResourceClass() {
+	@NotNull
+    public Class<?> getResourceClass() {
 		return resourceClass;
 	}
 
-	public ValueType getValueType() {
+	@NotNull
+    public ValueType getValueType() {
 		return valueType;
 	}
 }

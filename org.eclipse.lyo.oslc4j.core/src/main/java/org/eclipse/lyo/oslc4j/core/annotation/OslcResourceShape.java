@@ -24,6 +24,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.jetbrains.annotations.NotNull;
 
 @Documented
 @Target(ElementType.TYPE)
@@ -32,10 +33,10 @@ public @interface OslcResourceShape {
 	/**
 	 * Title of the resource shape.
 	 */
-	String title() default "";
+    @NotNull String title() default "";
 
 	/**
 	 * Type or types of resource described by this shape.
 	 */
-	String[] describes() default {};
+    @NotNull String[] describes() default {};
 }

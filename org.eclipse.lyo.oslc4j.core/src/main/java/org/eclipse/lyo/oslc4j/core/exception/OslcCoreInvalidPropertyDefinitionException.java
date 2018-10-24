@@ -21,15 +21,16 @@ package org.eclipse.lyo.oslc4j.core.exception;
 import java.lang.reflect.Method;
 
 import org.eclipse.lyo.oslc4j.core.annotation.OslcPropertyDefinition;
+import org.jetbrains.annotations.NotNull;
 
 public final class OslcCoreInvalidPropertyDefinitionException extends OslcCoreApplicationException {
 	private static final long serialVersionUID = 6043500589743612250L;
 
 	private static final String MESSAGE_KEY = "InvalidPropertyDefinitionException";
 
-	private final Method				 method;
-	private final OslcPropertyDefinition oslcPropertyDefinition;
-	private final Class<?>				 resourceClass;
+	@NotNull private final Method				 method;
+	@NotNull private final OslcPropertyDefinition oslcPropertyDefinition;
+	@NotNull private final Class<?>				 resourceClass;
 
 	public OslcCoreInvalidPropertyDefinitionException(final Class<?> resourceClass, final Method method, final OslcPropertyDefinition oslcPropertyDefinition) {
 		super(MESSAGE_KEY, new Object[] {resourceClass.getName(), method.getName(), oslcPropertyDefinition.value()});
@@ -39,16 +40,19 @@ public final class OslcCoreInvalidPropertyDefinitionException extends OslcCoreAp
 		this.resourceClass			= resourceClass;
 	}
 
-	public Method getMethod() {
+	@NotNull
+    public Method getMethod() {
 		return method;
 	}
 
-	public OslcPropertyDefinition getOslcPropertyDefinition()
+	@NotNull
+    public OslcPropertyDefinition getOslcPropertyDefinition()
 	{
 		return oslcPropertyDefinition;
 	}
 
-	public Class<?> getResourceClass() {
+	@NotNull
+    public Class<?> getResourceClass() {
 		return resourceClass;
 	}
 }

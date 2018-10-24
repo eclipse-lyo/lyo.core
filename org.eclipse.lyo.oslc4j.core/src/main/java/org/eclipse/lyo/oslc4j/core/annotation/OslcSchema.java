@@ -27,6 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.eclipse.lyo.oslc4j.core.model.IOslcCustomNamespaceProvider;
+import org.jetbrains.annotations.NotNull;
 
 @Documented
 @Target(ElementType.PACKAGE)
@@ -36,7 +37,7 @@ public @interface OslcSchema {
 	/**
 	 * The namespace mappings for the package.
 	 */
-	OslcNamespaceDefinition[] value();
+    @NotNull OslcNamespaceDefinition[] value();
 
 	/**
 	 * Any class that implements the {@link IOslcCustomNamespaceProvider}.
@@ -46,6 +47,6 @@ public @interface OslcSchema {
 	 * because this field must not be required and since it is not a concrete
 	 * implementation of the interface it will be ignored.
 	 */
-	Class<? extends IOslcCustomNamespaceProvider> customNamespaceProvider() default IOslcCustomNamespaceProvider.class;
+    @NotNull Class<? extends IOslcCustomNamespaceProvider> customNamespaceProvider() default IOslcCustomNamespaceProvider.class;
 
 }

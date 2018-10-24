@@ -35,6 +35,8 @@ import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcTitle;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueShape;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcValueType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @OslcNamespace(OslcConstants.OSLC_CORE_NAMESPACE)
 @OslcResourceShape(title = "OSLC Resource Shape Resource Shape", describes = OslcConstants.TYPE_RESOURCE_SHAPE)
@@ -56,7 +58,7 @@ public final class ResourceShape extends AbstractResource {
 		this.describes.add(describeItem);
 	}
 
-	public void addProperty(final Property property) {
+	public void addProperty(@NotNull final Property property) {
 		this.properties.put(property.getPropertyDefinition(), property);
 	}
 	
@@ -97,7 +99,7 @@ public final class ResourceShape extends AbstractResource {
 		return title;
 	}
 
-	public void setDescribes(final URI[] describes) {
+	public void setDescribes(@Nullable final URI[] describes) {
 		this.describes.clear();
 		if (describes != null) {
 			this.describes.addAll(Arrays.asList(describes));
@@ -105,7 +107,7 @@ public final class ResourceShape extends AbstractResource {
 	}
 
 
-	public void setProperties(final Property[] properties) {
+	public void setProperties(@Nullable final Property[] properties) {
 		this.properties.clear();
 		if (properties != null) {
 			for(Property prop :properties) {

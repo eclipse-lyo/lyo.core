@@ -19,6 +19,7 @@
 package org.eclipse.lyo.oslc4j.core.model;
 
 import java.net.URI;
+import org.jetbrains.annotations.Nullable;
 
 public enum Occurs {
 	ExactlyOne(OslcConstants.OSLC_CORE_NAMESPACE + "Exactly-one"),
@@ -47,7 +48,8 @@ public enum Occurs {
 		return null;
 	}
 	
-	public static Occurs fromURI(final URI uri) {
+	@Nullable
+    public static Occurs fromURI(final URI uri) {
 		return fromString(uri.toString());
 	}
 }

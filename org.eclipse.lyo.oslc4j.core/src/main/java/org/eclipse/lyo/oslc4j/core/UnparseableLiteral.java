@@ -17,6 +17,8 @@
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.core;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Represents properties whose value is not valid for the declared
  * datatype. This enables clients to at least see the raw value and
@@ -57,7 +59,8 @@ public class UnparseableLiteral
 		this.datatype = value;
 	}
 
-	public String toString()
+	@NotNull
+    public String toString()
 	{
 		return "unparseable literal: \""+this.rawValue+"\"^^<"+this.datatype+">";
 	}

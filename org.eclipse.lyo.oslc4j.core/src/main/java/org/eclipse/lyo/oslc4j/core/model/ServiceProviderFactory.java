@@ -39,6 +39,8 @@ import org.eclipse.lyo.oslc4j.core.annotation.OslcQueryCapability;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcService;
 import org.eclipse.lyo.oslc4j.core.exception.OslcCoreApplicationException;
 import org.eclipse.lyo.oslc4j.core.exception.OslcCoreMissingAnnotationException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,15 +51,20 @@ public final class ServiceProviderFactory {
 		super();
 	}
 
-	public static ServiceProvider createServiceProvider(final String baseURI, final String genericBaseURI, final String title, final String description, final Publisher publisher, final Class<?>[] resourceClasses) throws OslcCoreApplicationException, URISyntaxException {
+	@NotNull
+    public static ServiceProvider createServiceProvider(final String baseURI, final String genericBaseURI, final String title, final String description, final Publisher publisher, @NotNull
+    final Class<?>[] resourceClasses) throws OslcCoreApplicationException, URISyntaxException {
 		return initServiceProvider(new ServiceProvider(), baseURI, genericBaseURI, title, description, publisher, resourceClasses, null);
 	}
 	
-	public static ServiceProvider createServiceProvider(final String baseURI, final String genericBaseURI, final String title, final String description, final Publisher publisher, final Class<?>[] resourceClasses, final Map<String,Object> pathParameterValues) throws OslcCoreApplicationException, URISyntaxException {
+	@NotNull
+    public static ServiceProvider createServiceProvider(final String baseURI, final String genericBaseURI, final String title, final String description, final Publisher publisher, @NotNull
+    final Class<?>[] resourceClasses, final Map<String,Object> pathParameterValues) throws OslcCoreApplicationException, URISyntaxException {
 		return initServiceProvider(new ServiceProvider(), baseURI, genericBaseURI, title, description, publisher, resourceClasses, pathParameterValues);
 	}
 
-	public static ServiceProvider initServiceProvider(final ServiceProvider serviceProvider, final String baseURI, final String genericBaseURI, final String title, final String description, final Publisher publisher, final Class<?>[] resourceClasses, final Map<String,Object> pathParameterValues) throws OslcCoreApplicationException, URISyntaxException {
+	@NotNull
+    public static ServiceProvider initServiceProvider(final ServiceProvider serviceProvider, final String baseURI, final String genericBaseURI, final String title, final String description, final Publisher publisher, final Class<?>[] resourceClasses, final Map<String,Object> pathParameterValues) throws OslcCoreApplicationException, URISyntaxException {
 		serviceProvider.setTitle(title);
 		serviceProvider.setDescription(description);
 		serviceProvider.setPublisher(publisher);
@@ -91,7 +98,7 @@ public final class ServiceProviderFactory {
 	}
 
 	private static void handleResourceClass(final String baseURI, final String genericBaseURI, final Class<?> resourceClass,
-			final Service service, final Map<String,Object> pathParameterValues) throws URISyntaxException {
+			@NotNull final Service service, final Map<String,Object> pathParameterValues) throws URISyntaxException {
 		for (final Method method : resourceClass.getMethods()) {
 			final GET getAnnotation = method.getAnnotation(GET.class);
 			if (getAnnotation != null) {
@@ -151,7 +158,8 @@ public final class ServiceProviderFactory {
 		}
 	}
 
-	protected static CreationFactory createCreationFactory(final String baseURI,
+	@NotNull
+    protected static CreationFactory createCreationFactory(final String baseURI,
 			final Map<String, Object> pathParameterValues, final Method method)
 			throws URISyntaxException {
 		final Path classPathAnnotation = method.getDeclaringClass().getAnnotation(Path.class);
@@ -165,7 +173,8 @@ public final class ServiceProviderFactory {
 		return creationFactory;
 	}
 
-	protected static CreationFactory createCreationFactory(final String baseURI,
+	@NotNull
+    protected static CreationFactory createCreationFactory(final String baseURI,
 			final Map<String, Object> pathParameterValues, final Path classPathAnnotation,
 			final OslcCreationFactory creationFactoryAnnotation, final Path methodPathAnnotation)
 			throws URISyntaxException {
@@ -201,11 +210,13 @@ public final class ServiceProviderFactory {
 		return creationFactory;
 	}
 
-	private static String pathAnnotationStringValue(final Path pathAnnotation) {
+	@Nullable
+    private static String pathAnnotationStringValue(@Nullable final Path pathAnnotation) {
 		return pathAnnotation == null ? null : pathAnnotation.value();
 	}
 
-	private static QueryCapability createQueryCapability(final String baseURI, final Method method, final Map<String,Object> pathParameterValues) throws URISyntaxException {
+	@NotNull
+    private static QueryCapability createQueryCapability(final String baseURI, final Method method, final Map<String,Object> pathParameterValues) throws URISyntaxException {
 		final OslcQueryCapability queryCapabilityAnnotation = method.getAnnotation(OslcQueryCapability.class);
 
 		final String title = queryCapabilityAnnotation.title();
@@ -244,17 +255,23 @@ public final class ServiceProviderFactory {
 		return queryCapability;
 	}
 
-	private static Dialog createCreationDialog(final String baseURI, final String genericBaseURI, final Method method, final OslcDialog dialogAnnotation, final String[] resourceShapes,
+	@NotNull
+    private static Dialog createCreationDialog(final String baseURI, final String genericBaseURI, @NotNull
+    final Method method, @NotNull final OslcDialog dialogAnnotation, final String[] resourceShapes,
 			final Map<String,Object> pathParameterValues) throws URISyntaxException {
 		return createDialog(baseURI, genericBaseURI, "Creation", "creation", method, dialogAnnotation, resourceShapes, pathParameterValues);
 	}
 
-	private static Dialog createSelectionDialog(final String baseURI, final String genericBaseURI, final Method method, final OslcDialog dialogAnnotation, final String[] resourceShapes,
+	@NotNull
+    private static Dialog createSelectionDialog(final String baseURI, final String genericBaseURI, @NotNull
+    final Method method, @NotNull final OslcDialog dialogAnnotation, final String[] resourceShapes,
 			final Map<String,Object> pathParameterValues) throws URISyntaxException {
 		return createDialog(baseURI, genericBaseURI, "Selection", "queryBase", method, dialogAnnotation, resourceShapes, pathParameterValues);
 	}
 
-	private static Dialog createDialog(final String baseURI, final String genericBaseURI, final String dialogType, final String parameterName, final Method method, final OslcDialog dialogAnnotation, final String[] resourceShapes,
+	@NotNull
+    private static Dialog createDialog(final String baseURI, final String genericBaseURI, final String dialogType, final String parameterName, final Method method, final OslcDialog dialogAnnotation, @Nullable
+    final String[] resourceShapes,
 			final Map<String,Object> pathParameterValues) throws URISyntaxException {
 
 		final String title = dialogAnnotation.title();
@@ -290,7 +307,7 @@ public final class ServiceProviderFactory {
 			try {
 				final String encodedParameter = URLEncoder.encode(parameter, "UTF-8");
 				uri += "?" + parameterName + "=" + encodedParameter;
-			} catch (final UnsupportedEncodingException exception) {
+			} catch (@NotNull final UnsupportedEncodingException exception) {
 				// TODO Andrew@2017-07-18: Rethrow an exception
 				log.warn("Error encoding URI [{}]", parameter, exception);
 			}
@@ -307,7 +324,7 @@ public final class ServiceProviderFactory {
 
 						resourceShapeParameters.append("&resourceShape=").append(
 								encodedResourceShape);
-					} catch (final UnsupportedEncodingException exception) {
+					} catch (@NotNull final UnsupportedEncodingException exception) {
 						// TODO Andrew@2017-07-18: Rethrow an exception
 						log.warn("Error encoding URI [{}]", resourceShapeURI, exception);
 					}
@@ -342,7 +359,9 @@ public final class ServiceProviderFactory {
 		return dialog;
 	}
 	
-	private static String resolvePathParameters(final String basePath, final String classPathAnnotation, final String methodPathAnnotation, final Map<String, Object> pathParameterValues)
+	@Nullable
+    private static String resolvePathParameters(final String basePath, @Nullable final String classPathAnnotation, @Nullable
+    final String methodPathAnnotation, final Map<String, Object> pathParameterValues)
 	{
 		final UriBuilder builder = UriBuilder.fromUri(basePath);
 		if (classPathAnnotation != null && !classPathAnnotation.equals("")) {
