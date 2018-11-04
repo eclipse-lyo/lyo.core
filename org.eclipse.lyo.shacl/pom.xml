@@ -4,7 +4,7 @@
 
   <groupId>org.eclipse.lyo</groupId>
   <artifactId>shacl</artifactId>
-  <version>2.4.0-SNAPSHOT</version>
+  <version>3.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>shacl</name>
@@ -16,7 +16,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <version.lyo>2.4.0-SNAPSHOT</version.lyo>
+        <version.lyo>3.1.0-SNAPSHOT</version.lyo>
     </properties>
 
 

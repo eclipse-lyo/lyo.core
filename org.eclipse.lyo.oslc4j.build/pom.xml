@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.lyo.oslc4j.core</groupId>
   <artifactId>oslc4j-core-build</artifactId>
-  <version>2.4.0-SNAPSHOT</version>
+  <version>3.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>OSLC4J Build</name>
   <scm>
@@ -28,6 +28,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <version.jena>3.6.0</version.jena>
+    <version.jersey>2.27</version.jersey>
   </properties>
 
   <modules>
@@ -37,11 +38,13 @@
     <module>../org.eclipse.lyo.oslc4j.provider.jena</module>
     <module>../org.eclipse.lyo.oslc4j.provider.json4j</module>
     <module>../org.eclipse.lyo.core.utils</module>
+    <!--FIXME:  What to do with wink & registry?-->
     <!-- <module>../org.eclipse.lyo.oslc4j.wink</module> -->
-    <module>../org.eclipse.lyo.oslc4j.registry</module>
+    <!-- <module>../org.eclipse.lyo.oslc4j.registry</module> -->
     <module>../org.eclipse.lyo.repackaging.jersey</module>
     <module>../org.eclipse.lyo.shacl</module>
-    <module>../oslc4j-bundle</module>
+    <!--FIXME:  oslc4j-bundle needs lyo-store to be of version 3.1.0-SNAPSHOT for it to build.-->
+    <!-- <module>../oslc4j-bundle</module> -->
   </modules>
 
   <dependencyManagement>
@@ -85,39 +88,8 @@
       <dependency>
         <!--CQ 6733-->
         <groupId>org.apache.wink</groupId>
-        <artifactId>wink</artifactId>
-        <version>1.2.1-incubating</version>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <!--CQ 6733-->
-        <groupId>org.apache.wink</groupId>
-        <artifactId>wink-server</artifactId>
-        <version>1.2.1-incubating</version>
-      </dependency>
-      <dependency>
-        <!--CQ 6733-->
-        <groupId>org.apache.wink</groupId>
         <artifactId>wink-json4j</artifactId>
         <version>1.2.1-incubating</version>
-      </dependency>
-      <dependency>
-        <!--CQ 6733-->
-        <groupId>org.apache.wink</groupId>
-        <artifactId>wink-json4j-provider</artifactId>
-        <version>1.2.1-incubating</version>
-      </dependency>
-      <dependency>
-        <!--CQ 6733-->
-        <groupId>org.apache.wink</groupId>
-        <artifactId>wink-client</artifactId>
-        <version>1.2.1-incubating</version>
-        <exclusions>
-          <exclusion>
-            <artifactId>stax-api</artifactId>
-            <groupId>javax.xml.stream</groupId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <!--CQ 6582-->
@@ -163,6 +135,36 @@
         <groupId>xerces</groupId>
         <artifactId>xercesImpl</artifactId>
         <version>2.8.0</version>
+      </dependency>
+      <dependency>
+          <groupId>javax.ws.rs</groupId>
+          <artifactId>javax.ws.rs-api</artifactId>
+          <version>2.1</version>
+      </dependency>
+        <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+          <version>3.1.0</version>
+        </dependency>
+      <dependency>
+          <groupId>org.glassfish.jersey.containers</groupId>
+          <artifactId>jersey-container-servlet</artifactId>
+          <version>${version.jersey}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.glassfish.jersey.core</groupId>
+          <artifactId>jersey-server</artifactId>
+          <version>${version.jersey}</version>
+      </dependency>
+        <dependency>
+          <groupId>org.glassfish.jersey.core</groupId>
+          <artifactId>jersey-common</artifactId>
+          <version>${version.jersey}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.glassfish.jersey.inject</groupId>
+          <artifactId>jersey-hk2</artifactId>
+          <version>${version.jersey}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
