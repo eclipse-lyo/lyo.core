@@ -8,62 +8,53 @@
     <version>2.4.0.M1-SNAPSHOT</version>
     <relativePath>../oslc4j-core-build/pom.xml</relativePath>
   </parent>
-  <!--TODO fix-->
   <groupId>org.eclipse.lyo</groupId>
-  <artifactId>oslc-trs</artifactId>
-  <name>OSLC TRS Toolkit</name>
-  <description>Software development kit to assist with TRS adoption.</description>
+  <artifactId>shacl</artifactId>
+  <packaging>jar</packaging>
 
-  <scm>
-    <url>http://git.eclipse.org/c/lyo/org.eclipse.lyo.core.git</url>
-  </scm>
+  <name>shacl</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <lyo.version>${project.parent.version}</lyo.version>
-</properties>
+    <version.lyo>${project.parent.version}</version.lyo>
+  </properties>
+
 
   <dependencies>
+    <!-- Guava Library -->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>21.0</version>
+    </dependency>
+
+    <!-- OSLC Core Libraries -->
     <dependency>
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
       <artifactId>oslc4j-core</artifactId>
-      <version>${lyo.version}</version>
+      <version>${version.lyo}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.lyo.oslc4j.core</groupId>
       <artifactId>oslc4j-jena-provider</artifactId>
-      <version>${lyo.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.jena</groupId>
-      <artifactId>apache-jena-libs</artifactId>
-      <type>pom</type>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-
-    <!--TEST-->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <scope>test</scope>
+      <version>${version.lyo}</version>
     </dependency>
   </dependencies>
 
   <build>
-    <outputDirectory>target/classes</outputDirectory>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <configuration>
+          <wtpversion>2.0</wtpversion>
+        </configuration>
+        <version>2.8</version>
+      </plugin>
+
       <!-- Source Jar Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -96,9 +87,13 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.3</version>
+      </plugin>
     </plugins>
   </build>
-
   <distributionManagement>
     <repository>
       <id>repo.eclipse.org</id>
@@ -111,4 +106,5 @@
       <url>https://repo.eclipse.org/content/repositories/lyo-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
+
 </project>

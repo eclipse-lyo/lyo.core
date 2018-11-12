@@ -6,9 +6,6 @@
   <version>2.4.0.M1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>OSLC4J Build</name>
-  <scm>
-    <url>http://git.eclipse.org/c/lyo/org.eclipse.lyo.core.git</url>
-  </scm>
 
   <profiles>
     <profile>
@@ -33,14 +30,10 @@
   <modules>
     <module>../oslc-query</module>
     <module>../oslc-trs</module>
-    <module>../oslc4j-bundle</module>
     <module>../oslc4j-core</module>
     <module>../oslc4j-jena-provider</module>
     <module>../oslc4j-json4j-provider</module>
     <module>../oslc4j-utils</module>
-    <module>../oslc4j-wink</module>
-    <!-- <module>../org.eclipse.lyo.oslc4j.registry</module> -->
-    <module>../repackaging.jersey</module>
     <module>../shacl</module>
   </modules>
 
