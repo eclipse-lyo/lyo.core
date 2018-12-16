@@ -35,6 +35,8 @@
     <module>../oslc4j-json4j-provider</module>
     <module>../oslc4j-utils</module>
     <module>../shacl</module>
+    <module>../oslc4j-repackaging-jersey</module>
+    <module>../oslc4j-bundle</module>
   </modules>
 
   <dependencyManagement>
