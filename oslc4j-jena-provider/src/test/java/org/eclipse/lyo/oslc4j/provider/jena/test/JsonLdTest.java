@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.apache.jena.ext.com.google.common.collect.ImmutableList;
-import javax.ws.rs.core.MultivaluedHashMap;;
+import javax.ws.rs.core.MultivaluedHashMap;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.eclipse.lyo.oslc4j.core.model.ServiceProvider;
 import org.eclipse.lyo.oslc4j.provider.jena.OslcJsonLdArrayProvider;
