@@ -274,7 +274,9 @@ public abstract class AbstractOslcRdfXmlProvider
 		mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.TEXT_TURTLE_TYPE,
 													 RDFLanguages.strLangTurtle));
 		mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.APPLICATION_JSON_LD_TYPE,
-													 RDFLanguages.strLangJSONLD));
+				 RDFLanguages.strLangJSONLD));
+		mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.TEXT_XML_TYPE,
+				 RDFLanguages.strLangRDFXML));
 		if (OSLC4JUtils.alwaysAbbrevXML()) {
 			// application/rdf+xml will be forcefully abbreviated
 			mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.APPLICATION_RDF_XML_TYPE,
