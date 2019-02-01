@@ -354,12 +354,18 @@ public final class ServiceProviderFactory {
 
 		String returnUri = null;
 		
+		Map<String, Object> parameters = pathParameterValues;
+		if (parameters == null) {
+			parameters = new HashMap<>();
+		}
 		//Build the path from the @Path template + map of parameter value replacements
-		final URI resolvedUri = builder.buildFromMap(pathParameterValues);
+		final URI resolvedUri = builder.buildFromMap(parameters);
+
 		if (resolvedUri != null)
 		{
 			returnUri = resolvedUri.toString();
 		}
+		log.warn("Could not build a path URI for basePath={}", basePath);
 		return returnUri;
 	}
 }
