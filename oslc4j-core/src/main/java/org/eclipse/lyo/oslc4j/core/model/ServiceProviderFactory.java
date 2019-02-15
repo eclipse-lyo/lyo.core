@@ -355,9 +355,7 @@ public final class ServiceProviderFactory {
 		String returnUri = null;
 		
 		//Build the path from the @Path template + map of parameter value replacements
-		Map<String, Object> parameters = pathParameterValues;
-		if (pathParameterValues == null) parameters = new HashMap<String, Object>();
-		final URI resolvedUri = builder.buildFromMap(parameters);
+		final URI resolvedUri = builder.buildFromMap(pathParameterValues);
 		if (resolvedUri != null)
 		{
 			returnUri = resolvedUri.toString();
