@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*!*****************************************************************************
  * Copyright (c) 2012 - 2018 IBM Corporation and others.
  *
  * All rights reserved. This program and the accompanying materials
@@ -41,7 +41,6 @@ import org.apache.jena.rdf.model.RDFReader;
 import org.apache.jena.rdf.model.RDFWriter;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.util.FileUtils;
-import org.eclipse.lyo.oslc4j.core.OSLC4JConstants;
 import org.eclipse.lyo.oslc4j.core.OSLC4JUtils;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcNotQueryResult;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
@@ -49,13 +48,12 @@ import org.eclipse.lyo.oslc4j.core.exception.MessageExtractor;
 import org.eclipse.lyo.oslc4j.core.model.Error;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.eclipse.lyo.oslc4j.core.model.ResponseInfo;
-import org.eclipse.lyo.oslc4j.core.model.ResponseInfoArray;
 import org.eclipse.lyo.oslc4j.core.model.ServiceProvider;
 import org.eclipse.lyo.oslc4j.core.model.ServiceProviderCatalog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractOslcRdfXmlProvider
+public abstract class AbstractOslcRdfXmlProvider extends AbstractRdfProvider
 {
 	private static final Logger log = LoggerFactory.getLogger(AbstractOslcRdfXmlProvider.class.getName
 			());
@@ -101,10 +99,7 @@ public abstract class AbstractOslcRdfXmlProvider
 			type.getAnnotation(OslcNotQueryResult.class) != null)
 		{
 			// We do not have annotations when running from the non-web client.
-			if (isCompatible(actualMediaType, requiredMediaTypes))
-			{
-				return true;
-			}
+			return isCompatible(actualMediaType, requiredMediaTypes);
 		}
 
 		return false;
@@ -179,7 +174,7 @@ public abstract class AbstractOslcRdfXmlProvider
 	}
 
 	private RDFWriter getRdfWriter(final String serializationLanguage, final Model model) {
-		RDFWriter writer = null;
+		RDFWriter writer;
 		if	(serializationLanguage.equals(FileUtils.langXMLAbbrev))
         {
             writer = new RdfXmlAbbreviatedWriter();
@@ -194,68 +189,6 @@ public abstract class AbstractOslcRdfXmlProvider
 		return writer;
 	}
 
-	protected void writeTo(final boolean						queryResult,
-						   final Object[]						objects,
-						   final MediaType						baseMediaType,
-						   final MultivaluedMap<String, Object> map,
-						   final OutputStream					outputStream)
-			  throws WebApplicationException
-	{
-		boolean isClientSide = false;
-
-		try {
-			httpServletRequest.getMethod();
-		} catch (RuntimeException e) {
-			isClientSide = true;
-		}
-
-		String descriptionURI  = null;
-		String responseInfoURI = null;
-
-		if (queryResult && ! isClientSide)
-		{
-
-			final String method = httpServletRequest.getMethod();
-			if ("GET".equals(method))
-			{
-				descriptionURI =  OSLC4JUtils.resolveURI(httpServletRequest,true);
-				responseInfoURI = descriptionURI;
-
-				final String queryString = httpServletRequest.getQueryString();
-				if ((queryString != null) &&
-					(isOslcQuery(queryString)))
-				{
-					responseInfoURI += "?" + queryString;
-				}
-			}
-
-		}
-
-		final String serializationLanguage = getSerializationLanguage(baseMediaType);
-
-		@SuppressWarnings("unchecked")
-		final Map<String, Object> properties = isClientSide ?
-			null :
-			(Map<String, Object>)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_SELECTED_PROPERTIES);
-		final String nextPageURI = isClientSide ?
-			null :
-			(String)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_NEXT_PAGE);
-		final Integer totalCount = isClientSide ?
-			null :
-			(Integer)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_TOTAL_COUNT);
-
-		ResponseInfo<?> responseInfo = new ResponseInfoArray<Object>(null, properties, totalCount, nextPageURI);
-
-		writeObjectsTo(
-				objects,
-				outputStream,
-				properties,
-				descriptionURI,
-				responseInfoURI,
-				responseInfo,
-				serializationLanguage
-		);
-	}
 
 	/**
 	 * Determine whether to serialize in xml or abreviated xml based upon mediatype.
@@ -346,7 +279,7 @@ public abstract class AbstractOslcRdfXmlProvider
 
 			reader.read(model, inputStream, "");
 
-			return JenaModelHelper.fromJenaModel(model, type);
+			return JenaModelHelper.unmarshal(model, type);
 		}
 		catch (final Exception exception)
 		{
@@ -358,7 +291,7 @@ public abstract class AbstractOslcRdfXmlProvider
 	}
 
 	private RDFReader getRdfReader(final MediaType mediaType, final Model model) {
-		RDFReader reader = null;
+		RDFReader reader;
 		final String language = getSerializationLanguage(mediaType);
 		if (language.equals(FileUtils.langXMLAbbrev))
 		{
