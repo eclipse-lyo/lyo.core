@@ -42,8 +42,9 @@ import static org.junit.Assert.*;
  * @since 2.4.0
  */
 public class JsonLdTest {
-    @Test @SuppressWarnings({"unchecked", "rawtypes"}) public void testContentTypeTurtleUTF8()
-            throws Exception {
+    @Test
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public void testContentTypeTurtleUTF8() throws Exception {
         OslcJsonLdProvider provider = new OslcJsonLdProvider();
 
         InputStream is = ServiceProviderTest.class.getResourceAsStream("/provider.jsonld");
@@ -55,7 +56,8 @@ public class JsonLdTest {
         assertNotNull("Provider was not read", p);
     }
 
-    @Test public void testWrite() throws Exception {
+    @Test
+    public void testWrite() throws Exception {
         ServiceProvider sp = new ServiceProvider();
         sp.setDescription("Hello world");
         OslcJsonLdProvider provider = new OslcJsonLdProvider();
@@ -72,7 +74,8 @@ public class JsonLdTest {
 
     }
 
-    @Test public void testWriteArray() throws Exception {
+    @Test
+    public void testWriteArray() throws Exception {
         final OslcJsonLdArrayProvider provider = new OslcJsonLdArrayProvider();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -88,7 +91,8 @@ public class JsonLdTest {
         assertTrue("Provider was not read", jsonLD.contains("Hello world"));
     }
 
-    @Test @Ignore("TypeVariableImpl cannot be cast to java.lang.Class")
+    @Test
+    @Ignore("TypeVariableImpl cannot be cast to java.lang.Class")
     public void testWriteCollection() throws Exception {
         final OslcJsonLdCollectionProvider provider = new OslcJsonLdCollectionProvider();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -105,7 +109,8 @@ public class JsonLdTest {
         assertTrue("Provider was not read", jsonLD.contains("Hello world"));
     }
 
-    @Test public void testUniversalProvider() throws Exception {
+    @Test
+    public void testUniversalProvider() throws Exception {
         UniversalResourceSingleProvider provider = new UniversalResourceSingleProvider();
 
         InputStream is = ServiceProviderTest.class.getResourceAsStream("/provider.jsonld");
@@ -117,7 +122,8 @@ public class JsonLdTest {
         assertNotNull("Provider was not read", p);
     }
 
-    @Test public void testWriteUniversalProvider() throws Exception {
+    @Test
+    public void testWriteUniversalProvider() throws Exception {
         ServiceProvider sp = new ServiceProvider();
         sp.setDescription("Hello world");
         UniversalResourceSingleProvider provider = new UniversalResourceSingleProvider();
