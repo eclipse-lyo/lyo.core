@@ -15,7 +15,6 @@
  *******************************************************************************/
 package org.eclipse.lyo.oslc4j.provider.jena.test;
 
-import com.github.jsonldjava.utils.Obj;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
