@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*!*****************************************************************************
  * Copyright (c) 2012 - 2018 IBM Corporation and others.
  *
  * All rights reserved. This program and the accompanying materials
@@ -169,7 +169,7 @@ public abstract class AbstractOslcRdfXmlProvider
 	}
 
 	private RDFWriter getRdfWriter(final String serializationLanguage, final Model model) {
-		RDFWriter writer = null;
+		RDFWriter writer;
 		if	(serializationLanguage.equals(FileUtils.langXMLAbbrev))
         {
             writer = new RdfXmlAbbreviatedWriter();
@@ -234,7 +234,8 @@ public abstract class AbstractOslcRdfXmlProvider
 			null :
 			(Integer)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_TOTAL_COUNT);
 
-		ResponseInfo<?> responseInfo = new ResponseInfoArray<Object>(null, properties, totalCount, nextPageURI);
+		ResponseInfo<?> responseInfo = new ResponseInfoArray<>(null, properties, totalCount,
+				nextPageURI);
 
 		writeObjectsTo(
 				objects,
@@ -278,6 +279,9 @@ public abstract class AbstractOslcRdfXmlProvider
 		mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.APPLICATION_XML_TYPE,
 													 FileUtils.langXMLAbbrev));
 
+		mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.TEXT_XML_TYPE,
+				 RDFLanguages.strLangRDFXML));
+		
 		for (Map.Entry<MediaType, String> mediaPair : mediaPairs) {
 			if (baseMediaType.isCompatible(mediaPair.getKey())) {
 				log.trace("Using '{}' writer for '{}' Accept media type",
@@ -336,7 +340,7 @@ public abstract class AbstractOslcRdfXmlProvider
 
 			reader.read(model, inputStream, "");
 
-			return JenaModelHelper.fromJenaModel(model, type);
+			return JenaModelHelper.unmarshal(model, type);
 		}
 		catch (final Exception exception)
 		{
@@ -348,7 +352,7 @@ public abstract class AbstractOslcRdfXmlProvider
 	}
 
 	private RDFReader getRdfReader(final MediaType mediaType, final Model model) {
-		RDFReader reader = null;
+		RDFReader reader;
 		final String language = getSerializationLanguage(mediaType);
 		if (language.equals(FileUtils.langXMLAbbrev))
 		{
