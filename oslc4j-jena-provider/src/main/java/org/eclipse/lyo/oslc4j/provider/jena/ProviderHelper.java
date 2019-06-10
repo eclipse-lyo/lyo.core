@@ -16,8 +16,12 @@ final class ProviderHelper {
     final static int CANNOT_BE_DETERMINED_IN_ADVANCE = -1;
 
     static boolean hasNotQueryResultTypeAnnot(final Class<?> type) {
-        OslcNotQueryResult notQueryResult = type.getComponentType()
-                .getAnnotation(OslcNotQueryResult.class);
+        Class<?> annotatedType = type;
+        final Class<?> componentType = type.getComponentType();
+        if(componentType != null) {
+            annotatedType = componentType;
+        }
+        OslcNotQueryResult notQueryResult = annotatedType.getAnnotation(OslcNotQueryResult.class);
         return (notQueryResult != null && notQueryResult.value());
     }
 
