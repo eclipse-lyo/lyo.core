@@ -1,5 +1,5 @@
-/*!*****************************************************************************
- * Copyright (c) 2012 - 2018 IBM Corporation and others.
+/*
+ * Copyright (c) 2012-2019 IBM Corporation and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,15 +8,7 @@
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
- *
- * Contributors:
- *
- *	   Russell Boykin		- initial API and implementation
- *	   Alberto Giammaria	- initial API and implementation
- *	   Chris Peters			- initial API and implementation
- *	   Gianluca Bernardini	- initial API and implementation
- *	   Andrew Berezovskyi   - JSON-LD support
- *******************************************************************************/
+ */
 package org.eclipse.lyo.oslc4j.provider.jena;
 
 import java.io.InputStream;
@@ -41,6 +33,7 @@ import org.apache.jena.rdf.model.RDFReader;
 import org.apache.jena.rdf.model.RDFWriter;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.util.FileUtils;
+import org.eclipse.lyo.oslc4j.core.OSLC4JConstants;
 import org.eclipse.lyo.oslc4j.core.OSLC4JUtils;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcNotQueryResult;
 import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
@@ -48,11 +41,15 @@ import org.eclipse.lyo.oslc4j.core.exception.MessageExtractor;
 import org.eclipse.lyo.oslc4j.core.model.Error;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.eclipse.lyo.oslc4j.core.model.ResponseInfo;
+import org.eclipse.lyo.oslc4j.core.model.ResponseInfoArray;
 import org.eclipse.lyo.oslc4j.core.model.ServiceProvider;
 import org.eclipse.lyo.oslc4j.core.model.ServiceProviderCatalog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author Russell Boykin, Alberto Giammaria, Chris Peters, Gianluca Bernardini, Andrew Berezovskyi
+ */
 public abstract class AbstractOslcRdfXmlProvider extends AbstractRdfProvider
 {
 	private static final Logger log = LoggerFactory.getLogger(AbstractOslcRdfXmlProvider.class.getName
@@ -167,9 +164,8 @@ public abstract class AbstractOslcRdfXmlProvider extends AbstractRdfProvider
 		}
 		catch (final Exception exception)
 		{
-			log.warn(MessageExtractor.getMessage("ErrorSerializingResource"), exception);
-			// TODO Andrew@2018-03-03: use another exception
-			throw new WebApplicationException(exception);
+			log.warn(MessageExtractor.getMessage("ErrorSerializingResource"));
+			throw new IllegalStateException(exception);
 		}
 	}
 
@@ -189,6 +185,71 @@ public abstract class AbstractOslcRdfXmlProvider extends AbstractRdfProvider
 		return writer;
 	}
 
+	protected void writeTo(final boolean						queryResult,
+						   final Object[]						objects,
+						   final MediaType						baseMediaType,
+						   final MultivaluedMap<String, Object> map,
+						   final OutputStream					outputStream)
+			  throws WebApplicationException
+	{
+		boolean isClientSide = false;
+
+		try {
+			httpServletRequest.getMethod();
+		} catch (RuntimeException e) {
+			isClientSide = true;
+		}
+
+		String descriptionURI  = null;
+		// TODO Andrew@2019-04-18: stop using responseInfoURI nullity to detect Query results
+		String responseInfoURI = null;
+
+		if (queryResult && ! isClientSide)
+		{
+			log.trace("Marshalling response objects as OSLC Query result (server-side only)");
+
+			final String method = httpServletRequest.getMethod();
+			if ("GET".equals(method))
+			{
+				descriptionURI =  OSLC4JUtils.resolveURI(httpServletRequest,true);
+				responseInfoURI = descriptionURI;
+
+				final String queryString = httpServletRequest.getQueryString();
+				if ((queryString != null) &&
+					(ProviderHelper.isOslcQuery(queryString)))
+				{
+					responseInfoURI += "?" + queryString;
+				}
+			}
+
+		}
+
+		final String serializationLanguage = getSerializationLanguage(baseMediaType);
+
+		@SuppressWarnings("unchecked")
+		final Map<String, Object> properties = isClientSide ?
+			null :
+			(Map<String, Object>)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_SELECTED_PROPERTIES);
+		final String nextPageURI = isClientSide ?
+			null :
+			(String)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_NEXT_PAGE);
+		final Integer totalCount = isClientSide ?
+			null :
+			(Integer)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_TOTAL_COUNT);
+
+		ResponseInfo<?> responseInfo = new ResponseInfoArray<>(null, properties, totalCount,
+				nextPageURI);
+
+		writeObjectsTo(
+				objects,
+				outputStream,
+				properties,
+				descriptionURI,
+				responseInfoURI,
+				responseInfo,
+				serializationLanguage
+		);
+	}
 
 	/**
 	 * Determine whether to serialize in xml or abreviated xml based upon mediatype.
@@ -221,6 +282,9 @@ public abstract class AbstractOslcRdfXmlProvider extends AbstractRdfProvider
 		mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.APPLICATION_XML_TYPE,
 													 FileUtils.langXMLAbbrev));
 
+		mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.TEXT_XML_TYPE,
+				 RDFLanguages.strLangRDFXML));
+		
 		for (Map.Entry<MediaType, String> mediaPair : mediaPairs) {
 			if (baseMediaType.isCompatible(mediaPair.getKey())) {
 				log.trace("Using '{}' writer for '{}' Accept media type",

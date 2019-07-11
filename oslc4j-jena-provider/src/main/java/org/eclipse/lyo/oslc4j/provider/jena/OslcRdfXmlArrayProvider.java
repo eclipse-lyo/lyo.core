@@ -1,5 +1,5 @@
-/*******************************************************************************
- * Copyright (c) 2012, 2013 IBM Corporation.
+/*
+ * Copyright (c) 2012-2019 IBM Corporation and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,14 +8,7 @@
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
- *
- * Contributors:
- *
- *	   Russell Boykin		- initial API and implementation
- *	   Alberto Giammaria	- initial API and implementation
- *	   Chris Peters			- initial API and implementation
- *	   Gianluca Bernardini	- initial API and implementation
- *******************************************************************************/
+ */
 package org.eclipse.lyo.oslc4j.provider.jena;
 
 import java.io.IOException;
@@ -33,9 +26,11 @@ import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
-import org.eclipse.lyo.oslc4j.core.annotation.OslcNotQueryResult;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 
+/**
+ * @author Russell Boykin, Alberto Giammaria, Chris Peters, Gianluca Bernardini, Andrew Berezovskyi
+ */
 @Provider
 @Produces({OslcMediaType.APPLICATION_RDF_XML})
 @Consumes({OslcMediaType.APPLICATION_RDF_XML})
@@ -50,30 +45,15 @@ public class OslcRdfXmlArrayProvider
 	}
 
 	@Override
-	public long getSize(final Object[]	   objects,
-						final Class<?>	   type,
-						final Type		   genericType,
-						final Annotation[] annotations,
-						final MediaType	   mediaType)
-	{
-		return -1;
+	public boolean isWriteable(final Class<?> type, final Type genericType,
+			final Annotation[] annotations, final MediaType mediaType) {
+		return true;
 	}
 
 	@Override
-	public boolean isWriteable(final Class<?>	  type,
-							   final Type		  genericType,
-							   final Annotation[] annotations,
-							   final MediaType	  mediaType)
-	{
-		return (type.isArray()) &&
-			   (isWriteable(type.getComponentType(),
-							annotations,
-							mediaType,
-							OslcMediaType.APPLICATION_RDF_XML_TYPE,
-							OslcMediaType.APPLICATION_XML_TYPE,
-							OslcMediaType.TEXT_XML_TYPE, 
-							OslcMediaType.TEXT_TURTLE_TYPE,
-							OslcMediaType.APPLICATION_JSON_LD_TYPE));
+	public boolean isReadable(final Class<?> type, final Type genericType,
+			final Annotation[] annotations, final MediaType mediaType) {
+		return true;
 	}
 
 	@Override
@@ -85,30 +65,10 @@ public class OslcRdfXmlArrayProvider
 						final MultivaluedMap<String, Object> map,
 						final OutputStream					 outputStream)
 		   throws IOException,
-				  WebApplicationException
-	{
-		OslcNotQueryResult notQueryResult = type.getComponentType().getAnnotation(OslcNotQueryResult.class);
-		
-		writeTo(notQueryResult != null && notQueryResult.value() ? false : true,
-				objects,
-				mediaType,
-				map,
-				outputStream);
-	}
+				  WebApplicationException {
 
-	@Override
-	public boolean isReadable(final Class<?>	 type,
-							  final Type		 genericType,
-							  final Annotation[] annotations,
-							  final MediaType	 mediaType)
-	{
-		return (type.isArray()) &&
-			   (isReadable(type.getComponentType(),
-						   mediaType,
-						   OslcMediaType.APPLICATION_RDF_XML_TYPE,
-						   OslcMediaType.APPLICATION_XML_TYPE,
-						   OslcMediaType.TEXT_XML_TYPE, 
-						   OslcMediaType.TEXT_TURTLE_TYPE));
+		writeTo(ProviderHelper.isQueryResult(type, annotations), objects, mediaType, map,
+				outputStream);
 	}
 
 	@Override
@@ -125,5 +85,11 @@ public class OslcRdfXmlArrayProvider
 						mediaType,
 						map,
 						inputStream);
+	}
+
+	@Override
+	public long getSize(final Object[] objects, final Class<?> type, final Type genericType,
+			final Annotation[] annotations, final MediaType mediaType) {
+		return ProviderHelper.CANNOT_BE_DETERMINED_IN_ADVANCE;
 	}
 }

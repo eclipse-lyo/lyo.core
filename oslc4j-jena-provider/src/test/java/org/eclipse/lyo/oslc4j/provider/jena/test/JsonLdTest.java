@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.apache.jena.ext.com.google.common.collect.ImmutableList;
-import org.apache.wink.common.internal.MultivaluedMapImpl;
+import javax.ws.rs.core.MultivaluedHashMap;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
 import org.eclipse.lyo.oslc4j.core.model.ServiceProvider;
 import org.eclipse.lyo.oslc4j.provider.jena.OslcJsonLdArrayProvider;
@@ -64,9 +64,9 @@ public class JsonLdTest {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        provider.writeTo(sp, ServiceProvider.class, ServiceProvider.class,
-                ServiceProvider.class.getAnnotations(), OslcMediaType.APPLICATION_JSON_LD_TYPE,
-                new MultivaluedMapImpl<>(), outputStream);
+        provider.writeTo(sp, ServiceProvider.class, ServiceProvider.class, ServiceProvider.class
+                .getAnnotations(), OslcMediaType.APPLICATION_JSON_LD_TYPE, new
+                MultivaluedHashMap<>(), outputStream);
 
         final String jsonLD = outputStream.toString("UTF-8");
 
@@ -82,9 +82,13 @@ public class JsonLdTest {
         ServiceProvider sp = new ServiceProvider();
         sp.setDescription("Hello world");
         final Object[] objects = {sp};
-        provider.writeTo(objects, objects.getClass(), ServiceProvider.class,
-                ServiceProvider.class.getAnnotations(), OslcMediaType.APPLICATION_JSON_LD_TYPE,
-                new MultivaluedMapImpl<>(), outputStream);
+        provider.writeTo(objects,
+                         objects.getClass(),
+                         ServiceProvider.class,
+                         ServiceProvider.class.getAnnotations(),
+                         OslcMediaType.APPLICATION_JSON_LD_TYPE,
+                         new MultivaluedHashMap<>(),
+                         outputStream);
 
         final String jsonLD = outputStream.toString("UTF-8");
 
@@ -100,9 +104,14 @@ public class JsonLdTest {
         ServiceProvider sp = new ServiceProvider();
         sp.setDescription("Hello world");
         final Collection<ServiceProvider> objects = ImmutableList.of(sp);
-        provider.writeTo(new ArrayList<Object>(objects), objects.getClass(),
-                objects.getClass().getGenericSuperclass(), ServiceProvider.class.getAnnotations(),
-                OslcMediaType.APPLICATION_JSON_LD_TYPE, new MultivaluedMapImpl<>(), outputStream);
+        provider.writeTo(
+                new ArrayList<Object>(objects),
+                objects.getClass(),
+                objects.getClass().getGenericSuperclass(),
+                ServiceProvider.class.getAnnotations(),
+                OslcMediaType.APPLICATION_JSON_LD_TYPE,
+                new MultivaluedHashMap<>(),
+                outputStream);
 
         final String jsonLD = outputStream.toString("UTF-8");
 
@@ -132,12 +141,10 @@ public class JsonLdTest {
 
         provider.writeTo(sp, ServiceProvider.class, ServiceProvider.class,
                 ServiceProvider.class.getAnnotations(), OslcMediaType.APPLICATION_JSON_LD_TYPE,
-                new MultivaluedMapImpl<>(), outputStream);
+                new MultivaluedHashMap<>(), outputStream);
 
         final String jsonLD = outputStream.toString("UTF-8");
 
         assertTrue("Provider was not read", jsonLD.contains("Hello world"));
-
     }
-
 }
