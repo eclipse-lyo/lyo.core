@@ -7,24 +7,16 @@
   <packaging>pom</packaging>
   <name>OSLC4J Build</name>
 
-  <profiles>
-    <profile>
-      <id>disable-java8-doclint</id>
-      <activation>
-        <jdk>[1.8,)</jdk>
-      </activation>
-      <properties>
-        <additionalparam>-Xdoclint:none</additionalparam>
-      </properties>
-    </profile>
-  </profiles>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+
+    <version.lyo>${project.version}</version.lyo>
     <version.jena>3.6.0</version.jena>
+    <version.jersey>2.27</version.jersey>
+    <version.servlet>3.1.0</version.servlet>
   </properties>
 
   <modules>
@@ -41,6 +33,40 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.eclipse.lyo.oslc4j.core</groupId>
+        <artifactId>oslc4j-core</artifactId>
+        <version>${version.lyo}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.lyo.oslc4j.core</groupId>
+        <artifactId>oslc4j-jena-provider</artifactId>
+        <version>${version.lyo}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.lyo.oslc4j.core</groupId>
+        <artifactId>oslc4j-json4j-provider</artifactId>
+        <version>${version.lyo}</version>
+      </dependency>
+
+      <dependency>
+        <!--TODO remove-->
+        <groupId>org.glassfish</groupId>
+        <artifactId>javax.servlet</artifactId>
+        <version>3.1-b33</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>${version.servlet}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>21.0</version>
+      </dependency>
       <dependency>
         <!-- CQ 6577 -->
         <groupId>javax.xml.bind</groupId>
@@ -80,39 +106,8 @@
       <dependency>
         <!--CQ 6733-->
         <groupId>org.apache.wink</groupId>
-        <artifactId>wink</artifactId>
-        <version>1.2.1-incubating</version>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <!--CQ 6733-->
-        <groupId>org.apache.wink</groupId>
-        <artifactId>wink-server</artifactId>
-        <version>1.2.1-incubating</version>
-      </dependency>
-      <dependency>
-        <!--CQ 6733-->
-        <groupId>org.apache.wink</groupId>
         <artifactId>wink-json4j</artifactId>
         <version>1.2.1-incubating</version>
-      </dependency>
-      <dependency>
-        <!--CQ 6733-->
-        <groupId>org.apache.wink</groupId>
-        <artifactId>wink-json4j-provider</artifactId>
-        <version>1.2.1-incubating</version>
-      </dependency>
-      <dependency>
-        <!--CQ 6733-->
-        <groupId>org.apache.wink</groupId>
-        <artifactId>wink-client</artifactId>
-        <version>1.2.1-incubating</version>
-        <exclusions>
-          <exclusion>
-            <artifactId>stax-api</artifactId>
-            <groupId>javax.xml.stream</groupId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <!--CQ 6582-->
@@ -160,6 +155,36 @@
         <version>2.8.0</version>
       </dependency>
       <dependency>
+          <groupId>javax.ws.rs</groupId>
+          <artifactId>javax.ws.rs-api</artifactId>
+          <version>2.1</version>
+      </dependency>
+        <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+          <version>3.1.0</version>
+        </dependency>
+      <dependency>
+          <groupId>org.glassfish.jersey.containers</groupId>
+          <artifactId>jersey-container-servlet</artifactId>
+          <version>${version.jersey}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.glassfish.jersey.core</groupId>
+          <artifactId>jersey-server</artifactId>
+          <version>${version.jersey}</version>
+      </dependency>
+        <dependency>
+          <groupId>org.glassfish.jersey.core</groupId>
+          <artifactId>jersey-common</artifactId>
+          <version>${version.jersey}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.glassfish.jersey.inject</groupId>
+          <artifactId>jersey-hk2</artifactId>
+          <version>${version.jersey}</version>
+      </dependency>
+      <dependency>
         <!-- TODO remove https://github.com/eclipse/lyo.core/issues/58 -->
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
@@ -173,6 +198,43 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.2.1</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.0.1</version>
+          <configuration>
+            <source>8</source>
+            <additionalOptions>-Xdoclint:none</additionalOptions>
+          </configuration>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
   <repositories>
     <repository>

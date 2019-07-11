@@ -1,5 +1,5 @@
-/*******************************************************************************
- * Copyright (c) 2012 - 2018 IBM Corporation and others.
+/*
+ * Copyright (c) 2012-2019 IBM Corporation and others.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,15 +8,7 @@
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
- *
- * Contributors:
- *
- *	   Russell Boykin		- initial API and implementation
- *	   Alberto Giammaria	- initial API and implementation
- *	   Chris Peters			- initial API and implementation
- *	   Gianluca Bernardini	- initial API and implementation
- *	   Andrew Berezovskyi   - JSON-LD support
- *******************************************************************************/
+ */
 package org.eclipse.lyo.oslc4j.provider.jena;
 
 import java.io.InputStream;
@@ -43,8 +35,6 @@ import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.util.FileUtils;
 import org.eclipse.lyo.oslc4j.core.OSLC4JConstants;
 import org.eclipse.lyo.oslc4j.core.OSLC4JUtils;
-import org.eclipse.lyo.oslc4j.core.annotation.OslcNotQueryResult;
-import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.exception.MessageExtractor;
 import org.eclipse.lyo.oslc4j.core.model.Error;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
@@ -55,6 +45,9 @@ import org.eclipse.lyo.oslc4j.core.model.ServiceProviderCatalog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author Russell Boykin, Alberto Giammaria, Chris Peters, Gianluca Bernardini, Andrew Berezovskyi
+ */
 public abstract class AbstractOslcRdfXmlProvider
 {
 	private static final Logger log = LoggerFactory.getLogger(AbstractOslcRdfXmlProvider.class.getName
@@ -90,24 +83,6 @@ public abstract class AbstractOslcRdfXmlProvider
 	protected AbstractOslcRdfXmlProvider()
 	{
 		super();
-	}
-
-	protected static boolean isWriteable(final Class<?>		 type,
-										 final Annotation[]	 annotations,
-										 final MediaType	 actualMediaType,
-										 final MediaType ... requiredMediaTypes)
-	{
-		if (type.getAnnotation(OslcResourceShape.class) != null ||
-			type.getAnnotation(OslcNotQueryResult.class) != null)
-		{
-			// We do not have annotations when running from the non-web client.
-			if (isCompatible(actualMediaType, requiredMediaTypes))
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	protected void writeTo(final Object[]						objects,
@@ -172,14 +147,13 @@ public abstract class AbstractOslcRdfXmlProvider
 		}
 		catch (final Exception exception)
 		{
-			log.warn(MessageExtractor.getMessage("ErrorSerializingResource"), exception);
-			// TODO Andrew@2018-03-03: use another exception
-			throw new WebApplicationException(exception);
+			log.warn(MessageExtractor.getMessage("ErrorSerializingResource"));
+			throw new IllegalStateException(exception);
 		}
 	}
 
 	private RDFWriter getRdfWriter(final String serializationLanguage, final Model model) {
-		RDFWriter writer = null;
+		RDFWriter writer;
 		if	(serializationLanguage.equals(FileUtils.langXMLAbbrev))
         {
             writer = new RdfXmlAbbreviatedWriter();
@@ -210,10 +184,12 @@ public abstract class AbstractOslcRdfXmlProvider
 		}
 
 		String descriptionURI  = null;
+		// TODO Andrew@2019-04-18: stop using responseInfoURI nullity to detect Query results
 		String responseInfoURI = null;
 
 		if (queryResult && ! isClientSide)
 		{
+			log.trace("Marshalling response objects as OSLC Query result (server-side only)");
 
 			final String method = httpServletRequest.getMethod();
 			if ("GET".equals(method))
@@ -223,7 +199,7 @@ public abstract class AbstractOslcRdfXmlProvider
 
 				final String queryString = httpServletRequest.getQueryString();
 				if ((queryString != null) &&
-					(isOslcQuery(queryString)))
+					(ProviderHelper.isOslcQuery(queryString)))
 				{
 					responseInfoURI += "?" + queryString;
 				}
@@ -244,7 +220,8 @@ public abstract class AbstractOslcRdfXmlProvider
 			null :
 			(Integer)httpServletRequest.getAttribute(OSLC4JConstants.OSLC4J_TOTAL_COUNT);
 
-		ResponseInfo<?> responseInfo = new ResponseInfoArray<Object>(null, properties, totalCount, nextPageURI);
+		ResponseInfo<?> responseInfo = new ResponseInfoArray<>(null, properties, totalCount,
+				nextPageURI);
 
 		writeObjectsTo(
 				objects,
@@ -288,6 +265,9 @@ public abstract class AbstractOslcRdfXmlProvider
 		mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.APPLICATION_XML_TYPE,
 													 FileUtils.langXMLAbbrev));
 
+		mediaPairs.add(new AbstractMap.SimpleEntry<>(OslcMediaType.TEXT_XML_TYPE,
+				 RDFLanguages.strLangRDFXML));
+		
 		for (Map.Entry<MediaType, String> mediaPair : mediaPairs) {
 			if (baseMediaType.isCompatible(mediaPair.getKey())) {
 				log.trace("Using '{}' writer for '{}' Accept media type",
@@ -298,32 +278,6 @@ public abstract class AbstractOslcRdfXmlProvider
 		}
 
 		throw new IllegalArgumentException("Base media type can't be matched to any writer");
-	}
-
-	protected static boolean isReadable(final Class<?>		type,
-										final MediaType		actualMediaType,
-										final MediaType ... requiredMediaTypes)
-	{
-		if (type.getAnnotation(OslcResourceShape.class) != null)
-		{
-			return isCompatible(actualMediaType, requiredMediaTypes);
-		}
-
-		return false;
-	}
-
-	protected static boolean isCompatible(final MediaType actualMediaType,
-			final MediaType... requiredMediaTypes)
-	{
-			for (final MediaType requiredMediaType : requiredMediaTypes)
-			{
-				if (requiredMediaType.isCompatible(actualMediaType))
-				{
-					return true;
-				}
-			}
-
-		return false;
 	}
 
 	protected Object[] readFrom(final Class<?>						 type,
@@ -346,7 +300,7 @@ public abstract class AbstractOslcRdfXmlProvider
 
 			reader.read(model, inputStream, "");
 
-			return JenaModelHelper.fromJenaModel(model, type);
+			return JenaModelHelper.unmarshal(model, type);
 		}
 		catch (final Exception exception)
 		{
@@ -358,7 +312,7 @@ public abstract class AbstractOslcRdfXmlProvider
 	}
 
 	private RDFReader getRdfReader(final MediaType mediaType, final Model model) {
-		RDFReader reader = null;
+		RDFReader reader;
 		final String language = getSerializationLanguage(mediaType);
 		if (language.equals(FileUtils.langXMLAbbrev))
 		{
@@ -475,18 +429,5 @@ public abstract class AbstractOslcRdfXmlProvider
 											   CLASS_OSLC_ERROR,
 											   ANNOTATIONS_EMPTY_ARRAY,
 											   mediaType) != null);
-	}
-
-	protected static boolean isOslcQuery(final String parmString)
-	{
-		boolean containsOslcParm = false;
-
-		final String [] uriParts = parmString.toLowerCase().split("oslc\\.",2);
-		if (uriParts.length > 1)
-		{
-			containsOslcParm = true;
-		}
-
-		return containsOslcParm;
 	}
 }
