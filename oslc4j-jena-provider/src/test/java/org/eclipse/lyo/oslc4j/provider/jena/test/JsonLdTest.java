@@ -74,6 +74,7 @@ public class JsonLdTest {
 
     }
 
+    @Ignore("GHBRB testing")
     @Test
     public void testWriteArray() throws Exception {
         final OslcJsonLdArrayProvider provider = new OslcJsonLdArrayProvider();
