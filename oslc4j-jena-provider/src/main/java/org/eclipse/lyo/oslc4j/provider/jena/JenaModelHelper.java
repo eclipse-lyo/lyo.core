@@ -1676,10 +1676,12 @@ public final class JenaModelHelper
     {
         if (f.compareTo(Float.POSITIVE_INFINITY) == 0)
         {
+            logger.warn("+INF float is serialised to the model");
             return model.createTypedLiteral("INF", XSDDatatype.XSDfloat.getURI());
         }
         else if (f.compareTo(Float.NEGATIVE_INFINITY) == 0)
         {
+            logger.warn("-INF float is serialised to the model");
             return model.createTypedLiteral("-INF", XSDDatatype.XSDfloat.getURI());
         }
 
@@ -1690,10 +1692,12 @@ public final class JenaModelHelper
     {
         if (d.compareTo(Double.POSITIVE_INFINITY) == 0)
         {
+            logger.warn("+INF double is serialised to the model");
             return model.createTypedLiteral("INF", XSDDatatype.XSDdouble.getURI());
         }
         else if (d.compareTo(Double.NEGATIVE_INFINITY) == 0)
         {
+            logger.warn("-INF float is serialised to the model");
             return model.createTypedLiteral("-INF", XSDDatatype.XSDdouble.getURI());
         }
 
