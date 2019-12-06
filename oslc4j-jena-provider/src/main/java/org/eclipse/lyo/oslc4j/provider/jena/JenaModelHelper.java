@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 IBM Corporation and others
+ * Copyright (c) 2012-2019 IBM Corporation and others
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,6 +8,8 @@
  * The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
  * http://www.eclipse.org/org/documents/edl-v10.php.
+ *
+ * SPDX-License-Identifier: EPL-1.0 OR BSD-3-Clause
  */
 package org.eclipse.lyo.oslc4j.provider.jena;
 
@@ -956,7 +958,7 @@ public final class JenaModelHelper
 
 
 							setMethod.invoke(bean,
-											 new Object[] {parameter});
+									parameter);
 
 							singleValueMethodsUsed.add(setMethod);
 						}
@@ -993,7 +995,7 @@ public final class JenaModelHelper
 				}
 
 				setMethod.invoke(bean,
-								 new Object[] {array});
+						array);
 			}
 			// Else - we are dealing with a collection or a subclass of collection
 			else
@@ -1033,7 +1035,7 @@ public final class JenaModelHelper
 				collection.addAll(values);
 
 				setMethod.invoke(bean,
-								 new Object[] {collection});
+						collection);
 			}
 		}
 	}
