@@ -1,13 +1,23 @@
-# Build artefacts
-target/
-bin/
+# Configs
+*.env
 
-# IDE files
-.project
-.classpath
+# Lyo Designer Generator
+*.lost
+
+# Build systems & IDEs
+target/
+overlays/
+pom.xml.versionsBackup
+dependency-reduced-pom.xml
+
+bin/
 .settings/
+.classpath
+.project
 
 .idea/
 *.iml
 
-pom.xml.versionsBackup
+.vscode/
+
+.DS_Store
