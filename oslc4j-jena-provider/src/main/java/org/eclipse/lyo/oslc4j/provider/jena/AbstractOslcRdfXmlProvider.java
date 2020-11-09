@@ -35,6 +35,8 @@ import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.util.FileUtils;
 import org.eclipse.lyo.oslc4j.core.OSLC4JConstants;
 import org.eclipse.lyo.oslc4j.core.OSLC4JUtils;
+import org.eclipse.lyo.oslc4j.core.annotation.OslcNotQueryResult;
+import org.eclipse.lyo.oslc4j.core.annotation.OslcResourceShape;
 import org.eclipse.lyo.oslc4j.core.exception.MessageExtractor;
 import org.eclipse.lyo.oslc4j.core.model.Error;
 import org.eclipse.lyo.oslc4j.core.model.OslcMediaType;
@@ -48,7 +50,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Russell Boykin, Alberto Giammaria, Chris Peters, Gianluca Bernardini, Andrew Berezovskyi
  */
-public abstract class AbstractOslcRdfXmlProvider
+public abstract class AbstractOslcRdfXmlProvider extends AbstractRdfProvider
 {
 	private static final Logger log = LoggerFactory.getLogger(AbstractOslcRdfXmlProvider.class.getName
 			());
@@ -83,6 +85,21 @@ public abstract class AbstractOslcRdfXmlProvider
 	protected AbstractOslcRdfXmlProvider()
 	{
 		super();
+	}
+
+	protected static boolean isWriteable(final Class<?>		 type,
+										 final Annotation[]	 annotations,
+										 final MediaType	 actualMediaType,
+										 final MediaType ... requiredMediaTypes)
+	{
+		if (type.getAnnotation(OslcResourceShape.class) != null ||
+			type.getAnnotation(OslcNotQueryResult.class) != null)
+		{
+			// We do not have annotations when running from the non-web client.
+			return isCompatible(actualMediaType, requiredMediaTypes);
+		}
+
+		return false;
 	}
 
 	protected void writeTo(final Object[]						objects,
@@ -280,6 +297,32 @@ public abstract class AbstractOslcRdfXmlProvider
 		throw new IllegalArgumentException("Base media type can't be matched to any writer");
 	}
 
+	protected static boolean isReadable(final Class<?>		type,
+										final MediaType		actualMediaType,
+										final MediaType ... requiredMediaTypes)
+	{
+		if (type.getAnnotation(OslcResourceShape.class) != null)
+		{
+			return isCompatible(actualMediaType, requiredMediaTypes);
+		}
+
+		return false;
+	}
+
+	protected static boolean isCompatible(final MediaType actualMediaType,
+			final MediaType... requiredMediaTypes)
+	{
+			for (final MediaType requiredMediaType : requiredMediaTypes)
+			{
+				if (requiredMediaType.isCompatible(actualMediaType))
+				{
+					return true;
+				}
+			}
+
+		return false;
+	}
+
 	protected Object[] readFrom(final Class<?>						 type,
 								final MediaType						 mediaType,
 								final MultivaluedMap<String, String> map,
@@ -429,5 +472,18 @@ public abstract class AbstractOslcRdfXmlProvider
 											   CLASS_OSLC_ERROR,
 											   ANNOTATIONS_EMPTY_ARRAY,
 											   mediaType) != null);
+	}
+
+	protected static boolean isOslcQuery(final String parmString)
+	{
+		boolean containsOslcParm = false;
+
+		final String [] uriParts = parmString.toLowerCase().split("oslc\\.",2);
+		if (uriParts.length > 1)
+		{
+			containsOslcParm = true;
+		}
+
+		return containsOslcParm;
 	}
 }
